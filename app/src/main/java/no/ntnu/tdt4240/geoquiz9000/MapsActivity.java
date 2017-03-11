@@ -41,7 +41,8 @@ public class MapsActivity
         mMap.setOnMapClickListener(this);
         mMap.setOnMapLongClickListener(this);
 
-        LatLng startPoint = new LatLng(63, 10);
+        LatLng startPoint = new LatLng(getResources().getInteger(R.integer.starting_point_lat),
+                getResources().getInteger(R.integer.starting_point_long));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(startPoint));
     }
 
