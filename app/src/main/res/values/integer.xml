@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="starting_point_lat">63</integer>
+    <integer name="starting_point_long">10</integer>
+
+</resources>
