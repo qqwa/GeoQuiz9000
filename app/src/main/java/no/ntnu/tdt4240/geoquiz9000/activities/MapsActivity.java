@@ -1,5 +1,7 @@
-package no.ntnu.tdt4240.geoquiz9000;
+package no.ntnu.tdt4240.geoquiz9000.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -14,9 +16,23 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import no.ntnu.tdt4240.geoquiz9000.R;
+
 public class MapsActivity
         extends FragmentActivity
-        implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMapLongClickListener {
+        implements OnMapReadyCallback, GoogleMap.OnMapClickListener,
+                   GoogleMap.OnMapLongClickListener
+{
+    public static Intent newIntent(Context context)
+    {
+        // TODO: 20.03.2017 add arguments (pic's coordinates?)
+        return new Intent(context, MapsActivity.class);
+    }
+    public static float getDistance(Intent i)
+    {
+        // TODO: 20.03.2017 extract distance from the intent. To be called in onActivityResult() in the parent activity
+        return 0f;
+    }
 
     private static final String TAG = MapsActivity.class.getSimpleName();
 
@@ -24,17 +40,19 @@ public class MapsActivity
     private Marker lastMarker;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(GoogleMap googleMap)
+    {
         Log.d(TAG, "Map is ready");
         mMap = googleMap;
 
@@ -47,14 +65,16 @@ public class MapsActivity
     }
 
     @Override
-    public void onMapClick(LatLng latLng) {
+    public void onMapClick(LatLng latLng)
+    {
         Log.d(TAG, "Click on map");
 
         removeLastMarker();
     }
 
     @Override
-    public void onMapLongClick(LatLng latLng) {
+    public void onMapLongClick(LatLng latLng)
+    {
         Log.d(TAG, "Long click on map");
 
         removeLastMarker();
@@ -65,14 +85,16 @@ public class MapsActivity
         lastMarker = marker;
     }
 
-    private void removeLastMarker() {
+    private void removeLastMarker()
+    {
         if (lastMarker != null) {
             lastMarker.remove();
         }
     }
 
-    public static float distanceBetweenTwoPoints(LatLng actualPoint, LatLng setPoint) {
-        float[] results = new float[]{0};
+    public static float distanceBetweenTwoPoints(LatLng actualPoint, LatLng setPoint)
+    {
+        float[] results = new float[] { 0 };
 
         double actualLatitude = actualPoint.latitude;
         double actualLongitude = actualPoint.longitude;
