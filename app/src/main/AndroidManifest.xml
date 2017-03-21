@@ -13,11 +13,12 @@
         <activity android:name=".activities.MainMenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".activities.QuestionActivity" />
+        <activity android:name=".activities.SettingsActivity" android:theme="@style/AppTheme.Preferences"/>
+        <activity android:name=".activities.ScoreActivity" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />

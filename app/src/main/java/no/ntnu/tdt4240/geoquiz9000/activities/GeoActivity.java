@@ -16,11 +16,11 @@ class GeoActivity extends AppCompatActivity
     private Typeface m_textFont;
     private Typeface m_titleFont;
 
-    protected Typeface getTextFont()
+    public Typeface getTextFont()
     {
         return m_textFont;
     }
-    protected Typeface getTitleFont()
+    public Typeface getTitleFont()
     {
         return m_titleFont;
     }

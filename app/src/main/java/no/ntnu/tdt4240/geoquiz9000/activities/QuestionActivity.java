@@ -2,6 +2,7 @@ package no.ntnu.tdt4240.geoquiz9000.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -26,6 +27,7 @@ public class QuestionActivity extends GeoActivity
 
     private TextView m_questionText;
     private ImageView m_questionPic;
+    private Button m_mapBtn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
@@ -35,25 +37,12 @@ public class QuestionActivity extends GeoActivity
 
         m_questionText = (TextView)findViewById(R.id.question_text);
         m_questionText.setTypeface(getTextFont());
-
+        m_mapBtn = (Button)findViewById(R.id.map_btn);
+        m_mapBtn.setTypeface(getTextFont());
         m_questionPic = (ImageView)findViewById(R.id.question_pic);
 
-        Button mapBtn = (Button)findViewById(R.id.map_btn);
-        mapBtn.setTypeface(getTextFont());
-        mapBtn.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                startActivityForResult(MapsActivity.newIntent(QuestionActivity.this), REQUEST_MAPS);
-            }
-        });
-    }
-    @Override
-    protected void onSaveInstanceState(Bundle outState)
-    {
-        super.onSaveInstanceState(outState);
-
+        // TODO: 21.03.2017 retrieve question from DB, set question text, set question pic:
+        updateViews(null, null);    // temp
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -63,10 +52,42 @@ public class QuestionActivity extends GeoActivity
 
         switch (requestCode) {
             case REQUEST_MAPS:
-                double distance = MapsActivity.getDistance(data);
-                // TODO: 20.03.2017
+                float distance = MapsActivity.getDistance(data);
+                int score = (int)(1f / distance); // TODO: 21.03.2017 calculate score
+                final String resultMsg = getString(R.string.question_result, distance, score);
+
+                m_questionText.setText(resultMsg);
+                m_mapBtn.setText(R.string.map_btn_label1);
+                m_mapBtn.setOnClickListener(new NextQuestionClick());
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+    private void updateViews(String questionText, Bitmap questionImage)
+    {
+        m_mapBtn.setText(R.string.map_btn_label0);
+        m_mapBtn.setOnClickListener(new PlacePinClick());
+        m_questionText.setText(questionText);
+        m_questionPic.setImageBitmap(questionImage);
+    }
+
+    private class PlacePinClick implements View.OnClickListener
+    {
+        @Override
+        public void onClick(View v)
+        {
+            // TODO: 21.03.2017 pass arguments (target coordinates) to the MapsActivity through newIntent()
+            startActivityForResult(MapsActivity.newIntent(QuestionActivity.this), REQUEST_MAPS);
+        }
+    }
+
+    private class NextQuestionClick implements View.OnClickListener
+    {
+        @Override
+        public void onClick(View v)
+        {
+            // TODO: 21.03.2017 retrieve the next question from DB and update views:
+            updateViews(null, null);    // temp
+        }
     }
 }

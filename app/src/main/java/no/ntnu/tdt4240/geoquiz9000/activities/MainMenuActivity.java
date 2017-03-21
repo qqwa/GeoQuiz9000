@@ -16,7 +16,7 @@ public class MainMenuActivity extends GeoActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
-        TextView title = (TextView)findViewById(R.id.main_title);
+        final TextView title = (TextView)findViewById(R.id.main_title);
         title.setTypeface(getTitleFont());
 
         final Button singleplayerBtn = (Button)findViewById(R.id.singleplayer_btn);
@@ -26,7 +26,7 @@ public class MainMenuActivity extends GeoActivity
             @Override
             public void onClick(View v)
             {
-                // TODO: 20.03.2017
+                // TODO: 20.03.2017 start singleplayer game, f.ex.:
                 startActivity(QuestionActivity.newIntent(MainMenuActivity.this));
             }
         });
@@ -37,7 +37,7 @@ public class MainMenuActivity extends GeoActivity
             @Override
             public void onClick(View v)
             {
-                // TODO: 20.03.2017
+                // TODO: 20.03.2017 start multiplayer game
             }
         });
         final Button settingsBtn = (Button)findViewById(R.id.settings_btn);
@@ -47,7 +47,7 @@ public class MainMenuActivity extends GeoActivity
             @Override
             public void onClick(View v)
             {
-                // TODO: 20.03.2017
+                startActivity(SettingsActivity.newIntent(MainMenuActivity.this));
             }
         });
         final Button highscoreBtn = (Button)findViewById(R.id.highscore_btn);
@@ -57,7 +57,7 @@ public class MainMenuActivity extends GeoActivity
             @Override
             public void onClick(View v)
             {
-                // TODO: 20.03.2017
+                startActivity(ScoreActivity.newIntent(MainMenuActivity.this));
             }
         });
     }

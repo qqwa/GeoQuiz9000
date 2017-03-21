@@ -18,19 +18,19 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import no.ntnu.tdt4240.geoquiz9000.R;
 
-public class MapsActivity
-        extends FragmentActivity
-        implements OnMapReadyCallback, GoogleMap.OnMapClickListener,
-                   GoogleMap.OnMapLongClickListener
+// TODO: 21.03.2017 call setResult() somewhere that returns distance between the target and the guess
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
+                                                              GoogleMap.OnMapClickListener,
+                                                              GoogleMap.OnMapLongClickListener
 {
     public static Intent newIntent(Context context)
     {
-        // TODO: 20.03.2017 add arguments (pic's coordinates?)
+        // TODO: 20.03.2017 add arguments (target's coordinates?)
         return new Intent(context, MapsActivity.class);
     }
     public static float getDistance(Intent i)
     {
-        // TODO: 20.03.2017 extract distance from the intent. To be called in onActivityResult() in the parent activity
+        // TODO: 20.03.2017 extract distance from the intent passed to setResult(). To be called in onActivityResult() in the parent activity
         return 0f;
     }
 
