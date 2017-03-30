@@ -41,6 +41,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:10.2.1'
     compile 'com.google.android.gms:play-services-maps:10.2.1'
     compile 'io.objectbox:objectbox-android:0.9.9'
+    compile 'com.moandjiezana.toml:toml4j:0.7.1'
 
     testCompile 'junit:junit:4.12'
 }
