@@ -4,4 +4,4 @@
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="no.ntnu.tdt4240.geoquiz9000.MapsActivity" />
+    tools:context="no.ntnu.tdt4240.geoquiz9000.activities.MapsActivity" />
