@@ -2,9 +2,11 @@ package no.ntnu.tdt4240.geoquiz9000.models;
 
 import java.util.ArrayList;
 
-public class MapPicture extends AbstractModel implements IMap {
-    private String name;
-    private MapType type;
+public class MapPicture implements IMap {
+    protected String name;
+    protected static IMap.MapType mapType;
+    protected String rootPath;
+    protected int locationCount;
 
     //metaData
     private String map; //ref to map picture
@@ -24,14 +26,17 @@ public class MapPicture extends AbstractModel implements IMap {
     }
 
     @Override
-    public MapType getType() {
-        return type;
+    public IMap.MapType getType() {
+        return mapType;
     }
 
     //TODO: maybe return the actual map instead of a string
     public String getMap() {
         return map;
     }
+
+    @Override
+    public String getRootPath() { return rootPath; }
 
     public double getDistX() {
         return distX;
@@ -42,25 +47,23 @@ public class MapPicture extends AbstractModel implements IMap {
     }
 
     @Override
-    public int locationsGetCount() {
+    public int getLocationCount() {
         return pictures.size();
     }
 
-    @Override
-    public String locationsGetPicture(int id) {
+    public String getLocationPicture(int id) {
         return pictures.get(id);
     }
 
-    @Override
-    public String locationsGetDescription(int id) {
+    public String getLocationDescription(int id) {
         return description.get(id);
     }
 
-    public int locationsGetX(int id) {
+    public int getLocationX(int id) {
         return locationsX.get(id);
     }
 
-    public int locationsGetY(int id) {
+    public int getLocationY(int id) {
         return locationsY.get(id);
     }
 }
