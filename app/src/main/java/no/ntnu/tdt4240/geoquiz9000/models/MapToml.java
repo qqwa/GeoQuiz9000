@@ -1,10 +1,11 @@
 package no.ntnu.tdt4240.geoquiz9000.models;
 
 
-import android.util.Log;
 import com.moandjiezana.toml.Toml;
 
 import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +42,7 @@ public class MapToml {
     }
     private String name;
     private IMap.MapType type;
+    public String rootPath;
     private Map<String, String> metaData;
     private ArrayList<DataSet> dataSets;
 
@@ -49,10 +51,35 @@ public class MapToml {
         this.type = type;
         this.metaData = metaData;
         this.dataSets = dataSets;
+
+        String hashData = name;
+        for(DataSet dataSet : dataSets) {
+            name += dataSet.picture + dataSet.description;
+        }
+
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("MD5");
+            byte[] hash = md.digest(hashData.getBytes());
+            StringBuilder sb = new StringBuilder(hash.length * 2);
+            for(byte b: hash) {
+                sb.append(String.format("%02x", b));
+            }
+            rootPath = sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        rootPath += this.name.replace(" ", "");
+
     }
 
     static public MapToml readToml(InputStream inputStream) {
         Toml toml = new Toml().read(inputStream);
+
+        if(toml == null) {
+            return null;
+        }
 
         //get toplevel data
         String name = toml.getString("name");
@@ -69,7 +96,7 @@ public class MapToml {
         else throw new RuntimeException("Unsupported map type.");
 
         //metaData
-        Map metaData = new HashMap<>();
+        Map<String, String> metaData = new HashMap<>();
         if(mapType == IMap.MapType.GOOGLE) {
             metaData.put("map", toml.getString("meta-data.map"));
         } else if(mapType == IMap.MapType.PICTURE) {
@@ -124,5 +151,9 @@ public class MapToml {
     public DataSet getDataSet(int id) {
         return dataSets.get(id);
     }
+
+    public ArrayList<DataSet> getDataSets() { return dataSets; }
+
+    public String getRootPath() { return rootPath; }
 
 }
