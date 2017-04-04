@@ -6,12 +6,18 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:buttonStyle">@style/AppButtonStyle</item>
     </style>
 
     <style name="AppTheme.Preferences">
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
     </style>
 
+    <style name="AppButtonStyle" parent="Widget.AppCompat.Button.Colored">
+        <!--<item name="android:background">@color/colorPrimaryDark</item>-->
+        <item name="android:textColor">@color/textColor</item>
+    </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 

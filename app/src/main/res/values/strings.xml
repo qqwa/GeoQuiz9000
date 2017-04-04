@@ -11,4 +11,7 @@
     <string name="map_btn_label1">Next question</string>
     <string name="question_result">You were %1$.3f km away from the target. You earned %2$d points.</string>
     <string name="score_title_label">High score</string>
+    <string name="default_map_btn_label">Go with default map!</string>
+    <string name="browse_map_btn_label">Choose your own map!</string>
+    <string name="back_btn_label">Fall Back!</string>
 </resources>

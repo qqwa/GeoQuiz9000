@@ -6,7 +6,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "no.ntnu.tdt4240.geoquiz9000"
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -19,6 +19,8 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    productFlavors {
     }
 }
 
@@ -37,11 +39,9 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.3.0'
     compile 'com.android.support:preference-v7:25.3.0'
-
     compile 'com.google.android.gms:play-services:10.2.1'
     compile 'com.google.android.gms:play-services-maps:10.2.1'
     compile 'io.objectbox:objectbox-android:0.9.9'
     compile 'com.moandjiezana.toml:toml4j:0.7.1'
-
     testCompile 'junit:junit:4.12'
 }
