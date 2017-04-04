@@ -15,4 +15,5 @@
     <string name="back_btn_label">Back!</string>
     <string name="question_text">Guess location of the picture above. Press button below to open the map.</string>
     <string name="quit_btn_label">Quit game</string>
+    <string name="question_title">Question</string>
 </resources>

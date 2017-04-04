@@ -48,6 +48,11 @@ public class QuestionActivity extends GeoActivity implements SingleplayerFragmen
         return singlePlayer ? SingleplayerFragment.newInstance(0) : new MultiplayerFragment();
     }
     @Override
+    protected CharSequence getTitleText()
+    {
+        return getResources().getString(R.string.question_title);
+    }
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if (resultCode != RESULT_OK)

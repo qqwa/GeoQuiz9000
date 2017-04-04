@@ -2,13 +2,18 @@ package no.ntnu.tdt4240.geoquiz9000.activities;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.provider.OpenableColumns;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import java.io.InputStream;
 
 import io.objectbox.Box;
+import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.controllers.MapFactory;
 import no.ntnu.tdt4240.geoquiz9000.database.DatabaseLayer;
 import no.ntnu.tdt4240.geoquiz9000.fragments.FrontpageFragment;
@@ -21,6 +26,9 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
                                                          MapChooserFragment.Callbacks
 {
     private static final int REQUEST_FILE = 10;
+    private static final String SAVED_TITLE = "MenuActivity.SAVED_TITLE";
+
+    private String m_title;
     // ---FrontpageFragment-CALLBACKS---------------------------------------------------------------
     @Override
     public void onSinglePlayerPressed()
@@ -35,11 +43,13 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     @Override
     public void onSettingsPressed()
     {
+        m_title = getResources().getString(R.string.settings_btn_label);
         replaceState(new SettingsFragment());
     }
     @Override
     public void onHighScorePressed()
     {
+        m_title = getResources().getString(R.string.score_title_label);
         replaceState(new ScoreFragment());
     }
     @Override
@@ -86,33 +96,26 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     {
         return new FrontpageFragment();
     }
-    //    @Override
-//    protected void onCreate(Bundle savedInstanceState)
-//    {
-//        super.onCreate(savedInstanceState);
-//
-//        try {
-//            //import map
-//            Box maps = DatabaseLayer.getInstance(this).getBoxFor(MapStore.class);
-//            if(maps.find("name", "Test Map Pack").size() == 0){
-//                MapStore map = MapFactory.importMap(getAssets().open("testMap.zip"), this);
-//                map.save(this);
-//                Log.i("MainMenu", "Imported and Saved Map " + map.getName() + " to: " + map.getRootPath());
-//            }
-//            //load imported map
-//            if(maps.find("name", "Test Map Pack").size() != 0){
-//                MapStore testMap = (MapStore)maps.find("name", "Test Map Pack").get(0);
-//                MapGoogle mapGoogle = (MapGoogle)MapFactory.getMap(testMap);
-//                ImageView iv = new ImageView(this);
-//                iv.setImageBitmap(mapGoogle.getLocationPicture(0));
-//                LinearLayout linearLayout = (LinearLayout)findViewById(R.id.singleplayer_btn).getParent();
-//                linearLayout.addView(iv);
-//                Log.i("MainMenu", "Loaded Map: " + testMap.getRootPath());
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+    @Override
+    protected CharSequence getTitleText()
+    {
+        return m_title;
+    }
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState)
+    {
+        if (savedInstanceState != null)
+            m_title = savedInstanceState.getString(SAVED_TITLE);
+        else
+            m_title = getResources().getString(R.string.app_name);
+        super.onCreate(savedInstanceState);
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState)
+    {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putString(SAVED_TITLE, m_title);
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
