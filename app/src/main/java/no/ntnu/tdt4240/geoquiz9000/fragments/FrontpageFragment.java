@@ -28,6 +28,8 @@ public class FrontpageFragment extends Fragment
         void onSettingsPressed();
 
         void onHighScorePressed();
+
+        void onQuitApplication();
     }
 
     private Callbacks m_callbacks;
@@ -96,6 +98,18 @@ public class FrontpageFragment extends Fragment
             {
                 if (m_callbacks != null) {
                     m_callbacks.onHighScorePressed();
+                }
+            }
+        });
+        final Button quitBtn = (Button)root.findViewById(R.id.quit_btn);
+        quitBtn.setTypeface(textFont);
+        quitBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (m_callbacks != null) {
+                    m_callbacks.onQuitApplication();
                 }
             }
         });

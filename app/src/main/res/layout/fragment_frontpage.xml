@@ -36,4 +36,12 @@
         android:text="@string/highscore_btn_label"
         />
 
+    <Button
+        android:id="@+id/quit_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/quit_btn_label"
+        />
+
 </LinearLayout>

@@ -1,15 +1,22 @@
 package no.ntnu.tdt4240.geoquiz9000.activities;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+
+import java.io.InputStream;
 
 import io.objectbox.Box;
-import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.controllers.MapFactory;
 import no.ntnu.tdt4240.geoquiz9000.database.DatabaseLayer;
 import no.ntnu.tdt4240.geoquiz9000.fragments.FrontpageFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.MapChooserFragment;
+import no.ntnu.tdt4240.geoquiz9000.fragments.ScoreFragment;
+import no.ntnu.tdt4240.geoquiz9000.fragments.SettingsFragment;
 import no.ntnu.tdt4240.geoquiz9000.models.MapStore;
 
 public class MenuActivity extends GeoActivity implements FrontpageFragment.Callbacks,
@@ -20,22 +27,27 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     @Override
     public void onSinglePlayerPressed()
     {
-        // TODO: 20.03.2017 start singleplayer game, f.ex.:
+        replaceState(new MapChooserFragment());
     }
     @Override
     public void onMultiplayerPressed()
     {
-        // TODO: 20.03.2017 start multiplayer game
+        // TODO: 04.04.2017 start multiplayer game
     }
     @Override
     public void onSettingsPressed()
     {
-        // TODO: 04.04.2017 replace fragment
+        replaceState(new SettingsFragment());
     }
     @Override
     public void onHighScorePressed()
     {
-        startActivity(ScoreActivity.newIntent(MenuActivity.this));
+        replaceState(new ScoreFragment());
+    }
+    @Override
+    public void onQuitApplication()
+    {
+        finish();
     }
     // ---MapChooserFragment-CALLBACKS--------------------------------------------------------------
     @Override
@@ -45,13 +57,15 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
         try {
             Box maps = DatabaseLayer.getInstance(this).getBoxFor(MapStore.class);
             if (maps.find("name", "Test Map Pack").size() == 0) {
-                MapStore map = MapFactory.importMap(getAssets().open("testMap.zip"), this);
-                map.save(this);
+                MapFactory.importMap(getAssets().open("testMap.zip"), this).save(this);
             }
         }
         catch (Exception e) {
             e.printStackTrace();
         }
+
+        // starting game, single player
+        startActivity(QuestionActivity.newIntent(this, true));
     }
     @Override
     public void onBrowseMapPressed()
@@ -66,16 +80,19 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     @Override
     public void onBackBtnPressed()
     {
-        onBackPressed();
+        goToPreviousState();
     }
     // ---LIFECYCLE-METHODS-------------------------------------------------------------------------
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    protected Fragment getInitialState()
     {
-        super.onCreate(savedInstanceState);
-        replaceFragment(new FrontpageFragment()); // set initial fragment
-
-//        //TODO: remove this once the proper import menu is in place
+        return new FrontpageFragment();
+    }
+    //    @Override
+//    protected void onCreate(Bundle savedInstanceState)
+//    {
+//        super.onCreate(savedInstanceState);
+//
 //        try {
 //            //import map
 //            Box maps = DatabaseLayer.getInstance(this).getBoxFor(MapStore.class);
@@ -97,25 +114,51 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-    }
+//    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if (resultCode != RESULT_OK)
             return;
-        if (requestCode == REQUEST_FILE) {
-            onBackPressed(); // switch back to menu fragment
 
-            Uri path = data.getData();
+        switch (requestCode) {
+            case REQUEST_FILE:
+                getSupportFragmentManager().popBackStack();
+                Cursor cursor = null;
+                try {
+                    Uri path = data.getData(); // might throw NullPointerException
 
-            // TODO: 04.04.2017 load imported map
+                    // checking file type
+                    cursor = getContentResolver().query(path, null, null, null, null, null);
+                    if (cursor.moveToFirst()) {
+                        String fileName = cursor.getString(
+                                cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                        if (!fileName.endsWith(".zip") && !fileName.endsWith(".ZIP")) {
+                            // TODO: 04.04.2017 show a reproaching dialog
+                            return; // incorrect file type
+                        }
+                    }
+                    else {
+                        return; // no file
+                    }
 
-            // TODO: 04.04.2017 start QuestionActivity, f.ex:
-            startActivity(QuestionActivity.newIntent(this));
+                    // importing map
+                    InputStream file = getContentResolver().openInputStream(path);
+                    MapFactory.importMap(file, this).save(this);
 
-        }
-        else {
-            super.onActivityResult(requestCode, resultCode, data);
+                    // starting game, single player
+                    startActivity(QuestionActivity.newIntent(this, true));
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+                finally {
+                    if (cursor != null)
+                        cursor.close();
+                }
+                return;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
         }
     }
 }
