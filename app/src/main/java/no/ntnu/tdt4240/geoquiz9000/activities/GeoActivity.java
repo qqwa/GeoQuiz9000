@@ -68,7 +68,7 @@ public abstract class GeoActivity extends AppCompatActivity
             getSupportFragmentManager().putFragment(outState, SAVED_FRAGMENT, m_state);
         }
     }
-    protected void goToPreviousState()
+    protected void gotoPreviousState()
     {
         FragmentManager fm = getSupportFragmentManager();
         if (fm.getBackStackEntryCount() > 0)
@@ -77,6 +77,6 @@ public abstract class GeoActivity extends AppCompatActivity
     @Override
     public void onBackPressed()
     {
-        // disabling back button
+        // disable back button
     }
 }

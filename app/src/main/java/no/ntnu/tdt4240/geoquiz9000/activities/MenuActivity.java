@@ -3,9 +3,7 @@ package no.ntnu.tdt4240.geoquiz9000.activities;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Bundle;
 import android.provider.OpenableColumns;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import java.io.InputStream;
@@ -80,7 +78,7 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     @Override
     public void onBackBtnPressed()
     {
-        goToPreviousState();
+        gotoPreviousState();
     }
     // ---LIFECYCLE-METHODS-------------------------------------------------------------------------
     @Override
@@ -123,7 +121,6 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
 
         switch (requestCode) {
             case REQUEST_FILE:
-                getSupportFragmentManager().popBackStack();
                 Cursor cursor = null;
                 try {
                     Uri path = data.getData(); // might throw NullPointerException
