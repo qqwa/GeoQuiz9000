@@ -1,0 +1,66 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:5884734594454778380",
+      "lastPropertyId": "2:3131299236686445997",
+      "name": "Test",
+      "properties": [
+        {
+          "id": "1:4363801903079198445",
+          "name": "id"
+        },
+        {
+          "id": "2:3131299236686445997",
+          "name": "text"
+        }
+      ]
+    },
+    {
+      "id": "2:6275143695012075244",
+      "lastPropertyId": "8:4017309052912875092",
+      "name": "MapStore",
+      "properties": [
+        {
+          "id": "1:7491207053831808006",
+          "name": "id"
+        },
+        {
+          "id": "5:425084232602372806",
+          "name": "name"
+        },
+        {
+          "id": "6:6483649870603824967",
+          "name": "rootPath"
+        },
+        {
+          "id": "7:3140900259857065624",
+          "name": "locationCount"
+        },
+        {
+          "id": "8:4017309052912875092",
+          "name": "mapType"
+        }
+      ]
+    }
+  ],
+  "lastEntityId": "3:9148204076691080701",
+  "lastIndexId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 2,
+  "retiredEntityUids": [
+    9148204076691080701
+  ],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [
+    6028375127720159227,
+    440454650775891037,
+    4359992485191841813,
+    675342111604811492,
+    5902204682706905063,
+    112452697769995020
+  ],
+  "version": 1
+}

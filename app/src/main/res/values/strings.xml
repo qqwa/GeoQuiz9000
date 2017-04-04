@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">GeoQuiz9000</string>
     <string name="title_activity_maps">MapsActivity</string>
-    <string name="text_font_name">kirsty_rg_it.ttf</string>
-    <string name="title_font_name">RioGrande.ttf</string> <!-- TODO -->
+    <string name="text_font_name">kirsty_rg.ttf</string>
+    <string name="title_font_name">RioGrande.ttf</string>
     <string name="singleplayer_btn_label">Singleplayer</string>
     <string name="multiplayer_btn_label">Multiplayer</string>
     <string name="settings_btn_label">Settings</string>
