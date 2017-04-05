@@ -5,44 +5,100 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import no.ntnu.tdt4240.geoquiz9000.R;
+import no.ntnu.tdt4240.geoquiz9000.dialogs.AnswerDialog;
+import no.ntnu.tdt4240.geoquiz9000.fragments.MultiplayerFragment;
+import no.ntnu.tdt4240.geoquiz9000.fragments.SingleplayerFragment;
 
 /**
  * Created by MikhailV on 20.03.2017.
  */
 
-public class QuestionActivity extends GeoActivity
+public class QuestionActivity extends GeoActivity implements SingleplayerFragment.Callbacks,
+                                                             AnswerDialog.Callbacks
 {
-    public static Intent newIntent(Context context)
+    public static Intent newIntent(Context context, boolean singlePlayer)
     {
-        return new Intent(context, QuestionActivity.class);
+        Intent i = new Intent(context, QuestionActivity.class);
+        i.putExtra(EXTRA_MODE, singlePlayer);
+        return i;
     }
-
     private static final int REQUEST_MAPS = 0;
+    private static final String EXTRA_MODE = "QuestionActivity.EXTRA_MODE";
+    private static final String SAVED_QUESTION_ID = "QuestionActivity.SAVED_QUESTION_ID";
+    private static final String TAG_ANSWER_DIALOG = "QuestionActivity.TAG_ANSWER_DIALOG";
 
-    private TextView m_questionText;
-    private ImageView m_questionPic;
-    private Button m_mapBtn;
+    private boolean m_showAnswerDialog = false;
+    private int m_score;
+    private float m_distance;
+    private int m_questionId = 0;
 
+    // ---AnswerDialog-CALLBACKS--------------------------------------------------------------------
+    @Override
+    public void onNextQuestionPressed(int currentPictureId)
+    {
+        m_questionId = currentPictureId + 1;
+        boolean singlePlayer = getIntent().getBooleanExtra(EXTRA_MODE, true);
+        Fragment nextState = singlePlayer ?
+                SingleplayerFragment.newInstance(m_questionId) : new MultiplayerFragment();
+        replaceState(nextState);
+    }
+    // ---SinfleplayerFragment-CALLBACKS------------------------------------------------------------
+    @Override
+    public void onPlacePinPressed()
+    {
+        // The following code is temporary here. It must be moved to MapsActivity later:
+        AnswerDialog.newInstance(m_questionId, m_distance, m_score)
+                .show(getSupportFragmentManager(), TAG_ANSWER_DIALOG);
+
+
+        // TODO: uncomment, pass arguments (target coordinates) to the MapsActivity through newIntent()
+        //startActivityForResult(MapsActivity.newIntent(QuestionActivity.this), REQUEST_MAPS);
+    }
+    @Override
+    public void onQuit(int currentPicId)
+    {
+        finish();
+    }
+    // ---LIFECYCLE-METHODS-------------------------------------------------------------------------
+    @Override
+    protected Fragment getInitialState()
+    {
+        boolean singlePlayer = getIntent().getBooleanExtra(EXTRA_MODE, true);
+        return singlePlayer ? SingleplayerFragment.newInstance(m_questionId) : new MultiplayerFragment();
+    }
+    @Override
+    protected CharSequence getTitleText()
+    {
+        return getResources().getString(R.string.question_title);
+    }
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_question);
-
-        m_questionText = (TextView)findViewById(R.id.question_text);
-        m_questionText.setTypeface(getTextFont());
-        m_mapBtn = (Button)findViewById(R.id.map_btn);
-        m_mapBtn.setTypeface(getTextFont());
-        m_questionPic = (ImageView)findViewById(R.id.question_pic);
-
-        // TODO: 21.03.2017 retrieve question from DB, set question text, set question pic:
-        updateViews(null, null);    // temp
+        if (savedInstanceState != null)
+            m_questionId = savedInstanceState.getInt(SAVED_QUESTION_ID);
+        setResult(RESULT_OK);
+    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+        outState.putInt(SAVED_QUESTION_ID, m_questionId);
+    }
+    @Override
+    protected void onResumeFragments()
+    {
+        // http://stackoverflow.com/a/15802094/4432988
+        super.onResumeFragments();
+        if (m_showAnswerDialog) {
+            m_showAnswerDialog = false;
+            AnswerDialog.newInstance(0, m_distance, m_score)
+                    .show(getSupportFragmentManager(), TAG_ANSWER_DIALOG);
+        }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -52,42 +108,11 @@ public class QuestionActivity extends GeoActivity
 
         switch (requestCode) {
             case REQUEST_MAPS:
-                float distance = MapsActivity.getDistance(data);
-                int score = (int)(1f / distance); // TODO: 21.03.2017 calculate score
-                final String resultMsg = getString(R.string.question_result, distance, score);
-
-                m_questionText.setText(resultMsg);
-                m_mapBtn.setText(R.string.map_btn_label1);
-                m_mapBtn.setOnClickListener(new NextQuestionClick());
+                m_distance = MapsActivity.getDistance(data);
+                m_score = (int)(1f / m_distance); // TODO: 21.03.2017 calculate score
+                m_showAnswerDialog = true;
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
-    }
-    private void updateViews(String questionText, Bitmap questionImage)
-    {
-        m_mapBtn.setText(R.string.map_btn_label0);
-        m_mapBtn.setOnClickListener(new PlacePinClick());
-        m_questionText.setText(questionText);
-        m_questionPic.setImageBitmap(questionImage);
-    }
-
-    private class PlacePinClick implements View.OnClickListener
-    {
-        @Override
-        public void onClick(View v)
-        {
-            // TODO: 21.03.2017 pass arguments (target coordinates) to the MapsActivity through newIntent()
-            startActivityForResult(MapsActivity.newIntent(QuestionActivity.this), REQUEST_MAPS);
-        }
-    }
-
-    private class NextQuestionClick implements View.OnClickListener
-    {
-        @Override
-        public void onClick(View v)
-        {
-            // TODO: 21.03.2017 retrieve the next question from DB and update views:
-            updateViews(null, null);    // temp
-        }
     }
 }

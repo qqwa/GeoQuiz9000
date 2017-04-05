@@ -109,7 +109,7 @@ public final class MapFactory {
     }
 
     private static void deleteFolder(File file) {
-        if(file != null) {
+        if(file != null && file.listFiles() != null) {
             for(File f : file.listFiles()) {
                 deleteFolder(f);
             }

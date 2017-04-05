@@ -4,29 +4,28 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/question_pic"
+    <Button
+        android:id="@+id/default_map_btn"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        />
-
-    <TextView
-        android:id="@+id/question_text"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:layout_margin="16dp"
+        android:text="@string/default_map_btn_label"
         />
 
     <Button
-        android:id="@+id/map_btn"
-        android:text="@string/map_btn_label0"
-        android:layout_width="wrap_content"
+        android:id="@+id/browse_map_btn"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:layout_gravity="center"
+        android:text="@string/browse_map_btn_label"
+        />
+
+    <Button
+        android:id="@+id/back_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/back_btn_label"
         />
 
 </LinearLayout>
