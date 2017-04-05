@@ -21,7 +21,6 @@ public abstract class GeoActivity extends AppCompatActivity
 
     private Typeface m_textFont;
     private Typeface m_titleFont;
-    private Fragment m_state;
     private TextView m_title;
 
     public Typeface getTextFont()
@@ -35,7 +34,6 @@ public abstract class GeoActivity extends AppCompatActivity
     protected void replaceState(Fragment nextState)
     {
         m_title.setText(getTitleText());
-        m_state = nextState;
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, nextState)
                 .addToBackStack(null)
@@ -66,18 +64,19 @@ public abstract class GeoActivity extends AppCompatActivity
         replaceState(state);
     }
     @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState)
+    protected void onSaveInstanceState(Bundle outState)
     {
-        super.onSaveInstanceState(outState, outPersistentState);
-        if (m_state != null) {
-            getSupportFragmentManager().putFragment(outState, SAVED_FRAGMENT, m_state);
+        super.onSaveInstanceState(outState);
+        Fragment currentState = getSupportFragmentManager().findFragmentById(R.id.container);
+        if (currentState != null) {
+            getSupportFragmentManager().putFragment(outState, SAVED_FRAGMENT, currentState);
         }
     }
     protected void gotoPreviousState()
     {
         m_title.setText(getTitleText());
         FragmentManager fm = getSupportFragmentManager();
-        if (fm.getBackStackEntryCount() > 0)
+        if (fm.getBackStackEntryCount() > 1)
             fm.popBackStack();
     }
     @Override

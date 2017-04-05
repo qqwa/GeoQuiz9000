@@ -16,4 +16,6 @@
     <string name="question_text">Guess location of the picture above. Press button below to open the map.</string>
     <string name="quit_btn_label">Quit game</string>
     <string name="question_title">Question</string>
+    <string name="import_error_msg">Incompatible file type chosen</string>
+    <string name="next_question_label">Next question</string>
 </resources>
