@@ -8,8 +8,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.io.IOException;
-
 import io.objectbox.Box;
 import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.controllers.MapFactory;
@@ -17,56 +15,45 @@ import no.ntnu.tdt4240.geoquiz9000.database.DatabaseLayer;
 import no.ntnu.tdt4240.geoquiz9000.models.MapGoogle;
 import no.ntnu.tdt4240.geoquiz9000.models.MapStore;
 
-public class MainMenuActivity extends GeoActivity
-{
+public class MainMenuActivity extends GeoActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
-        final TextView title = (TextView)findViewById(R.id.main_title);
+        final TextView title = (TextView) findViewById(R.id.main_title);
         title.setTypeface(getTitleFont());
 
-        final Button singleplayerBtn = (Button)findViewById(R.id.singleplayer_btn);
+        final Button singleplayerBtn = (Button) findViewById(R.id.singleplayer_btn);
         singleplayerBtn.setTypeface(getTextFont());
-        singleplayerBtn.setOnClickListener(new View.OnClickListener()
-        {
+        singleplayerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                // TODO: 20.03.2017 start singleplayer game, f.ex.:
-                startActivity(QuestionActivity.newIntent(MainMenuActivity.this));
+            public void onClick(View v) {
+                startActivity(MapsActivity.newIntent(getApplicationContext()));
             }
         });
-        final Button multiplayerBtn = (Button)findViewById(R.id.multiplayer_btn);
+        final Button multiplayerBtn = (Button) findViewById(R.id.multiplayer_btn);
         multiplayerBtn.setTypeface(getTextFont());
-        multiplayerBtn.setOnClickListener(new View.OnClickListener()
-        {
+        multiplayerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 // TODO: 20.03.2017 start multiplayer game
             }
         });
-        final Button settingsBtn = (Button)findViewById(R.id.settings_btn);
+        final Button settingsBtn = (Button) findViewById(R.id.settings_btn);
         settingsBtn.setTypeface(getTextFont());
-        settingsBtn.setOnClickListener(new View.OnClickListener()
-        {
+        settingsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 startActivity(SettingsActivity.newIntent(MainMenuActivity.this));
             }
         });
-        final Button highscoreBtn = (Button)findViewById(R.id.highscore_btn);
+        final Button highscoreBtn = (Button) findViewById(R.id.highscore_btn);
         highscoreBtn.setTypeface(getTextFont());
-        highscoreBtn.setOnClickListener(new View.OnClickListener()
-        {
+        highscoreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 startActivity(ScoreActivity.newIntent(MainMenuActivity.this));
             }
         });

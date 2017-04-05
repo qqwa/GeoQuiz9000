@@ -8,10 +8,6 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 
 import no.ntnu.tdt4240.geoquiz9000.R;
 
-/**
- * Created by MikhailV on 21.03.2017.
- */
-
 public class SettingsActivity extends GeoActivity
 {
     public static Intent newIntent(Context context)

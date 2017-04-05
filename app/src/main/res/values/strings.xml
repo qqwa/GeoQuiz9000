@@ -11,4 +11,7 @@
     <string name="map_btn_label1">Next question</string>
     <string name="question_result">You were %1$.3f km away from the target. You earned %2$d points.</string>
     <string name="score_title_label">High score</string>
+
+    <string name="error_load_map_package">"Could not load map package."</string>
+    <string name="title_activity_result">ResultActivity</string>
 </resources>

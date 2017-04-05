@@ -7,11 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import no.ntnu.tdt4240.geoquiz9000.R;
 
-/**
- * Created by MikhailV on 20.03.2017.
- */
-
-class GeoActivity extends AppCompatActivity
+public class GeoActivity extends AppCompatActivity
 {
     private Typeface m_textFont;
     private Typeface m_titleFont;
