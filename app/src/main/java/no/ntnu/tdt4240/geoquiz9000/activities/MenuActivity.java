@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.provider.OpenableColumns;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +14,7 @@ import io.objectbox.Box;
 import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.controllers.MapFactory;
 import no.ntnu.tdt4240.geoquiz9000.database.DatabaseLayer;
+import no.ntnu.tdt4240.geoquiz9000.dialogs.ImportErrorDialog;
 import no.ntnu.tdt4240.geoquiz9000.fragments.FrontpageFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.MapChooserFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.ScoreFragment;
@@ -22,12 +22,33 @@ import no.ntnu.tdt4240.geoquiz9000.fragments.SettingsFragment;
 import no.ntnu.tdt4240.geoquiz9000.models.MapStore;
 
 public class MenuActivity extends GeoActivity implements FrontpageFragment.Callbacks,
-                                                         MapChooserFragment.Callbacks
+                                                         MapChooserFragment.Callbacks,
+                                                         ScoreFragment.Callbacks,
+                                                         SettingsFragment.Callbacks
 {
     private static final int REQUEST_FILE = 10;
+    private static final int REQUEST_GAME = 11;
     private static final String SAVED_TITLE = "MenuActivity.SAVED_TITLE";
+    private static final String TAG_ERROR_DIALOG = "MapChooserFragment.TAG_ERROR_DIALOG";
 
+    private boolean m_gotoFrontpage = false;
+    private boolean m_showErrorDialog = false;
     private String m_title;
+
+    // ---SettingsFragment-CALLBACKS----------------------------------------------------------------
+    @Override
+    public void onSettingsBackPressed()
+    {
+        m_title = getResources().getString(R.string.app_name);
+        gotoPreviousState();
+    }
+    // ---ScoreFragment-CALLBACKS-------------------------------------------------------------------
+    @Override
+    public void onScoreBackPressed()
+    {
+        m_title = getResources().getString(R.string.app_name);
+        gotoPreviousState();
+    }
     // ---FrontpageFragment-CALLBACKS---------------------------------------------------------------
     @Override
     public void onSinglePlayerPressed()
@@ -70,7 +91,6 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
         catch (Exception e) {
             e.printStackTrace();
         }
-
         startActivity(MapsActivity.newIntent(this, "Test Map Pack", 1));
     }
     @Override
@@ -109,9 +129,23 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
         super.onCreate(savedInstanceState);
     }
     @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState)
+    protected void onResumeFragments()
     {
-        super.onSaveInstanceState(outState, outPersistentState);
+        // http://stackoverflow.com/a/15802094/4432988
+        super.onResumeFragments();
+        if (m_showErrorDialog) {
+            m_showErrorDialog = false;
+            new ImportErrorDialog().show(getSupportFragmentManager(), TAG_ERROR_DIALOG);
+        }
+        if (m_gotoFrontpage) {
+            m_gotoFrontpage = false;
+            replaceState(new FrontpageFragment());
+        }
+    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
         outState.putString(SAVED_TITLE, m_title);
     }
     @Override
@@ -121,6 +155,9 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
             return;
 
         switch (requestCode) {
+            case REQUEST_GAME:
+                m_gotoFrontpage = true;
+                break;
             case REQUEST_FILE:
                 Cursor cursor = null;
                 try {
@@ -132,12 +169,11 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
                         String fileName = cursor.getString(
                                 cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                         if (!fileName.endsWith(".zip") && !fileName.endsWith(".ZIP")) {
-                            // TODO: 04.04.2017 show a reproaching dialog
-                            return; // incorrect file type
+                            throw new Exception();
                         }
                     }
                     else {
-                        return; // no file
+                        throw new Exception();
                     }
 
                     // importing map
@@ -145,16 +181,17 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
                     MapFactory.importMap(file, this).save(this);
 
                     // starting game, single player
-                    startActivity(QuestionActivity.newIntent(this, true));
+                    startActivityForResult(QuestionActivity.newIntent(this, true), REQUEST_GAME);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
+                    m_showErrorDialog = true;
                 }
                 finally {
                     if (cursor != null)
                         cursor.close();
                 }
-                return;
+                break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
         }

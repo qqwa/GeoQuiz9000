@@ -1,17 +1,18 @@
 package no.ntnu.tdt4240.geoquiz9000.fragments;
 
+import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ListFragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 
 import no.ntnu.tdt4240.geoquiz9000.R;
+import no.ntnu.tdt4240.geoquiz9000.activities.GeoActivity;
 
 /**
  * Created by MikhailV on 04.04.2017.
@@ -19,67 +20,48 @@ import no.ntnu.tdt4240.geoquiz9000.R;
 
 public class ScoreFragment extends ListFragment
 {
-    // TODO: 04.04.2017 define own adapter showing score data, setup listfragment
-//    @Override
-//    protected void onCreate(@Nullable Bundle savedInstanceState)
-//    {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.fragment_score);
-//
-//        TextView title = (TextView)findViewById(R.id.score_title);
-//        title.setTypeface(getTitleFont());
-//
-//        RecyclerView list = (RecyclerView)findViewById(R.id.score_list);
-//        list.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-//        list.setAdapter(new ScoreAdapter(this));
-//    }
+    public interface Callbacks
+    {
+        void onScoreBackPressed();
+    }
 
-//    private static class ScoreHolder extends RecyclerView.ViewHolder
-//    {
-//        final private TextView m_name;
-//        final private TextView m_score;
-//
-//        public ScoreHolder(View root, Typeface textFont)
-//        {
-//            super(root);
-//            m_name = (TextView)root.findViewById(R.id.player_label);
-//            m_name.setTypeface(textFont);
-//            m_score = (TextView)root.findViewById(R.id.score_label);
-//            m_score.setTypeface(textFont);
-//        }
-//        public void bind(String playerName, int highScore)
-//        {
-//            m_name.setText(playerName);
-//            m_score.setText(highScore + "");
-//        }
-//    }
-//
-//    private static class ScoreAdapter extends RecyclerView.Adapter<ScoreHolder>
-//    {
-//        private final LayoutInflater m_inflater;
-//        private final ScoreActivity m_activity;
-//
-//        public ScoreAdapter(ScoreActivity activity)
-//        {
-//            m_activity = activity;
-//            m_inflater = LayoutInflater.from(activity);
-//        }
-//        @Override
-//        public ScoreHolder onCreateViewHolder(ViewGroup parent, int viewType)
-//        {
-//            View itemView = m_inflater.inflate(R.layout.item_score, parent, false);
-//            return new ScoreHolder(itemView, m_activity.getTextFont());
-//        }
-//        @Override
-//        public void onBindViewHolder(ScoreHolder holder, int position)
-//        {
-//            // TODO: 21.03.2017 retrieve score from DB and then call holder.bind()
-//        }
-//        @Override
-//        public int getItemCount()
-//        {
-//            // TODO: 21.03.2017 retrieve the total number of highscores from DB
-//            return 0;
-//        }
-//    }
+    private Callbacks m_callbacks;
+
+    @Override
+    public void onAttach(Context context)
+    {
+        super.onAttach(context);
+        m_callbacks = (Callbacks)context;
+    }
+    @Override
+    public void onDetach()
+    {
+        super.onDetach();
+        m_callbacks = null;
+    }
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setListAdapter(null); // TODO: 05.04.2017 define ScoreAdapter in the 'controllers' package
+    }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        final Typeface font = ((GeoActivity)getActivity()).getTextFont();
+        View root = inflater.inflate(R.layout.fragment_score, container, false);
+
+        Button backBtn = (Button)root.findViewById(R.id.back_btn);
+        backBtn.setTypeface(font);
+        backBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (m_callbacks != null)
+                    m_callbacks.onScoreBackPressed();
+            }
+        });
+        return root;
+    }
 }
