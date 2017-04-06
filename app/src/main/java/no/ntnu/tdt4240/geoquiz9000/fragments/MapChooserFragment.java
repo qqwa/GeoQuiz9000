@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.activities.GeoActivity;
+import no.ntnu.tdt4240.geoquiz9000.activities.MapsActivity;
 
 /**
  * Created by MikhailV on 04.04.2017.
@@ -44,7 +45,7 @@ public class MapChooserFragment extends Fragment
     }
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+    public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         final Typeface textFont = ((GeoActivity)getActivity()).getTextFont();
         View root = inflater.inflate(R.layout.fragment_map_chooser, container, false);
@@ -56,9 +57,8 @@ public class MapChooserFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                if (m_callbacks != null) {
-                    m_callbacks.onDefaultMapPressed();
-                }
+                startActivity(MapsActivity.newIntent(getContext(), "Test Map Pack", 1));
+
             }
         });
         final Button browseBtn = (Button)root.findViewById(R.id.browse_map_btn);

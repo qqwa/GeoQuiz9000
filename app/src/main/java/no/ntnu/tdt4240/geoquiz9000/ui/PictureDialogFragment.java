@@ -2,11 +2,13 @@ package no.ntnu.tdt4240.geoquiz9000.ui;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,18 +34,28 @@ public class PictureDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Typeface textFont = UiUtils.getTextFont(getContext());
+
         View v = inflater.inflate(R.layout.picture_dialog, container, false);
 
-        String titleText = "Question: " + String.valueOf(mQuestionNr + 1);
+        String titleText = getString(R.string.question_title1) + " " + String.valueOf(mQuestionNr + 1);
 
         TextView title = (TextView) v.findViewById(R.id.title);
+        title.setTypeface(textFont);
         title.setText(titleText);
+
+        TextView question = (TextView) v.findViewById(R.id.question);
+        question.setTypeface(textFont);
+
+        TextView callToAction = (TextView) v.findViewById(R.id.call_to_action);
+        callToAction.setTypeface(textFont);
 
         ImageView iv = (ImageView) v.findViewById(R.id.question_picture);
         Bitmap pic = BitmapFactory.decodeFile(mImagePath);
         iv.setImageBitmap(pic);
 
-        TextView answerButton = (TextView) v.findViewById(R.id.answer_button);
+        Button answerButton = (Button) v.findViewById(R.id.answer_button);
+        answerButton.setTypeface(textFont);
         answerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -1,6 +1,7 @@
 package no.ntnu.tdt4240.geoquiz9000.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,9 +9,11 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -42,8 +45,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private static final String TAG = MapsActivity.class.getSimpleName();
     public static final String PIC_DIALOG = "picture dialog";
+    public static final String INTENT_PACKAGE_NAME = "intent package name";
+    public static final String INTENT_NR_OF_PLAYERS = "intent nr of players";
 
-    private String mMapName = "Test Map Pack";
+    private String mMapName;
     private GoogleMap mMap;
     private Marker lastMarker;
     private MapGoogle mapGoogle;
@@ -51,12 +56,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private int mCurrentQuestionNr;
     private float mCurrentCalculatedDistance;
     private FloatingActionButton mActionButton;
+    private TextView mPlayerTv;
     private List<Float> mDistances = new ArrayList<>();
+    private int mNrOfPlayers;
+    private String mCurrentPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        mMapName = getIntent().getStringExtra(INTENT_PACKAGE_NAME);
+        mNrOfPlayers = getIntent().getIntExtra(INTENT_NR_OF_PLAYERS, 1);
 
         mActionButton = (FloatingActionButton) findViewById(R.id.action_button);
         mActionButton.setOnClickListener(onActionButtonClick);
@@ -70,10 +81,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mCurrentQuestionNr = 0;
             initializeQuestion(0);
         }
+
+        mPlayerTv = (TextView) findViewById(R.id.player_id);
+        if (mNrOfPlayers == 1) {
+            mCurrentPlayer = getString(R.string.player) + " 1";
+            mPlayerTv.setText(mCurrentPlayer);
+        }
     }
 
-    public static Intent newIntent(Context context) {
-        return new Intent(context, MapsActivity.class);
+    public static Intent newIntent(Context context, String mapPackageName, int nrOfPlayers) {
+        Intent intent = new Intent(context, MapsActivity.class);
+        intent.putExtra(INTENT_PACKAGE_NAME, mapPackageName);
+        intent.putExtra(INTENT_NR_OF_PLAYERS, nrOfPlayers);
+        return intent;
     }
 
     @Override
@@ -121,6 +141,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.quit_game))
+                .setMessage(getString(R.string.sure_to_quit_game))
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        MapsActivity.super.onBackPressed();
+                    }
+                })
+                .create();
+        dialog.show();
+    }
+
     private void removeLastMarker() {
         mActionButton.setVisibility(View.GONE);
         mCurrentCalculatedDistance = 0;
@@ -146,6 +187,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    /**
+     * Initialize the question
+     * @param questionNr nr of question
+     */
     private void initializeQuestion(final int questionNr) {
         final String picPath = testMap.getRootPath() + "/" + mapGoogle.getLocationPicturePath(questionNr);
 
@@ -162,6 +207,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
+    /**
+     * Show question and picture again
+     * @param questionNr nr of question
+     * @param picPath path to picture
+     */
     private void showDialog(int questionNr, String picPath) {
         Bundle bundle = new Bundle();
         bundle.putInt(PictureDialogFragment.NR_OF_QUESTION, questionNr);
@@ -189,17 +239,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 nextQuestion();
             } else {
                 float result = 0;
-                for (float distance: mDistances) {
+                for (float distance : mDistances) {
                     result = result + distance;
                 }
                 Log.d(TAG, "In total: " + String.valueOf(result));
 
-                Intent intent = ResultActivity.newIntent(getApplicationContext());
-
                 Score score = new Score(result, mDistances, mMapName);
-                intent.putExtra(ResultActivity.INTENT_SCORE, score);
-
+                Intent intent = ResultActivity.newIntent(getApplicationContext(), score);
                 startActivity(intent);
+                finish();
             }
         }
     };

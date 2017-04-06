@@ -1,7 +1,6 @@
 package no.ntnu.tdt4240.geoquiz9000.fragments;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,6 +24,7 @@ import no.ntnu.tdt4240.geoquiz9000.models.MapStore;
  * Created by MikhailV on 04.04.2017.
  */
 
+// TODO should be deleted
 public class SingleplayerFragment extends Fragment
 {
     public interface Callbacks

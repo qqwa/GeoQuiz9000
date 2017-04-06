@@ -6,22 +6,49 @@
     tools:context="no.ntnu.tdt4240.geoquiz9000.activities.ResultActivity">
 
     <TextView
+        android:id="@+id/result_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:gravity="center"
+        android:text="@string/your_result"
+        android:textSize="40sp" />
+
+    <TextView
         android:id="@+id/tv1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="150dp"
-        android:text="Your result is: " />
+        android:text="@string/your_result_is"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/result_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:textSize="20sp"
-        android:text="0"
         android:layout_below="@+id/tv1"
-        android:layout_marginTop="20dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/try_again_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/result_tv"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:text="@string/try_again" />
+
+    <Button
+        android:id="@+id/quit_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/try_again_btn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="@string/quit" />
 
 </RelativeLayout>

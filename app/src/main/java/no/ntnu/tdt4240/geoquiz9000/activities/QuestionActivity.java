@@ -2,19 +2,11 @@ package no.ntnu.tdt4240.geoquiz9000.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.View;
 
 import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.fragments.MultiplayerFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.SingleplayerFragment;
-
-/**
- * Created by MikhailV on 20.03.2017.
- */
 
 public class QuestionActivity extends GeoActivity implements SingleplayerFragment.Callbacks
 {
@@ -28,12 +20,11 @@ public class QuestionActivity extends GeoActivity implements SingleplayerFragmen
     private static final int REQUEST_MAPS = 0;
     private static final String EXTRA_MODE = "QuestionActivity.EXTRA_MODE";
 
-    // ---SinfleplayerFragment-CALLBACKS------------------------------------------------------------
+    // ---SingleplayerFragment-CALLBACKS------------------------------------------------------------
     @Override
     public void onPlacePinPressed()
     {
-        // TODO: 21.03.2017 pass arguments (target coordinates) to the MapsActivity through newIntent()
-        startActivityForResult(MapsActivity.newIntent(QuestionActivity.this), REQUEST_MAPS);
+        //startActivityForResult(MapsActivity.newIntent(QuestionActivity.this), REQUEST_MAPS);
     }
     @Override
     public void onQuit(int currentPicId)
@@ -60,7 +51,7 @@ public class QuestionActivity extends GeoActivity implements SingleplayerFragmen
 
         switch (requestCode) {
             case REQUEST_MAPS:
-                float distance = MapsActivity.getDistance(data);
+                float distance = 0; //MapsActivity.getDistance(data);
                 int score = (int)(1f / distance); // TODO: 21.03.2017 calculate score
                 final String resultMsg = getString(R.string.question_result, distance, score);
 
