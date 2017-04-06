@@ -12,7 +12,6 @@ import android.widget.Button;
 
 import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.activities.GeoActivity;
-import no.ntnu.tdt4240.geoquiz9000.activities.MapsActivity;
 
 /**
  * Created by MikhailV on 04.04.2017.
@@ -57,7 +56,9 @@ public class MapChooserFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                startActivity(MapsActivity.newIntent(getContext(), "Test Map Pack", 1));
+                if (m_callbacks != null) {
+                    m_callbacks.onDefaultMapPressed();
+                }
 
             }
         });

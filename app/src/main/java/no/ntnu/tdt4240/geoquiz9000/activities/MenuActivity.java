@@ -2,7 +2,6 @@ package no.ntnu.tdt4240.geoquiz9000.activities;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -72,8 +71,7 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
             e.printStackTrace();
         }
 
-        // starting game, single player
-        startActivity(QuestionActivity.newIntent(this, true));
+        startActivity(MapsActivity.newIntent(this, "Test Map Pack", 1));
     }
     @Override
     public void onBrowseMapPressed()
