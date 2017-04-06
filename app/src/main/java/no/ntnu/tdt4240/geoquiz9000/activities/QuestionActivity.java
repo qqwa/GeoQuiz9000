@@ -2,23 +2,15 @@ package no.ntnu.tdt4240.geoquiz9000.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.view.View;
 
 import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.dialogs.AnswerDialog;
 import no.ntnu.tdt4240.geoquiz9000.fragments.MultiplayerFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.SingleplayerFragment;
 
-/**
- * Created by MikhailV on 20.03.2017.
- */
 
-public class QuestionActivity extends GeoActivity implements SingleplayerFragment.Callbacks,
-                                                             AnswerDialog.Callbacks
+public class QuestionActivity extends GeoActivity implements SingleplayerFragment.Callbacks
 {
     public static Intent newIntent(Context context, boolean singlePlayer)
     {
@@ -36,26 +28,10 @@ public class QuestionActivity extends GeoActivity implements SingleplayerFragmen
     private float m_distance;
     private int m_questionId = 0;
 
-    // ---AnswerDialog-CALLBACKS--------------------------------------------------------------------
-    @Override
-    public void onNextQuestionPressed(int currentPictureId)
-    {
-        m_questionId = currentPictureId + 1;
-        boolean singlePlayer = getIntent().getBooleanExtra(EXTRA_MODE, true);
-        Fragment nextState = singlePlayer ?
-                SingleplayerFragment.newInstance(m_questionId) : new MultiplayerFragment();
-        replaceState(nextState);
-    }
-    // ---SinfleplayerFragment-CALLBACKS------------------------------------------------------------
+    // ---SingleplayerFragment-CALLBACKS------------------------------------------------------------
     @Override
     public void onPlacePinPressed()
     {
-        // The following code is temporary here. It must be moved to MapsActivity later:
-        AnswerDialog.newInstance(m_questionId, m_distance, m_score)
-                .show(getSupportFragmentManager(), TAG_ANSWER_DIALOG);
-
-
-        // TODO: uncomment, pass arguments (target coordinates) to the MapsActivity through newIntent()
         //startActivityForResult(MapsActivity.newIntent(QuestionActivity.this), REQUEST_MAPS);
     }
     @Override

@@ -11,10 +11,6 @@ import android.widget.TextView;
 
 import no.ntnu.tdt4240.geoquiz9000.R;
 
-/**
- * Created by MikhailV on 20.03.2017.
- */
-
 public abstract class GeoActivity extends AppCompatActivity
 {
     private static final String SAVED_FRAGMENT = "GeoActivity.SAVED_FRAGMENT";

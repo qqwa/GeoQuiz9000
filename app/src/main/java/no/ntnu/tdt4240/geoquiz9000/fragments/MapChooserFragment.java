@@ -44,7 +44,7 @@ public class MapChooserFragment extends Fragment
     }
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+    public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
     {
         final Typeface textFont = ((GeoActivity)getActivity()).getTextFont();
         View root = inflater.inflate(R.layout.fragment_map_chooser, container, false);
@@ -59,6 +59,7 @@ public class MapChooserFragment extends Fragment
                 if (m_callbacks != null) {
                     m_callbacks.onDefaultMapPressed();
                 }
+
             }
         });
         final Button browseBtn = (Button)root.findViewById(R.id.browse_map_btn);

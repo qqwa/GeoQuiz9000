@@ -16,6 +16,22 @@
     <string name="question_text">Guess location of the picture above. Press button below to open the map.</string>
     <string name="quit_btn_label">Quit game</string>
     <string name="question_title">Question</string>
+    <string name="error_load_map_package">"Could not load map package."</string>
+    <string name="title_activity_result">ResultActivity</string>
+    <string name="where_is_this_place">Where is this place?</string>
+    <string name="image_for_question">Image for Question</string>
+    <string name="press_long_on_the_map_to_set_the_marker">Press long on the map to set the marker!</string>
+    <string name="let_s_go">LET\'S GO</string>
+    <string name="question_title1">Question:</string>
+    <string name="player">Player</string>
+    <string name="your_result_is">Your result is:</string>
+    <string name="your_result">Your Result:</string>
+    <string name="try_again">Try again?</string>
+    <string name="quit">Quit</string>
+    <string name="quit_game">Quit game</string>
+    <string name="sure_to_quit_game">"Are you sure to quit the game?"</string>
+    <string name="cancel">Cancel</string>
+    <string name="yes">Yes</string>
     <string name="import_error_msg">Incompatible file type chosen</string>
     <string name="next_question_label">Next question</string>
 </resources>
