@@ -46,6 +46,7 @@ public class ResultActivity extends AppCompatActivity {
         tryAgainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // TODO go to MapChooserFragment
                 startActivity(MapsActivity
                         .newIntent(getApplicationContext(), mScore.getMapPackName(), 1));
                 finish();
