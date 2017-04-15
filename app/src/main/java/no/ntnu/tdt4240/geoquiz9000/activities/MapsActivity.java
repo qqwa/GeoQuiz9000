@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
@@ -27,16 +26,20 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import io.objectbox.Box;
 import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.controllers.MapFactory;
 import no.ntnu.tdt4240.geoquiz9000.database.DatabaseLayer;
+import no.ntnu.tdt4240.geoquiz9000.dialogs.PictureDialogFragment;
+import no.ntnu.tdt4240.geoquiz9000.dialogs.ResultDialog;
 import no.ntnu.tdt4240.geoquiz9000.models.MapGoogle;
 import no.ntnu.tdt4240.geoquiz9000.models.MapStore;
 import no.ntnu.tdt4240.geoquiz9000.models.Score;
-import no.ntnu.tdt4240.geoquiz9000.ui.PictureDialogFragment;
 import no.ntnu.tdt4240.geoquiz9000.utils.GeoUtils;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
@@ -44,7 +47,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleMap.OnMapLongClickListener {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
+
     public static final String PIC_DIALOG = "picture dialog";
+    public static final String RESULT_DIALOG = "result dialog";
     public static final String INTENT_PACKAGE_NAME = "intent package name";
     public static final String INTENT_NR_OF_PLAYERS = "intent nr of players";
 
@@ -52,14 +57,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private Marker lastMarker;
     private MapGoogle mapGoogle;
-    private MapStore testMap;
+    private MapStore mapStore;
     private int mCurrentQuestionNr;
     private float mCurrentCalculatedDistance;
     private FloatingActionButton mActionButton;
     private TextView mPlayerTv;
-    private List<Float> mDistances = new ArrayList<>();
+    private Map<Integer, Score> mScores = new HashMap<>();
+    private Map<String, LatLng> mPoints = new HashMap<>();
+    private LatLng mCurrentPoint;
     private int mNrOfPlayers;
     private String mCurrentPlayer;
+    private int mCurrentPlayerNr;
+    private boolean mShowAnswer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,18 +86,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         loadMapPackage();
-        if (testMap != null && mapGoogle != null) {
+        if (mapStore != null && mapGoogle != null) {
             mCurrentQuestionNr = 0;
             initializeQuestion(0);
         }
 
         mPlayerTv = (TextView) findViewById(R.id.player_id);
-        if (mNrOfPlayers == 1) {
-            mCurrentPlayer = getString(R.string.player) + " 1";
-            mPlayerTv.setText(mCurrentPlayer);
-        }
+        mCurrentPlayerNr = 1;
+        setPlayerName(mCurrentPlayerNr);
     }
 
+    /**
+     * Initialize the Intent.
+     *
+     * @param context Context
+     * @param mapPackageName name of game package
+     * @param nrOfPlayers number of players
+     * @return Intent
+     */
     public static Intent newIntent(Context context, String mapPackageName, int nrOfPlayers) {
         Intent intent = new Intent(context, MapsActivity.class);
         intent.putExtra(INTENT_PACKAGE_NAME, mapPackageName);
@@ -112,6 +127,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapClick(LatLng latLng) {
         Log.d(TAG, "Click on map");
+        if (!mShowAnswer) {
+            mActionButton.setVisibility(View.GONE);
+        }
 
         removeLastMarker();
     }
@@ -120,24 +138,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapLongClick(LatLng setPoint) {
         Log.d(TAG, "Long click on map");
 
-        removeLastMarker();
+        if (!mShowAnswer) {
+            mActionButton.setVisibility(View.GONE);
 
-        Marker marker = mMap.addMarker(new MarkerOptions()
-                .position(setPoint)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-        lastMarker = marker;
+            removeLastMarker();
 
-        LatLng answerPoint = new LatLng(mapGoogle.getLocationLatitude(mCurrentQuestionNr),
-                mapGoogle.getLocationLongitude(mCurrentQuestionNr));
+            mCurrentPoint = setPoint;
 
-        float calculatedDistance = GeoUtils.distanceBetweenTwoPoints(setPoint, answerPoint);
-        Log.d(TAG, "Distance in meters: " + String.valueOf(calculatedDistance));
-        mCurrentCalculatedDistance = calculatedDistance;
+            lastMarker = mMap.addMarker(new MarkerOptions()
+                    .position(setPoint)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
 
-        mActionButton.setVisibility(View.VISIBLE);
-        if (isLastQuestion()) {
-            mActionButton.setImageDrawable(
-                    ContextCompat.getDrawable(this, R.drawable.ic_done_white_24px));
+            LatLng answerPoint = new LatLng(mapGoogle.getLocationLatitude(mCurrentQuestionNr),
+                    mapGoogle.getLocationLongitude(mCurrentQuestionNr));
+
+            float calculatedDistance = GeoUtils.distanceBetweenTwoPoints(setPoint, answerPoint);
+            Log.d(TAG, "Distance in meters: " + String.valueOf(calculatedDistance));
+            mCurrentCalculatedDistance = calculatedDistance;
+
+            mActionButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -162,23 +181,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         dialog.show();
     }
 
+    /**
+     * Remove the last marker.
+     */
     private void removeLastMarker() {
-        mActionButton.setVisibility(View.GONE);
         mCurrentCalculatedDistance = 0;
+        mCurrentPoint = null;
 
         if (lastMarker != null) {
             lastMarker.remove();
         }
     }
 
+    /**
+     * Load map package.
+     */
     private void loadMapPackage() {
         Box maps = DatabaseLayer.getInstance(this).getBoxFor(MapStore.class);
 
         try {
-            //load imported map
             if (maps.find("name", mMapName).size() != 0) {
-                testMap = (MapStore) maps.find("name", mMapName).get(0);
-                mapGoogle = (MapGoogle) MapFactory.getMap(testMap);
+                mapStore = (MapStore) maps.find("name", mMapName).get(0);
+                mapGoogle = (MapGoogle) MapFactory.getMap(mapStore);
             }
         } catch (IOException e) {
             Log.e(TAG, "Could not load map package.");
@@ -189,10 +213,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Initialize the question
+     *
      * @param questionNr nr of question
      */
     private void initializeQuestion(final int questionNr) {
-        final String picPath = testMap.getRootPath() + "/" + mapGoogle.getLocationPicturePath(questionNr);
+        final String picPath = mapStore.getRootPath() + "/" + mapGoogle.getLocationPicturePath(questionNr);
 
         showDialog(questionNr, picPath);
 
@@ -209,8 +234,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Show question and picture again
+     *
      * @param questionNr nr of question
-     * @param picPath path to picture
+     * @param picPath    path to picture
      */
     private void showDialog(int questionNr, String picPath) {
         Bundle bundle = new Bundle();
@@ -222,44 +248,189 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         dialog.show(getSupportFragmentManager(), PIC_DIALOG);
     }
 
+    /**
+     * Load next question.
+     */
     private void nextQuestion() {
-        mDistances.add(mCurrentCalculatedDistance);
-
+        mMap.clear();
         removeLastMarker();
 
         mCurrentQuestionNr++;
         initializeQuestion(mCurrentQuestionNr);
     }
 
-    View.OnClickListener onActionButtonClick = new View.OnClickListener() {
+    View.OnClickListener onNextQuestionClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            int maxNrOfQuestions = mapGoogle.getLocationCount();
-            if (mCurrentQuestionNr < maxNrOfQuestions - 1) {
-                nextQuestion();
-            } else {
-                float result = 0;
-                for (float distance : mDistances) {
-                    result = result + distance;
-                }
-                Log.d(TAG, "In total: " + String.valueOf(result));
+            mShowAnswer = false;
 
-                Score score = new Score(result, mDistances, mMapName);
-                Intent intent = ResultActivity.newIntent(getApplicationContext(), score);
+            int maxNrOfQuestions = mapGoogle.getLocationCount();
+            boolean notLastQuestion = mCurrentQuestionNr < maxNrOfQuestions - 1;
+            if (notLastQuestion) {
+                nextQuestion();
+
+                setPlayerName(mCurrentPlayerNr);
+
+                mActionButton.setVisibility(View.VISIBLE);
+                mActionButton.setOnClickListener(onActionButtonClick);
+            } else {
+                ArrayList<Score> finalScores = new ArrayList<>();
+
+                for (int i = 1; i <= mNrOfPlayers; i++) {
+                    Score finalScore = mScores.get(i);
+                    List<Float> finalDistances = finalScore.getDistances();
+
+                    float result = 0;
+                    for (float distance : finalDistances) {
+                        result = result + distance;
+                    }
+                    Log.d(TAG, "In total: " + String.valueOf(result));
+                    finalScore.setTotalDistance(result);
+
+                    finalScores.add(finalScore);
+                }
+
+                // Finish game.
+                Intent intent = ResultActivity.newIntent(getApplicationContext(), finalScores);
                 startActivity(intent);
                 finish();
             }
         }
     };
 
-    private boolean isLastQuestion() {
-        boolean isLastQuestion = false;
-        int maxNrOfQuestions = mapGoogle.getLocationCount();
+    View.OnClickListener onActionButtonClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            int maxNrOfQuestions = mapGoogle.getLocationCount();
 
-        if (mCurrentQuestionNr == maxNrOfQuestions - 1) {
-            isLastQuestion = true;
+            mPoints.put(mCurrentPlayer, mCurrentPoint);
+
+            // Get Score object
+            Score score = mScores.get(mCurrentPlayerNr);
+            if (score == null) {
+                score = initializePlayer(mCurrentPlayerNr, mCurrentPlayer);
+            }
+
+            // Add new values to Score object
+            List<Float> distances = score.getDistances();
+            distances.add(mCurrentCalculatedDistance);
+            score.setDistances(distances);
+            mScores.put(mCurrentPlayerNr, score);
+
+            if (mCurrentQuestionNr < maxNrOfQuestions - 1) {
+                nextPlayer(mCurrentPlayerNr);
+
+                if (mCurrentPlayerNr == 1) {
+                    removeLastMarker();
+
+                    LatLng answerPoint = new LatLng(mapGoogle.getLocationLatitude(mCurrentQuestionNr),
+                            mapGoogle.getLocationLongitude(mCurrentQuestionNr));
+                    showResult(answerPoint);
+
+                    mActionButton.setVisibility(View.VISIBLE);
+                    mActionButton.setOnClickListener(onNextQuestionClick);
+                } else {
+                    removeLastMarker();
+                    initializeQuestion(mCurrentQuestionNr);
+                }
+            } else {
+                nextPlayer(mCurrentPlayerNr);
+
+                if (mCurrentPlayerNr != 1) {
+                    removeLastMarker();
+                    initializeQuestion(mCurrentQuestionNr);
+                } else {
+                    removeLastMarker();
+
+                    LatLng answerPoint = new LatLng(mapGoogle.getLocationLatitude(mCurrentQuestionNr),
+                            mapGoogle.getLocationLongitude(mCurrentQuestionNr));
+                    showResult(answerPoint);
+
+                    mActionButton.setVisibility(View.VISIBLE);
+                    mActionButton.setOnClickListener(onNextQuestionClick);
+                }
+            }
         }
+    };
 
-        return isLastQuestion;
+    /**
+     * Set the player name in the box.
+     * @param nr player number
+     */
+    private void setPlayerName(int nr) {
+        String playerNumber = String.valueOf(nr);
+        mCurrentPlayer = getString(R.string.player) + " " + playerNumber;
+        mPlayerTv.setText(mCurrentPlayer);
+    }
+
+    /**
+     * Set up next player.
+     * @param currentNr current number of player
+     */
+    private void nextPlayer(int currentNr) {
+        if (currentNr < mNrOfPlayers) {
+            mCurrentPlayerNr = currentNr + 1;
+        } else {
+            mCurrentPlayerNr = 1;
+        }
+        setPlayerName(mCurrentPlayerNr);
+    }
+
+    /**
+     * Initialize new player, if score of player was null.
+     *
+     * @param playerNr nr of player
+     * @param playerName name of player
+     * @return initialized Score
+     */
+    private Score initializePlayer(int playerNr, String playerName) {
+        List<Float> distances = new ArrayList<>();
+        Score score = new Score(playerName, 0, distances, mMapName);
+        mScores.put(playerNr, score);
+        return score;
+    }
+
+    /**
+     * Shows result for round.
+     *
+     * @param resultPoint coordinates of result
+     */
+    private void showResult(LatLng resultPoint) {
+        mShowAnswer = true;
+
+        final String picPath = mapStore.getRootPath() + "/" + mapGoogle.getLocationPicturePath(mCurrentQuestionNr);
+        Bundle bundle = new Bundle();
+        bundle.putString(ResultDialog.IMAGE_PATH, picPath);
+
+        // Show result dialog.
+        final ResultDialog dialog = new ResultDialog();
+        dialog.setArguments(bundle);
+        dialog.show(getSupportFragmentManager(), RESULT_DIALOG);
+
+        ImageView questionPic = (ImageView) findViewById(R.id.image_preview);
+        mPlayerTv.setText(getString(R.string.answer));
+        questionPic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.show(getSupportFragmentManager(), RESULT_DIALOG);
+            }
+        });
+
+        // Set result marker.
+        mMap.addMarker(new MarkerOptions()
+                .position(resultPoint)
+                .title(getString(R.string.result))
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(resultPoint));
+
+        // Set markers of all players.
+        Set<String> keys = mPoints.keySet();
+        for (String key : keys) {
+            LatLng point = mPoints.get(key);
+            mMap.addMarker(new MarkerOptions()
+                    .position(point)
+                    .title(key)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+        }
     }
 }

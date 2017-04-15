@@ -8,14 +8,20 @@ import java.util.List;
 
 public class Score extends AbstractModel implements Parcelable {
 
+    private String playerName;
     private float totalDistance;
     private List<Float> distances;
     private String mapPackName;
 
-    public Score(float totalDistance, List<Float> distances, String mapPackName) {
+    public Score(String playerName, float totalDistance, List<Float> distances, String mapPackName) {
+        this.playerName = playerName;
         this.totalDistance = totalDistance;
         this.distances = distances;
         this.mapPackName = mapPackName;
+    }
+
+    public String getPlayerName() {
+        return playerName;
     }
 
     public float getTotalDistance() {
@@ -28,6 +34,14 @@ public class Score extends AbstractModel implements Parcelable {
 
     public String getMapPackName() {
         return mapPackName;
+    }
+
+    public void setTotalDistance(float totalDistance) {
+        this.totalDistance = totalDistance;
+    }
+
+    public void setDistances(List<Float> distances) {
+        this.distances = distances;
     }
 
     protected Score(Parcel in) {

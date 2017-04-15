@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.models.Score;
 import no.ntnu.tdt4240.geoquiz9000.ui.UiUtils;
@@ -18,7 +20,7 @@ public class ResultActivity extends AppCompatActivity {
     private static final String TAG = ResultActivity.class.getSimpleName();
     public static final String INTENT_SCORE = "intent score";
 
-    private Score mScore;
+    private ArrayList<Score> mScores;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +29,7 @@ public class ResultActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mScore = getIntent().getParcelableExtra(INTENT_SCORE);
+        mScores = getIntent().getParcelableArrayListExtra(INTENT_SCORE);
 
         TextView titleTv = (TextView) findViewById(R.id.result_title);
         titleTv.setTypeface(UiUtils.getTitleFont(this));
@@ -36,7 +38,7 @@ public class ResultActivity extends AppCompatActivity {
         tv1.setTypeface(UiUtils.getTextFont(this));
 
         // Meter representation of result to km
-        String result = String.format("%.02f", mScore.getTotalDistance() / 1000) + "km";
+        String result = String.format("%.02f", mScores.get(0).getTotalDistance() / 1000) + "km";
         TextView resultTv = (TextView) findViewById(R.id.result_tv);
         resultTv.setTypeface(UiUtils.getTextFont(this));
         resultTv.setText(result);
@@ -48,7 +50,7 @@ public class ResultActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // TODO go to MapChooserFragment
                 startActivity(MapsActivity
-                        .newIntent(getApplicationContext(), mScore.getMapPackName(), 1));
+                        .newIntent(getApplicationContext(), mScores.get(0).getMapPackName(), 1));
                 finish();
             }
         });
@@ -65,9 +67,9 @@ public class ResultActivity extends AppCompatActivity {
         });
     }
 
-    public static Intent newIntent(Context context, Score score) {
+    public static Intent newIntent(Context context, ArrayList<Score> score) {
         Intent intent = new Intent(context, ResultActivity.class);
-        intent.putExtra(INTENT_SCORE, score);
+        intent.putParcelableArrayListExtra(INTENT_SCORE, score);
         return intent;
     }
 

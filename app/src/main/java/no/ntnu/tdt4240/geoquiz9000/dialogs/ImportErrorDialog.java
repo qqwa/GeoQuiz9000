@@ -9,10 +9,6 @@ import android.support.v7.app.AlertDialog;
 
 import no.ntnu.tdt4240.geoquiz9000.R;
 
-/**
- * Created by MikhailV on 05.04.2017.
- */
-
 public class ImportErrorDialog extends DialogFragment
 {
     @NonNull

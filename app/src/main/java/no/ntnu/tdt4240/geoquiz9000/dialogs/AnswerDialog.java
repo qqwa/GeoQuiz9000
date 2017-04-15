@@ -22,10 +22,6 @@ import no.ntnu.tdt4240.geoquiz9000.models.MapGoogle;
 import no.ntnu.tdt4240.geoquiz9000.models.MapStore;
 
 /**
- * Created by MikhailV on 05.04.2017.
- */
-
-/**
  * To be started upon returning from MapsActivity back to the QuestionActivity
  */
 public class AnswerDialog extends DialogFragment

@@ -91,7 +91,7 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
         catch (Exception e) {
             e.printStackTrace();
         }
-        startActivity(MapsActivity.newIntent(this, "Test Map Pack", 1));
+        startActivity(MapsActivity.newIntent(this, "Test Map Pack", 2));
     }
     @Override
     public void onBrowseMapPressed()

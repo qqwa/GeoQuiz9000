@@ -10,14 +10,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.MenuActivity" android:screenOrientation="portrait">
+        <activity
+            android:name=".activities.MenuActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.QuestionActivity" />
+        <activity
+            android:name=".activities.QuestionActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -25,9 +29,11 @@
 
         <activity
             android:name=".activities.MapsActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_maps" />
         <activity
             android:name=".activities.ResultActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_result"
             android:theme="@style/AppTheme" />
     </application>
