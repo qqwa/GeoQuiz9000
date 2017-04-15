@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/amount_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/amount_of_players"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/amount_players"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/amount_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/add_player"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/remove_player"
+        android:layout_alignBottom="@+id/remove_player"
+        android:layout_toStartOf="@+id/amount_players"
+        android:text="@string/add_player" />
+
+    <Button
+        android:id="@+id/remove_player"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/amount_players"
+        android:layout_marginTop="20dp"
+        android:layout_toEndOf="@+id/amount_players"
+        android:text="@string/remove_player" />
+
+    <Button
+        android:id="@+id/choose_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="@string/select_a_map"
+        android:layout_below="@+id/add_player"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/back_btn_label"
+        android:layout_below="@+id/choose_map"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

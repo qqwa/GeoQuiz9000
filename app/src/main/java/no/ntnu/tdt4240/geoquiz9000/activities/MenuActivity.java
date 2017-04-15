@@ -10,21 +10,20 @@ import android.support.v4.app.Fragment;
 
 import java.io.InputStream;
 
-import io.objectbox.Box;
 import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.controllers.MapFactory;
-import no.ntnu.tdt4240.geoquiz9000.database.DatabaseLayer;
 import no.ntnu.tdt4240.geoquiz9000.dialogs.ImportErrorDialog;
+import no.ntnu.tdt4240.geoquiz9000.fragments.AddPlayersFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.FrontpageFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.MapChooserFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.ScoreFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.SettingsFragment;
-import no.ntnu.tdt4240.geoquiz9000.models.MapStore;
 
 public class MenuActivity extends GeoActivity implements FrontpageFragment.Callbacks,
                                                          MapChooserFragment.Callbacks,
                                                          ScoreFragment.Callbacks,
-                                                         SettingsFragment.Callbacks
+                                                         SettingsFragment.Callbacks,
+                                                         AddPlayersFragment.Callbacks
 {
     private static final int REQUEST_FILE = 10;
     private static final int REQUEST_GAME = 11;
@@ -34,6 +33,7 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     private boolean m_gotoFrontpage = false;
     private boolean m_showErrorDialog = false;
     private String m_title;
+    private int m_numberPlayers;
 
     // ---SettingsFragment-CALLBACKS----------------------------------------------------------------
     @Override
@@ -53,12 +53,18 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     @Override
     public void onSinglePlayerPressed()
     {
+        m_numberPlayers = 1;
         replaceState(new MapChooserFragment());
     }
     @Override
     public void onMultiplayerPressed()
     {
-        // TODO: 04.04.2017 start multiplayer game
+        replaceState(new AddPlayersFragment());
+    }
+    @Override
+    public void selectMapBtn(int nrOfPlayers) {
+        m_numberPlayers = nrOfPlayers;
+        replaceState(new MapChooserFragment());
     }
     @Override
     public void onSettingsPressed()
@@ -81,17 +87,8 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     @Override
     public void onDefaultMapPressed()
     {
-        // importing map from assets
-        try {
-            Box maps = DatabaseLayer.getInstance(this).getBoxFor(MapStore.class);
-            if (maps.find("name", "Test Map Pack").size() == 0) {
-                MapFactory.importMap(getAssets().open("testMap.zip"), this).save(this);
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        startActivity(MapsActivity.newIntent(this, "Test Map Pack", 1));
+        if (m_numberPlayers < 1) m_numberPlayers = 1;
+        startActivity(MapsActivity.newIntent(this, "Test Map Pack", m_numberPlayers));
     }
     @Override
     public void onBrowseMapPressed()
