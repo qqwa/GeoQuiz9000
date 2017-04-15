@@ -7,12 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.models.Score;
+import no.ntnu.tdt4240.geoquiz9000.ui.ResultsArrayAdapter;
 import no.ntnu.tdt4240.geoquiz9000.ui.UiUtils;
 
 public class ResultActivity extends AppCompatActivity {
@@ -34,14 +36,11 @@ public class ResultActivity extends AppCompatActivity {
         TextView titleTv = (TextView) findViewById(R.id.result_title);
         titleTv.setTypeface(UiUtils.getTitleFont(this));
 
-        TextView tv1 = (TextView) findViewById(R.id.tv1);
-        tv1.setTypeface(UiUtils.getTextFont(this));
+        ResultsArrayAdapter adapter = new ResultsArrayAdapter(this, R.layout.result_list_row,
+                mScores);
 
-        // Meter representation of result to km
-        String result = String.format("%.02f", mScores.get(0).getTotalDistance() / 1000) + "km";
-        TextView resultTv = (TextView) findViewById(R.id.result_tv);
-        resultTv.setTypeface(UiUtils.getTextFont(this));
-        resultTv.setText(result);
+        ListView resultsList = (ListView) findViewById(R.id.results_list_view);
+        resultsList.setAdapter(adapter);
 
         Button tryAgainBtn = (Button) findViewById(R.id.try_again_btn);
         tryAgainBtn.setTypeface(UiUtils.getTextFont(this));

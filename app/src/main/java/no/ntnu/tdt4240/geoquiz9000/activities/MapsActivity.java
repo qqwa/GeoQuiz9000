@@ -271,7 +271,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 setPlayerName(mCurrentPlayerNr);
 
-                mActionButton.setVisibility(View.VISIBLE);
+                mActionButton.setVisibility(View.GONE);
                 mActionButton.setOnClickListener(onActionButtonClick);
             } else {
                 ArrayList<Score> finalScores = new ArrayList<>();
@@ -331,6 +331,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     mActionButton.setOnClickListener(onNextQuestionClick);
                 } else {
                     removeLastMarker();
+
+                    mActionButton.setVisibility(View.GONE);
                     initializeQuestion(mCurrentQuestionNr);
                 }
             } else {

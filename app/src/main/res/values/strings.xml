@@ -25,7 +25,7 @@
     <string name="question_title1">Question:</string>
     <string name="player">Player</string>
     <string name="your_result_is">Your result is:</string>
-    <string name="your_result">Your Result:</string>
+    <string name="your_result">Results</string>
     <string name="try_again">Try again?</string>
     <string name="quit">Quit</string>
     <string name="quit_game">Quit game</string>

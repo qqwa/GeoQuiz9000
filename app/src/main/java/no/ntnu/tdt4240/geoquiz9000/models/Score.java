@@ -2,11 +2,12 @@ package no.ntnu.tdt4240.geoquiz9000.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Score extends AbstractModel implements Parcelable {
+public class Score extends AbstractModel implements Parcelable, Comparable<Score> {
 
     private String playerName;
     private float totalDistance;
@@ -45,6 +46,7 @@ public class Score extends AbstractModel implements Parcelable {
     }
 
     protected Score(Parcel in) {
+        playerName = in.readString();
         totalDistance = in.readFloat();
         if (in.readByte() == 0x01) {
             distances = new ArrayList<Float>();
@@ -62,6 +64,7 @@ public class Score extends AbstractModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(playerName);
         dest.writeFloat(totalDistance);
         if (distances == null) {
             dest.writeByte((byte) (0x00));
@@ -84,4 +87,15 @@ public class Score extends AbstractModel implements Parcelable {
             return new Score[size];
         }
     };
+
+    @Override
+    public int compareTo(@NonNull Score score) {
+        if (this.totalDistance == score.totalDistance) {
+            return 0;
+
+        } else {
+            return this.totalDistance > score.totalDistance ? 1 : -1;
+        }
+
+    }
 }
