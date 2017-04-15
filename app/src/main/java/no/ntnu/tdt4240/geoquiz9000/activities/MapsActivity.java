@@ -85,15 +85,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        mPlayerTv = (TextView) findViewById(R.id.player_id);
+        mCurrentPlayerNr = 1;
+        setPlayerName(mCurrentPlayerNr);
+
         loadMapPackage();
         if (mapStore != null && mapGoogle != null) {
             mCurrentQuestionNr = 0;
             initializeQuestion(0);
         }
-
-        mPlayerTv = (TextView) findViewById(R.id.player_id);
-        mCurrentPlayerNr = 1;
-        setPlayerName(mCurrentPlayerNr);
     }
 
     /**
@@ -242,6 +242,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Bundle bundle = new Bundle();
         bundle.putInt(PictureDialogFragment.NR_OF_QUESTION, questionNr);
         bundle.putString(PictureDialogFragment.IMAGE_PATH, picPath);
+        bundle.putString(PictureDialogFragment.PLAYER_NAME, mCurrentPlayer);
 
         PictureDialogFragment dialog = new PictureDialogFragment();
         dialog.setArguments(bundle);
