@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.models.Score;
@@ -32,6 +33,7 @@ public class ResultActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         mScores = getIntent().getParcelableArrayListExtra(INTENT_SCORE);
+        saveScores(mScores);
 
         TextView titleTv = (TextView) findViewById(R.id.result_title);
         titleTv.setTypeface(UiUtils.getTitleFont(this));
@@ -70,6 +72,17 @@ public class ResultActivity extends AppCompatActivity {
         Intent intent = new Intent(context, ResultActivity.class);
         intent.putParcelableArrayListExtra(INTENT_SCORE, score);
         return intent;
+    }
+
+    /**
+     * Save all scores.
+     *
+     * @param scoreList List of all scores.
+     */
+    private void saveScores(List<Score> scoreList) {
+        for (Score score : scoreList) {
+            score.save(this);
+        }
     }
 
 }
