@@ -7,6 +7,7 @@ import java.util.List;
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
 import no.ntnu.tdt4240.geoquiz9000.App;
+import no.ntnu.tdt4240.geoquiz9000.models.AbstractModel;
 
 public class DatabaseLayer {
 
@@ -34,7 +35,7 @@ public class DatabaseLayer {
         return mBoxStore.boxFor(c);
     }
 
-    public List getAll(Class c) {
+    public <T extends AbstractModel> List<T> getAll(Class<T> c) {
         Box box = getBoxFor(c);
         return box.getAll();
     }

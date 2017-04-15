@@ -99,9 +99,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * Initialize the Intent.
      *
-     * @param context Context
+     * @param context        Context
      * @param mapPackageName name of game package
-     * @param nrOfPlayers number of players
+     * @param nrOfPlayers    number of players
      * @return Intent
      */
     public static Intent newIntent(Context context, String mapPackageName, int nrOfPlayers) {
@@ -358,6 +358,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Set the player name in the box.
+     *
      * @param nr player number
      */
     private void setPlayerName(int nr) {
@@ -368,6 +369,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     /**
      * Set up next player.
+     *
      * @param currentNr current number of player
      */
     private void nextPlayer(int currentNr) {
@@ -382,7 +384,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     /**
      * Initialize new player, if score of player was null.
      *
-     * @param playerNr nr of player
+     * @param playerNr   nr of player
      * @param playerName name of player
      * @return initialized Score
      */
