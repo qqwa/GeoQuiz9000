@@ -35,6 +35,12 @@ public class DatabaseLayer {
         return mBoxStore.boxFor(c);
     }
 
+    /**
+     * Get all data from a score.
+     *
+     * @param c Context
+     * @return List of all ObjectBox objects.
+     */
     public <T extends AbstractModel> List<T> getAll(Class<T> c) {
         Box box = getBoxFor(c);
         return box.getAll();

@@ -33,7 +33,7 @@ public class ResultDialog extends DialogFragment {
                              Bundle savedInstanceState) {
         Typeface textFont = UiUtils.getTextFont(getContext());
 
-        View v = inflater.inflate(R.layout.result_dialog, container, false);
+        View v = inflater.inflate(R.layout.dialog_result, container, false);
 
         TextView title = (TextView) v.findViewById(R.id.result_dialog_title);
         title.setTypeface(textFont);
