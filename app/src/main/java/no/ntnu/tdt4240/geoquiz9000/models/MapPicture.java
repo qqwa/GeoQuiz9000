@@ -20,6 +20,22 @@ public class MapPicture implements IMap {
     private ArrayList<Integer> locationsX;
     private ArrayList<Integer> locationsY;
 
+    public MapPicture(MapToml map, String rootPath, ArrayList<String> pictures, ArrayList<String> descriptions,
+                      ArrayList<Integer> locationsX, ArrayList<Integer> locationsY) {
+        this.name = map.getName();
+        this.mapType = map.getType();
+        this.rootPath = rootPath;
+        this.locationCount = map.getDataSetCount();
+        this.map = map.getMetaData("map");
+        this.distX = Double.parseDouble(map.getMetaData("distX"));
+        this.distY = Double.parseDouble(map.getMetaData("distY"));
+
+        this.pictures = pictures;
+        this.description = descriptions;
+        this.locationsX = locationsX;
+        this.locationsY = locationsY;
+    }
+
     @Override
     public String getName() {
         return name;
