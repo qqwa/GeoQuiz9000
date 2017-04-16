@@ -1,5 +1,6 @@
 package no.ntnu.tdt4240.geoquiz9000.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -29,6 +30,7 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     private static final int REQUEST_GAME = 11;
     private static final String SAVED_TITLE = "MenuActivity.SAVED_TITLE";
     private static final String TAG_ERROR_DIALOG = "MapChooserFragment.TAG_ERROR_DIALOG";
+    private static final String INTENT_NR_OF_PLAYERS = "intent nr of players";
 
     private boolean m_gotoFrontpage = false;
     private boolean m_showErrorDialog = false;
@@ -124,6 +126,12 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
         else
             m_title = getResources().getString(R.string.app_name);
         super.onCreate(savedInstanceState);
+
+        int nrOfPlayers = getIntent().getIntExtra(INTENT_NR_OF_PLAYERS, 0);
+        if (nrOfPlayers > 0) {
+            m_numberPlayers = nrOfPlayers;
+            replaceState(new MapChooserFragment());
+        }
     }
     @Override
     protected void onResumeFragments()
@@ -192,5 +200,11 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
             default:
                 super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    public static Intent startMapChooserIntent(Context c, int nrOfPlayers) {
+        Intent intent = new Intent(c, MenuActivity.class);
+        intent.putExtra(INTENT_NR_OF_PLAYERS, nrOfPlayers);
+        return intent;
     }
 }

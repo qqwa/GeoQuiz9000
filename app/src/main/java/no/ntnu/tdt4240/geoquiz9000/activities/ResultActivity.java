@@ -49,9 +49,8 @@ public class ResultActivity extends AppCompatActivity {
         tryAgainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO go to MapChooserFragment
-                startActivity(MapsActivity
-                        .newIntent(getApplicationContext(), mScores.get(0).getMapPackName(), 1));
+                Intent i = MenuActivity.startMapChooserIntent(getApplicationContext(), mScores.size());
+                startActivity(i);
                 finish();
             }
         });
@@ -68,9 +67,9 @@ public class ResultActivity extends AppCompatActivity {
         });
     }
 
-    public static Intent newIntent(Context context, ArrayList<Score> score) {
+    public static Intent newIntent(Context context, ArrayList<Score> scores) {
         Intent intent = new Intent(context, ResultActivity.class);
-        intent.putParcelableArrayListExtra(INTENT_SCORE, score);
+        intent.putParcelableArrayListExtra(INTENT_SCORE, scores);
         return intent;
     }
 

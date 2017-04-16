@@ -44,9 +44,36 @@
           "name": "mapType"
         }
       ]
+    },
+    {
+      "id": "4:2043348237668995430",
+      "lastPropertyId": "5:5576994761811457586",
+      "name": "Score",
+      "properties": [
+        {
+          "id": "1:5275210405603619313",
+          "name": "id"
+        },
+        {
+          "id": "2:5145690988298751767",
+          "name": "playerName"
+        },
+        {
+          "id": "3:330395830801917983",
+          "name": "totalDistance"
+        },
+        {
+          "id": "4:2922521865184339934",
+          "name": "distances"
+        },
+        {
+          "id": "5:5576994761811457586",
+          "name": "mapPackName"
+        }
+      ]
     }
   ],
-  "lastEntityId": "3:9148204076691080701",
+  "lastEntityId": "4:2043348237668995430",
   "lastIndexId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 2,
