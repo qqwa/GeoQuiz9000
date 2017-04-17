@@ -13,10 +13,6 @@ import android.widget.Button;
 import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.activities.GeoActivity;
 
-/**
- * Created by MikhailV on 04.04.2017.
- */
-
 public class FrontpageFragment extends Fragment
 {
     public interface Callbacks
