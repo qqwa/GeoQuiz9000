@@ -33,6 +33,7 @@ import no.ntnu.tdt4240.geoquiz9000.models.MapPicture;
 import no.ntnu.tdt4240.geoquiz9000.models.MapStore;
 import no.ntnu.tdt4240.geoquiz9000.models.Score;
 import no.ntnu.tdt4240.geoquiz9000.ui.PinView;
+import no.ntnu.tdt4240.geoquiz9000.utils.GeoUtils;
 
 public class ImageActivity extends AbstractQuestionsActivity {
 
@@ -70,6 +71,11 @@ public class ImageActivity extends AbstractQuestionsActivity {
         setupMap(map);
     }
 
+    /**
+     * Sets up the image map.
+     *
+     * @param map Bitmap representation of map.
+     */
     private void setupMap(Bitmap map) {
         mMapView.setImage(ImageSource.bitmap(map));
 
@@ -81,6 +87,17 @@ public class ImageActivity extends AbstractQuestionsActivity {
                             PointF sCoord = mMapView.viewToSourceCoord(e.getX(), e.getY());
                             mMapView.setPin(sCoord);
                             mCurrentPoint = sCoord;
+
+                            float answerX = (float) mMapPicture.getLocationX(mCurrentQuestionNr);
+                            float answerY = (float) mMapPicture.getLocationY(mCurrentQuestionNr);
+                            PointF answerPoint = new PointF(answerX, answerY);
+                            float distance = GeoUtils.distanceBetweenTwoPoints(mMapPicture,
+                                    answerPoint, sCoord);
+
+                            Log.d(TAG, "Distance in meters: " + String.valueOf(distance));
+                            mCurrentCalculatedDistance = distance;
+
+                            mActionButton.setVisibility(View.VISIBLE);
                         } else {
                             Toast.makeText(getApplicationContext(), "Long press: Image not ready",
                                     Toast.LENGTH_SHORT).show();
@@ -89,7 +106,13 @@ public class ImageActivity extends AbstractQuestionsActivity {
 
                     @Override
                     public boolean onSingleTapConfirmed(MotionEvent e) {
-                        mMapView.clear();
+                        if (!mShowAnswer) {
+                            mActionButton.setVisibility(View.GONE);
+                            mMapView.clear();
+                        }
+
+                        mCurrentCalculatedDistance = 0;
+                        mCurrentPoint = null;
                         return super.onSingleTapConfirmed(e);
                     }
                 });
@@ -192,8 +215,9 @@ public class ImageActivity extends AbstractQuestionsActivity {
                 if (mCurrentPlayerNr == 1) {
                     mMapView.clear();
 
-                    // TODO fill with arguments
-                    PointF answerPoint = new PointF();
+                    float answerX = (float) mMapPicture.getLocationX(mCurrentQuestionNr);
+                    float answerY = (float) mMapPicture.getLocationY(mCurrentQuestionNr);
+                    PointF answerPoint = new PointF(answerX, answerY);
                     showResult(answerPoint);
 
                     mActionButton.setVisibility(View.VISIBLE);
@@ -213,8 +237,9 @@ public class ImageActivity extends AbstractQuestionsActivity {
                 } else {
                     mMapView.clear();
 
-                    // TODO fill with arguments
-                    PointF answerPoint = new PointF();
+                    float answerX = (float) mMapPicture.getLocationX(mCurrentQuestionNr);
+                    float answerY = (float) mMapPicture.getLocationY(mCurrentQuestionNr);
+                    PointF answerPoint = new PointF(answerX, answerY);
                     showResult(answerPoint);
 
                     mActionButton.setVisibility(View.VISIBLE);
@@ -306,13 +331,17 @@ public class ImageActivity extends AbstractQuestionsActivity {
             }
         });
 
-        mMapView.setPin(resultPoint);
+        Map<PointF, PinView.Colors> pins = new HashMap<>();
+        pins.put(resultPoint, PinView.Colors.GREEN);
 
         // Set markers of all players.
         Set<String> keys = mPoints.keySet();
         for (String key : keys) {
-            // TODO show answer points
+            PointF p = mPoints.get(key);
+            pins.put(p, PinView.Colors.RED);
         }
+
+        mMapView.setPins(pins);
     }
 
     public static Intent newIntent(Context c, String mapPackageName, int nrOfPlayers) {
