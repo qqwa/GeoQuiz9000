@@ -18,6 +18,7 @@ import java.util.zip.ZipInputStream;
 
 import no.ntnu.tdt4240.geoquiz9000.models.IMap;
 import no.ntnu.tdt4240.geoquiz9000.models.MapGoogle;
+import no.ntnu.tdt4240.geoquiz9000.models.MapPicture;
 import no.ntnu.tdt4240.geoquiz9000.models.MapStore;
 import no.ntnu.tdt4240.geoquiz9000.models.MapToml;
 
@@ -93,8 +94,22 @@ public final class MapFactory {
             return new MapGoogle(mapToml, mapStore.getRootPath(), pictures, description,
                     locationsLatitude, locationsLongitude);
         } else if (mapStore.getType() == IMap.MapType.PICTURE) {
-            //TODO: load picture maps
-            return null;
+            File tomlFile = new File(mapStore.getRootPath() + "/map.toml");
+            MapToml mapToml = MapToml.readToml(new FileInputStream(tomlFile));
+            ArrayList<String> pictures = new ArrayList<>();
+            ArrayList<String> description = new ArrayList<>();
+            ArrayList<Integer> locationsX = new ArrayList<>();
+            ArrayList<Integer> locationsY = new ArrayList<>();
+
+            for(MapToml.DataSet dataSet : mapToml.getDataSets()) {
+                pictures.add(dataSet.picture);
+                description.add(dataSet.description);
+                locationsX.add(((MapToml.LocationPicture)dataSet.location).x);
+                locationsY.add(((MapToml.LocationPicture)dataSet.location).y);
+            }
+
+            return new MapPicture(mapToml, mapStore.getRootPath(), pictures, description,
+                    locationsX, locationsY);
         } else {
             return null;
         }
