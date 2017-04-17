@@ -14,30 +14,18 @@
         android:text="@string/your_result"
         android:textSize="40sp" />
 
-    <TextView
-        android:id="@+id/tv1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="150dp"
-        android:text="@string/your_result_is"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/result_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv1"
-        android:layout_centerHorizontal="true"
+    <ListView
+        android:layout_below="@+id/result_title"
+        android:id="@+id/results_list_view"
         android:layout_marginTop="20dp"
-        android:textSize="24sp" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/try_again_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/result_tv"
+        android:layout_below="@id/results_list_view"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:text="@string/try_again" />

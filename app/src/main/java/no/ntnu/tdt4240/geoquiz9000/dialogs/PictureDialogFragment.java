@@ -1,4 +1,4 @@
-package no.ntnu.tdt4240.geoquiz9000.ui;
+package no.ntnu.tdt4240.geoquiz9000.dialogs;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,14 +13,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import no.ntnu.tdt4240.geoquiz9000.R;
+import no.ntnu.tdt4240.geoquiz9000.ui.UiUtils;
 
 public class PictureDialogFragment extends DialogFragment {
 
     public static final String NR_OF_QUESTION = "nr of question";
     public static final String IMAGE_PATH = "image path";
+    public static final String PLAYER_NAME = "player name";
 
     private int mQuestionNr;
     private String mImagePath;
+    private String mPlayername;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,6 +32,7 @@ public class PictureDialogFragment extends DialogFragment {
 
         mQuestionNr = getArguments().getInt(NR_OF_QUESTION);
         mImagePath = getArguments().getString(IMAGE_PATH);
+        mPlayername = getArguments().getString(PLAYER_NAME);
     }
 
     @Override
@@ -37,6 +41,10 @@ public class PictureDialogFragment extends DialogFragment {
         Typeface textFont = UiUtils.getTextFont(getContext());
 
         View v = inflater.inflate(R.layout.picture_dialog, container, false);
+
+        TextView playerNameText = (TextView) v.findViewById(R.id.player_name);
+        playerNameText.setTypeface(textFont);
+        playerNameText.setText(mPlayername);
 
         String titleText = getString(R.string.question_title1) + " " + String.valueOf(mQuestionNr + 1);
 
