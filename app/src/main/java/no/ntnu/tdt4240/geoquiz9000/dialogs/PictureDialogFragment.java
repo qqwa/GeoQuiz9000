@@ -40,7 +40,7 @@ public class PictureDialogFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         Typeface textFont = UiUtils.getTextFont(getContext());
 
-        View v = inflater.inflate(R.layout.picture_dialog, container, false);
+        View v = inflater.inflate(R.layout.dialog_picture, container, false);
 
         TextView playerNameText = (TextView) v.findViewById(R.id.player_name);
         playerNameText.setTypeface(textFont);

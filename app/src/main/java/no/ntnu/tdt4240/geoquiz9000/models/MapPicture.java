@@ -27,8 +27,8 @@ public class MapPicture implements IMap {
         this.rootPath = rootPath;
         this.locationCount = map.getDataSetCount();
         this.map = map.getMetaData("map");
-        this.distX = Double.parseDouble(map.getMetaData("distX"));
-        this.distY = Double.parseDouble(map.getMetaData("distY"));
+        this.distX = Double.parseDouble(map.getMetaData("dist_x"));
+        this.distY = Double.parseDouble(map.getMetaData("dist_y"));
 
         this.pictures = pictures;
         this.description = descriptions;

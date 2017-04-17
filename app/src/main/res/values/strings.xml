@@ -38,5 +38,11 @@
     <string name="result">Result</string>
     <string name="have_a_look_where_the_picture_was_shot">Have a look, where the picture was shot!</string>
     <string name="answer">ANSWER</string>
+    <string name="amount_of_players">Amount of players:</string>
+    <string name="add_player">Add Player!</string>
+    <string name="remove_player">Remove Player!</string>
+    <string name="select_a_map">Select a map!</string>
+    <string name="title_activity_image">ImageActivity</string>
+    <string name="default_image_map">Default image map!</string>
 
 </resources>

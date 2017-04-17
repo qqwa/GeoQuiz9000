@@ -1,5 +1,6 @@
 package no.ntnu.tdt4240.geoquiz9000.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -10,30 +11,31 @@ import android.support.v4.app.Fragment;
 
 import java.io.InputStream;
 
-import io.objectbox.Box;
 import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.controllers.MapFactory;
-import no.ntnu.tdt4240.geoquiz9000.database.DatabaseLayer;
 import no.ntnu.tdt4240.geoquiz9000.dialogs.ImportErrorDialog;
+import no.ntnu.tdt4240.geoquiz9000.fragments.AddPlayersFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.FrontpageFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.MapChooserFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.ScoreFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.SettingsFragment;
-import no.ntnu.tdt4240.geoquiz9000.models.MapStore;
 
 public class MenuActivity extends GeoActivity implements FrontpageFragment.Callbacks,
                                                          MapChooserFragment.Callbacks,
                                                          ScoreFragment.Callbacks,
-                                                         SettingsFragment.Callbacks
+                                                         SettingsFragment.Callbacks,
+                                                         AddPlayersFragment.Callbacks
 {
     private static final int REQUEST_FILE = 10;
     private static final int REQUEST_GAME = 11;
     private static final String SAVED_TITLE = "MenuActivity.SAVED_TITLE";
     private static final String TAG_ERROR_DIALOG = "MapChooserFragment.TAG_ERROR_DIALOG";
+    private static final String INTENT_NR_OF_PLAYERS = "intent nr of players";
 
     private boolean m_gotoFrontpage = false;
     private boolean m_showErrorDialog = false;
     private String m_title;
+    private int m_numberPlayers;
 
     // ---SettingsFragment-CALLBACKS----------------------------------------------------------------
     @Override
@@ -53,12 +55,18 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     @Override
     public void onSinglePlayerPressed()
     {
+        m_numberPlayers = 1;
         replaceState(new MapChooserFragment());
     }
     @Override
     public void onMultiplayerPressed()
     {
-        // TODO: 04.04.2017 start multiplayer game
+        replaceState(new AddPlayersFragment());
+    }
+    @Override
+    public void selectMapBtn(int nrOfPlayers) {
+        m_numberPlayers = nrOfPlayers;
+        replaceState(new MapChooserFragment());
     }
     @Override
     public void onSettingsPressed()
@@ -81,17 +89,13 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     @Override
     public void onDefaultMapPressed()
     {
-        // importing map from assets
-        try {
-            Box maps = DatabaseLayer.getInstance(this).getBoxFor(MapStore.class);
-            if (maps.find("name", "Test Map Pack").size() == 0) {
-                MapFactory.importMap(getAssets().open("testMap.zip"), this).save(this);
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        startActivity(MapsActivity.newIntent(this, "Test Map Pack", 1));
+        if (m_numberPlayers < 1) m_numberPlayers = 1;
+        startActivity(MapsActivity.newIntent(this, "Test Map Pack", m_numberPlayers));
+    }
+    @Override
+    public void onDefaultImagePressed() {
+        if (m_numberPlayers < 1) m_numberPlayers = 1;
+        startActivity(ImageActivity.newIntent(this, "Wraeclast123", m_numberPlayers));
     }
     @Override
     public void onBrowseMapPressed()
@@ -127,6 +131,12 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
         else
             m_title = getResources().getString(R.string.app_name);
         super.onCreate(savedInstanceState);
+
+        int nrOfPlayers = getIntent().getIntExtra(INTENT_NR_OF_PLAYERS, 0);
+        if (nrOfPlayers > 0) {
+            m_numberPlayers = nrOfPlayers;
+            replaceState(new MapChooserFragment());
+        }
     }
     @Override
     protected void onResumeFragments()
@@ -195,5 +205,11 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
             default:
                 super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    public static Intent startMapChooserIntent(Context c, int nrOfPlayers) {
+        Intent intent = new Intent(c, MenuActivity.class);
+        intent.putExtra(INTENT_NR_OF_PLAYERS, nrOfPlayers);
+        return intent;
     }
 }
