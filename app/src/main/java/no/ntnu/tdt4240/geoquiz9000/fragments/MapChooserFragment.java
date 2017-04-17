@@ -22,6 +22,8 @@ public class MapChooserFragment extends Fragment
         void onBrowseMapPressed();
 
         void onBackBtnPressed();
+
+        void onDefaultImagePressed();
     }
 
     private Callbacks m_callbacks;
@@ -54,6 +56,19 @@ public class MapChooserFragment extends Fragment
             {
                 if (m_callbacks != null) {
                     m_callbacks.onDefaultMapPressed();
+                }
+
+            }
+        });
+        final Button defaultImageBtn = (Button)root.findViewById(R.id.default_image_btn);
+        defaultImageBtn.setTypeface(textFont);
+        defaultImageBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (m_callbacks != null) {
+                    m_callbacks.onDefaultImagePressed();
                 }
 
             }

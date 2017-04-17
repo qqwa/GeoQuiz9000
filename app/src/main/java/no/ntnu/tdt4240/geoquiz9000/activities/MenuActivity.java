@@ -93,6 +93,11 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
         startActivity(MapsActivity.newIntent(this, "Test Map Pack", m_numberPlayers));
     }
     @Override
+    public void onDefaultImagePressed() {
+        if (m_numberPlayers < 1) m_numberPlayers = 1;
+        startActivity(ImageActivity.newIntent(this, "Wraeclast123", m_numberPlayers));
+    }
+    @Override
     public void onBrowseMapPressed()
     {
         // launching file explorer

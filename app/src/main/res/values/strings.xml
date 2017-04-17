@@ -42,5 +42,7 @@
     <string name="add_player">Add Player!</string>
     <string name="remove_player">Remove Player!</string>
     <string name="select_a_map">Select a map!</string>
+    <string name="title_activity_image">ImageActivity</string>
+    <string name="default_image_map">Default image map!</string>
 
 </resources>

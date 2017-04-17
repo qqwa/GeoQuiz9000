@@ -13,6 +13,14 @@
         />
 
     <Button
+        android:id="@+id/default_image_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/default_image_map"
+        />
+
+    <Button
         android:id="@+id/browse_map_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
