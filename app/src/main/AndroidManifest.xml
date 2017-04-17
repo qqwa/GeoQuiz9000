@@ -39,7 +39,8 @@
         <activity
             android:name=".activities.ImageActivity"
             android:label="@string/title_activity_image"
-            android:theme="@style/AppTheme"></activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>
