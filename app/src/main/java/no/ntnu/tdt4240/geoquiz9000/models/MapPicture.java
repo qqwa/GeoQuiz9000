@@ -45,8 +45,7 @@ public class MapPicture implements IMap {
     public IMap.MapType getType() {
         return mapType;
     }
-
-    //TODO: maybe return the actual map instead of a string
+    
     public String getMap() {
         return map;
     }
