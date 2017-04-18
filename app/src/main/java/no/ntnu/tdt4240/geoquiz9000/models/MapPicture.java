@@ -53,7 +53,7 @@ public class MapPicture implements IMap {
     public IMap.MapType getType() {
         return mapType;
     }
-    
+
     public String getMap() {
         return map;
     }

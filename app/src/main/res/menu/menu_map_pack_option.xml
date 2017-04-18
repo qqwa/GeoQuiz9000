@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_add_question"
+        android:title="@string/add_question"
+        />
+
+    <item
+        android:id="@+id/menu_export_map"
+        android:title="@string/export_map"
+        />
+</menu>

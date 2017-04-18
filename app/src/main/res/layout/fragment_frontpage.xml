@@ -21,6 +21,14 @@
         />
 
     <Button
+        android:id="@+id/mappacks_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="@string/mappacks_btn_label"
+        />
+
+    <Button
         android:id="@+id/settings_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

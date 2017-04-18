@@ -13,6 +13,7 @@
     <!--Fragment Frontpage -->
     <string name="singleplayer_btn_label">Singleplayer</string>
     <string name="multiplayer_btn_label">Multiplayer</string>
+    <string name="mappacks_btn_label">Map Packs</string>
     <string name="settings_btn_label">Settings</string>
     <string name="highscore_btn_label">Highscores</string>
     <string name="quit_btn_label">Quit game</string>
@@ -25,6 +26,12 @@
     <string name="add_player">Add Player!</string>
     <string name="remove_player">Remove Player!</string>
     <string name="select_a_map">Select a map!</string>
+    <!--Fragment MapPacks-->
+    <string name="import_map_btn">Import new Map</string>
+    <string name="import_from_stroage">From Device</string>
+    <string name="import_from_network">Download from Internet</string>
+    <string name="add_question">Add new Question</string>
+    <string name="export_map">Export Map Pack</string>
     <!--Fragment Settings-->
     <string name="settings_title_label">Settings</string>
     <!--Fragment Score-->
@@ -69,6 +76,5 @@
     <!--universal-->
     <string name="back_btn_label">Back!</string>
     <string name="image_for_question">Image for Question</string>
-
 
 </resources>

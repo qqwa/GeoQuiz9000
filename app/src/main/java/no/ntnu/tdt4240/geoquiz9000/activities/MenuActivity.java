@@ -4,38 +4,117 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.OpenableColumns;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.PopupMenu;
+import android.util.Log;
+import android.view.MenuItem;
+import android.widget.Button;
 
+import java.io.File;
 import java.io.InputStream;
 
 import no.ntnu.tdt4240.geoquiz9000.R;
+import no.ntnu.tdt4240.geoquiz9000.controllers.AsyncExportMap;
+import no.ntnu.tdt4240.geoquiz9000.controllers.AsyncImportMap;
 import no.ntnu.tdt4240.geoquiz9000.controllers.MapFactory;
 import no.ntnu.tdt4240.geoquiz9000.dialogs.ImportErrorDialog;
 import no.ntnu.tdt4240.geoquiz9000.fragments.AddPlayersFragment;
+import no.ntnu.tdt4240.geoquiz9000.dialogs.TaskDialog;
 import no.ntnu.tdt4240.geoquiz9000.fragments.FrontpageFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.MapChooserFragment;
+import no.ntnu.tdt4240.geoquiz9000.fragments.MapPacksFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.ScoreFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.SettingsFragment;
+import no.ntnu.tdt4240.geoquiz9000.models.MapStore;
 
 public class MenuActivity extends GeoActivity implements FrontpageFragment.Callbacks,
                                                          MapChooserFragment.Callbacks,
                                                          ScoreFragment.Callbacks,
                                                          SettingsFragment.Callbacks,
-                                                         AddPlayersFragment.Callbacks
+                                                         AddPlayersFragment.Callbacks,
+                                                         MapPacksFragment.Callbacks,
+                                                         TaskDialog.Callbacks
 {
     private static final int REQUEST_FILE = 10;
     private static final int REQUEST_GAME = 11;
+    private static final int REQUEST_URL = 12;
     private static final String SAVED_TITLE = "MenuActivity.SAVED_TITLE";
     private static final String TAG_ERROR_DIALOG = "MapChooserFragment.TAG_ERROR_DIALOG";
     private static final String INTENT_NR_OF_PLAYERS = "intent nr of players";
+    private static final String TAG_TASK_DIALOG = "MapPacksFragment.TAG_TASK_DIALOG";
 
     private boolean m_gotoFrontpage = false;
     private boolean m_showErrorDialog = false;
+    private boolean m_showTaskDialog = false;
+    private AsyncTask m_task = null;
+    private InputStream m_file = null;
+    private String m_url = null;
     private String m_title;
     private int m_numberPlayers;
+
+    // ---TaskDialog-CALLBACKS----------------------------------------------------------------
+
+    @Override
+    public void onCancelPressed() {
+        if(m_task != null) {
+            m_task.cancel(false);
+        }
+    }
+
+
+
+    // ---MapPacksFragment-CALLBACKS----------------------------------------------------------------
+
+
+    @Override
+    public void onImportMapPressed() {
+        Button button = (Button)findViewById(R.id.import_map_btn);
+        PopupMenu popup = new PopupMenu(MenuActivity.this, button);
+        popup.getMenuInflater().inflate(R.menu.menu_import_option, popup.getMenu());
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent;
+                switch (item.getItemId()) {
+                    case R.id.menu_import_storage:
+                        Log.i("MENU", "IMPORT FROM DEVICE");
+                        // launching file explorer
+                        intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                        intent.addCategory(Intent.CATEGORY_OPENABLE);
+                        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+                        intent.setType("*/*");
+                        startActivityForResult(intent, REQUEST_FILE);
+                        return true;
+                    case R.id.menu_import_network:
+                        Log.i("MENU", "IMPORT FROM NETWORK");
+                        //TODO: change intent to something meaningful
+                        intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                        intent.addCategory(Intent.CATEGORY_OPENABLE);
+                        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+                        intent.setType("*/*");
+                        startActivityForResult(intent, REQUEST_URL);
+                        return true;
+
+                    default:
+                        return false;
+                }
+            }
+        });
+
+        popup.show();
+    }
+
+    @Override
+    public void onMapPacksBackPressed() {
+        m_title = getResources().getString(R.string.app_name);
+        gotoPreviousState();
+    }
 
     // ---SettingsFragment-CALLBACKS----------------------------------------------------------------
     @Override
@@ -67,6 +146,11 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     public void selectMapBtn(int nrOfPlayers) {
         m_numberPlayers = nrOfPlayers;
         replaceState(new MapChooserFragment());
+    }
+    @Override
+    public void onMapPacksPressed() {
+        m_title = getResources().getString(R.string.mappacks_btn_label);
+        replaceState(new MapPacksFragment());
     }
     @Override
     public void onSettingsPressed()
@@ -151,6 +235,78 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
             m_gotoFrontpage = false;
             replaceState(new FrontpageFragment());
         }
+        if (m_showTaskDialog) {
+            m_showErrorDialog = false;
+            final TaskDialog taskDialog = TaskDialog.newInstance();
+            //Prevent user from closing dialog until task is finished.
+            taskDialog.setCancelable(false);
+            taskDialog.show(getSupportFragmentManager(), TAG_TASK_DIALOG);
+
+
+            if(m_file != null) {
+                Log.i("MENU", "CREATING TASK FOR FILE");
+                final AsyncTask task;
+                task = new AsyncImportMap(m_file, this) {
+                    @Override
+                    protected void onPostExecute(MapStore mapStore) {
+                        if(mapStore != null) {
+                            taskDialog.setTaskLog("Successfully importer Map!");
+                        } else {
+                            taskDialog.setTaskLog(getErrorMessage());
+                        }
+                        taskDialog.setCanDismiss(true);
+                    }
+                    @Override
+                    protected void onCancelled() {
+                        taskDialog.setTaskLog("Canceled.");
+                        taskDialog.setCanDismiss(true);
+                    }
+                    @Override
+                    protected void onProgressUpdate(String... values) {
+                        taskDialog.setTaskLog(values[0]);
+                    }
+                }.execute();
+
+                m_file = null;
+            }
+            if(m_url != null) {
+                Log.i("MENU", "CREATING TASK FOR URL " + m_url);
+                final AsyncTask task;
+                task = new AsyncImportMap(m_url, this) {
+                    @Override
+                    protected void onPreExecute() {
+                        super.onPreExecute();
+                    }
+
+                    @Override
+                    protected void onPostExecute(MapStore mapStore) {
+                        if(mapStore != null) {
+                            taskDialog.setTaskLog("Successfully importer Map!");
+                        } else {
+                            taskDialog.setTaskLog(getErrorMessage());
+                        }
+                        taskDialog.setCanDismiss(true);
+                    }
+
+                    @Override
+                    protected void onCancelled() {
+                        taskDialog.setTaskLog("Canceled.");
+                        taskDialog.setCanDismiss(true);
+                    }
+
+                    @Override
+                    protected void onProgressUpdate(String... values) {
+                        taskDialog.setTaskLog(values[0]);
+                    }
+                }.execute();
+
+                Log.i("MENU", "EXECUTING TASK");
+
+                m_url = null;
+            }
+
+
+        }
     }
     @Override
     protected void onSaveInstanceState(Bundle outState)
@@ -185,14 +341,10 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
                     else {
                         throw new Exception();
                     }
+                    //start new AsyncTask
+                    m_file = getContentResolver().openInputStream(path);
+                    m_showTaskDialog = true;
 
-                    // importing map
-                    InputStream file = getContentResolver().openInputStream(path);
-                    //TODO: update me to new map management system
-//                    MapFactory.importMap(file, this).save(this);
-
-                    // starting game, single player
-                    startActivityForResult(QuestionActivity.newIntent(this, true), REQUEST_GAME);
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -202,6 +354,11 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
                     if (cursor != null)
                         cursor.close();
                 }
+                break;
+            case REQUEST_URL:
+                //TODO: put real url into m_url
+                m_url = "https://github.com/bebae/Maps-GeoQuiz9000/raw/master/wraeclast3.zip";
+                m_showTaskDialog = true;
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
