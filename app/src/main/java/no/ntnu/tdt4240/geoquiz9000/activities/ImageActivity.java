@@ -133,7 +133,8 @@ public class ImageActivity extends AbstractQuestionsActivity {
 
         try {
             if (maps.find("name", mMapName).size() == 0) {
-                MapFactory.importMap(getAssets().open("wraeclast123.zip"), this).save(this);
+                //TODO: update me to new map management system
+//                MapFactory.importMap(getAssets().open("wraeclast123.zip"), this).save(this);
             }
         } catch (Exception e) {
             Log.e(TAG, "Could not import map package.");

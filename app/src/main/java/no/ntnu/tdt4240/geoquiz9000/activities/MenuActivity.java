@@ -188,7 +188,8 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
 
                     // importing map
                     InputStream file = getContentResolver().openInputStream(path);
-                    MapFactory.importMap(file, this).save(this);
+                    //TODO: update me to new map management system
+//                    MapFactory.importMap(file, this).save(this);
 
                     // starting game, single player
                     startActivityForResult(QuestionActivity.newIntent(this, true), REQUEST_GAME);
