@@ -45,7 +45,7 @@ public class AsyncAddQuestion extends AsyncTask<Void, String, MapStore> {
             File tomlFile = new File(mMap.getRootPath(), "map.toml");
             File pictureFile = new File(mMap.getRootPath(), sb.toString() + ".jpg");
             toml = MapToml.readToml(new FileInputStream(new File(mMap.getRootPath(), "map.toml")));
-            toml.add(pictureFile.getName(), new MapPicture.Location(50, 50));
+            toml.add(pictureFile.getName(), mLocation);
             toml.write(new FileOutputStream(tomlFile));
             //write picture
             mPicture.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream(pictureFile));
