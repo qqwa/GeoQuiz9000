@@ -12,15 +12,17 @@ import java.io.FileOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import no.ntnu.tdt4240.geoquiz9000.models.IMap;
+import no.ntnu.tdt4240.geoquiz9000.models.MapPicture;
 import no.ntnu.tdt4240.geoquiz9000.models.MapStore;
 import no.ntnu.tdt4240.geoquiz9000.models.MapToml;
 
 public class AsyncAddQuestion extends AsyncTask<Void, String, MapStore> {
     private MapStore mMap;
     private Bitmap mPicture;
-    private MapToml.Location mLocation;
+    private IMap.Location mLocation;
 
-    public AsyncAddQuestion(MapStore map, Bitmap picture, MapToml.Location location) {
+    public AsyncAddQuestion(MapStore map, Bitmap picture, IMap.Location location) {
         this.mMap = map;
         this.mPicture = picture;
         this.mLocation = location;
@@ -43,7 +45,7 @@ public class AsyncAddQuestion extends AsyncTask<Void, String, MapStore> {
             File tomlFile = new File(mMap.getRootPath(), "map.toml");
             File pictureFile = new File(mMap.getRootPath(), sb.toString() + ".jpg");
             toml = MapToml.readToml(new FileInputStream(new File(mMap.getRootPath(), "map.toml")));
-            toml.add(pictureFile.getName(), new MapToml.LocationPicture(50, 50));
+            toml.add(pictureFile.getName(), new MapPicture.Location(50, 50));
             toml.write(new FileOutputStream(tomlFile));
             //write picture
             mPicture.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream(pictureFile));

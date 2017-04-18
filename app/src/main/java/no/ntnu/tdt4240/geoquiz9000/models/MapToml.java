@@ -1,19 +1,14 @@
 package no.ntnu.tdt4240.geoquiz9000.models;
 
 
-import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.moandjiezana.toml.Toml;
 import com.moandjiezana.toml.TomlWriter;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -25,29 +20,12 @@ public class MapToml {
     public static class DataSet {
         public String picture;
         public String description;
-        public Location location;
+        public IMap.Location location;
 
-        public DataSet(String picture, String description, Location location) {
+        public DataSet(String picture, String description, IMap.Location location) {
             this.picture = picture;
             this.description = description;
             this.location = location;
-        }
-    }
-    public static abstract class Location {};
-    public static class LocationGoogle extends Location {
-        public double longitude;
-        public double latitude;
-        public LocationGoogle(double longitude, double latitude) {
-            this.longitude = longitude;
-            this.latitude = latitude;
-        }
-    }
-    public static class LocationPicture extends Location {
-        public int x;
-        public int y;
-        public LocationPicture(int x, int y) {
-            this.x = x;
-            this.y = y;
         }
     }
     private String name;
@@ -129,11 +107,11 @@ public class MapToml {
                 description = "";
             }
             
-            Location location = null;
+            IMap.Location location = null;
             if(mapType == IMap.MapType.GOOGLE) {
-                location = new LocationGoogle(cur.getDouble("longitude"), cur.getDouble("latitude"));
+                location = new MapGoogle.Location(cur.getDouble("longitude"), cur.getDouble("latitude"));
             } else if(mapType == IMap.MapType.PICTURE) {
-                location = new LocationPicture(cur.getLong("x").intValue(), cur.getLong("y").intValue());
+                location = new MapPicture.Location(cur.getLong("x").intValue(), cur.getLong("y").intValue());
             }
 
             dataSets.add(new DataSet(picture, description, location));
@@ -172,11 +150,11 @@ public class MapToml {
             data.put("picture", dataSet.picture);
             data.put("description", dataSet.description);
             if(type == IMap.MapType.GOOGLE) {
-                LocationGoogle locationGoogle = (LocationGoogle)dataSet.location;
+                MapGoogle.Location locationGoogle = (MapGoogle.Location)dataSet.location;
                 data.put("latitude", locationGoogle.latitude);
                 data.put("longitude", locationGoogle.longitude);
             } else {
-                LocationPicture locationPicture = (LocationPicture)dataSet.location;
+                MapPicture.Location locationPicture = (MapPicture.Location)dataSet.location;
                 data.put("x", locationPicture.x);
                 data.put("y", locationPicture.y);
             }
@@ -191,16 +169,16 @@ public class MapToml {
         }
     }
 
-    public void add(String picturePath, MapToml.Location location) {
+    public void add(String picturePath, IMap.Location location) {
         add(picturePath, location, null);
     }
 
-    public void add(String picturePath, MapToml.Location location, String description) {
+    public void add(String picturePath, IMap.Location location, String description) {
         if(description == null) {
             description = "";
         }
-        if(location instanceof LocationGoogle && type != IMap.MapType.GOOGLE
-                || location instanceof LocationPicture && type != IMap.MapType.PICTURE) {
+        if(location instanceof MapGoogle.Location && type != IMap.MapType.GOOGLE
+                || location instanceof MapPicture.Location && type != IMap.MapType.PICTURE) {
             Log.e("MapToml", "Tried to add new Question with wrong type of location");
             return;
         }

@@ -24,8 +24,8 @@ public final class MapFactory {
             for(MapToml.DataSet dataSet : mapToml.getDataSets()) {
                 pictures.add(dataSet.picture);
                 description.add(dataSet.description);
-                locationsLatitude.add(((MapToml.LocationGoogle)dataSet.location).latitude);
-                locationsLongitude.add(((MapToml.LocationGoogle)dataSet.location).longitude);
+                locationsLatitude.add(((MapGoogle.Location)dataSet.location).latitude);
+                locationsLongitude.add(((MapGoogle.Location)dataSet.location).longitude);
             }
 
             return new MapGoogle(mapToml, mapStore.getRootPath(), pictures, description,
@@ -41,8 +41,8 @@ public final class MapFactory {
             for(MapToml.DataSet dataSet : mapToml.getDataSets()) {
                 pictures.add(dataSet.picture);
                 description.add(dataSet.description);
-                locationsX.add(((MapToml.LocationPicture)dataSet.location).x);
-                locationsY.add(((MapToml.LocationPicture)dataSet.location).y);
+                locationsX.add(((MapPicture.Location)dataSet.location).x);
+                locationsY.add(((MapPicture.Location)dataSet.location).y);
             }
 
             return new MapPicture(mapToml, mapStore.getRootPath(), pictures, description,

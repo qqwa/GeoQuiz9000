@@ -6,6 +6,14 @@ import android.graphics.BitmapFactory;
 import java.util.ArrayList;
 
 public class MapGoogle implements IMap {
+    public static class Location extends IMap.Location {
+        public double longitude;
+        public double latitude;
+        public Location(double longitude, double latitude) {
+            this.longitude = longitude;
+            this.latitude = latitude;
+        }
+    }
     protected String name;
     protected static IMap.MapType mapType;
     protected String rootPath;
