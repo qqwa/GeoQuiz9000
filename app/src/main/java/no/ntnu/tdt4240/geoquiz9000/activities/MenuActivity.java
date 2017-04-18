@@ -71,7 +71,7 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     @Override
     public void onSettingsPressed()
     {
-        m_title = getResources().getString(R.string.settings_btn_label);
+        m_title = getResources().getString(R.string.settings_title_label);
         replaceState(new SettingsFragment());
     }
     @Override

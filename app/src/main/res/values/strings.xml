@@ -1,48 +1,74 @@
 <resources>
+    <!--Manifest Names-->
     <string name="app_name">GeoQuiz9000</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="title_activity_result">ResultActivity</string>
+    <string name="title_activity_image">ImageActivity</string>
+
+    <!--Resources-->
     <string name="text_font_name">kirsty_rg.ttf</string>
     <string name="title_font_name">RioGrande.ttf</string>
+
+    <!--!!!MenuActivity!!!-->
+    <!--Fragment Frontpage -->
     <string name="singleplayer_btn_label">Singleplayer</string>
     <string name="multiplayer_btn_label">Multiplayer</string>
     <string name="settings_btn_label">Settings</string>
     <string name="highscore_btn_label">Highscores</string>
-    <string name="map_btn_label">Place a pin on the map</string>
-    <string name="question_result">You were %1$.3f km away from the target. You earned %2$d points.</string>
-    <string name="score_title_label">High score</string>
-    <string name="default_map_btn_label">Go with default map!</string>
-    <string name="browse_map_btn_label">Choose your own map!</string>
-    <string name="back_btn_label">Back!</string>
-    <string name="question_text">Guess location of the picture above. Press button below to open the map.</string>
     <string name="quit_btn_label">Quit game</string>
-    <string name="question_title">Question</string>
-    <string name="error_load_map_package">"Could not load map package."</string>
-    <string name="title_activity_result">ResultActivity</string>
-    <string name="where_is_this_place">Where is this place?</string>
-    <string name="image_for_question">Image for Question</string>
-    <string name="press_long_on_the_map_to_set_the_marker">Press long on the map to set the marker!</string>
-    <string name="let_s_go">LET\'S GO</string>
-    <string name="question_title1">Question:</string>
-    <string name="player">Player</string>
-    <string name="your_result_is">Your result is:</string>
-    <string name="your_result">Results</string>
-    <string name="try_again">Try again?</string>
-    <string name="quit">Quit</string>
-    <string name="quit_game">Quit game</string>
-    <string name="sure_to_quit_game">"Are you sure to quit the game?"</string>
-    <string name="cancel">Cancel</string>
-    <string name="yes">Yes</string>
-    <string name="import_error_msg">Incompatible file type chosen</string>
-    <string name="next_question_label">Next question</string>
-    <string name="ok">OK</string>
-    <string name="result">Result</string>
-    <string name="have_a_look_where_the_picture_was_shot">Have a look, where the picture was shot!</string>
-    <string name="answer">ANSWER</string>
+    <!--Fragment MapChooser-->
+    <string name="default_map_btn_label">Go with default map!</string>
+    <string name="default_image_map">Default image map!</string>
+    <string name="browse_map_btn_label">Choose your own map!</string>
+    <!--Fragment AddPlayers-->
     <string name="amount_of_players">Amount of players:</string>
     <string name="add_player">Add Player!</string>
     <string name="remove_player">Remove Player!</string>
     <string name="select_a_map">Select a map!</string>
-    <string name="title_activity_image">ImageActivity</string>
-    <string name="default_image_map">Default image map!</string>
+    <!--Fragment Settings-->
+    <string name="settings_title_label">Settings</string>
+    <!--Fragment Score-->
+    <string name="score_title_label">High score</string>
+
+
+    <!--!!!QuestionActivity!!!-->
+    <string name="question_title">Question</string>
+    <string name="sure_to_quit_game">"Are you sure to quit the game?"</string>
+    <string name="cancel">Cancel</string>
+    <string name="yes">Yes</string>
+    <string name="result">Result</string>
+    <string name="player">Player</string>
+    <string name="answer">ANSWER</string>
+    <string name="quit_game">Quit game</string>
+    <!--Fragment Question-->
+    <string name="map_btn_label">Place a pin on the map</string>
+    <string name="question_text">Guess location of the picture above. Press button below to open the map.</string>
+
+    <!--!!!ResultActivity!!!-->
+    <string name="your_result">Results</string>
+    <string name="try_again">Try again?</string>
+    <string name="quit">Quit</string>
+    <!--Dialog Result-->
+    <string name="ok">OK</string>
+    <string name="have_a_look_where_the_picture_was_shot">Have a look, where the picture was shot!</string>
+
+    <!--Dialog Answer-->
+    <string name="question_result">You were %1$.3f km away from the target. You earned %2$d points.</string>
+    <string name="next_question_label">Next question</string>
+
+    <!--Dialog Picture-->
+    <string name="question_title1">Question:</string>
+    <string name="where_is_this_place">Where is this place?</string>
+    <string name="press_long_on_the_map_to_set_the_marker">Press long on the map to set the marker!</string>
+    <string name="let_s_go">LET\'S GO</string>
+
+    <!--Error Messages-->
+    <string name="error_load_map_package">"Could not load map package."</string>
+    <string name="import_error_msg">Incompatible file type chosen</string>
+
+    <!--universal-->
+    <string name="back_btn_label">Back!</string>
+    <string name="image_for_question">Image for Question</string>
+
 
 </resources>
