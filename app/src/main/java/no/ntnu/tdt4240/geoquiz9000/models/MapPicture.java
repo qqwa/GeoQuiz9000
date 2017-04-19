@@ -3,6 +3,14 @@ package no.ntnu.tdt4240.geoquiz9000.models;
 import java.util.ArrayList;
 
 public class MapPicture implements IMap {
+    public static class Location extends IMap.Location {
+        public int x;
+        public int y;
+        public Location(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
     protected String name;
     protected static IMap.MapType mapType;
     protected String rootPath;
@@ -46,7 +54,6 @@ public class MapPicture implements IMap {
         return mapType;
     }
 
-    //TODO: maybe return the actual map instead of a string
     public String getMap() {
         return map;
     }

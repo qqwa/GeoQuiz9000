@@ -1,9 +1,14 @@
 package no.ntnu.tdt4240.geoquiz9000.models;
 
 
-import com.moandjiezana.toml.Toml;
+import android.util.Log;
 
+import com.moandjiezana.toml.Toml;
+import com.moandjiezana.toml.TomlWriter;
+
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -15,29 +20,12 @@ public class MapToml {
     public static class DataSet {
         public String picture;
         public String description;
-        public Location location;
+        public IMap.Location location;
 
-        public DataSet(String picture, String description, Location location) {
+        public DataSet(String picture, String description, IMap.Location location) {
             this.picture = picture;
             this.description = description;
             this.location = location;
-        }
-    }
-    public static abstract class Location {};
-    public static class LocationGoogle extends Location {
-        public double longitude;
-        public double latitude;
-        public LocationGoogle(double longitude, double latitude) {
-            this.longitude = longitude;
-            this.latitude = latitude;
-        }
-    }
-    public static class LocationPicture extends Location {
-        public int x;
-        public int y;
-        public LocationPicture(int x, int y) {
-            this.x = x;
-            this.y = y;
         }
     }
     private String name;
@@ -98,15 +86,15 @@ public class MapToml {
         //metaData
         Map<String, String> metaData = new HashMap<>();
         if(mapType == IMap.MapType.GOOGLE) {
-            metaData.put("map", toml.getString("meta-data.map"));
+            metaData.put("map", toml.getString("meta_data.map"));
         } else if(mapType == IMap.MapType.PICTURE) {
-            metaData.put("map", toml.getString("meta-data.map"));
-            metaData.put("dist_x", Double.toString(toml.getDouble("meta-data.dist_x")));
-            metaData.put("dist_y", Double.toString(toml.getDouble("meta-data.dist_y")));
+            metaData.put("map", toml.getString("meta_data.map"));
+            metaData.put("dist_x", Double.toString(toml.getDouble("meta_data.dist_x")));
+            metaData.put("dist_y", Double.toString(toml.getDouble("meta_data.dist_y")));
         }
 
         //dataSets
-        List<Toml> dataToml = toml.getTables("data-set");
+        List<Toml> dataToml = toml.getTables("data_set");
         ArrayList<DataSet> dataSets = new ArrayList<>(dataToml.size());
 
         for(int i=0; i<dataToml.size(); i++) {
@@ -119,17 +107,82 @@ public class MapToml {
                 description = "";
             }
             
-            Location location = null;
+            IMap.Location location = null;
             if(mapType == IMap.MapType.GOOGLE) {
-                location = new LocationGoogle(cur.getDouble("longitude"), cur.getDouble("latitude"));
+                location = new MapGoogle.Location(cur.getDouble("longitude"), cur.getDouble("latitude"));
             } else if(mapType == IMap.MapType.PICTURE) {
-                location = new LocationPicture(cur.getLong("x").intValue(), cur.getLong("y").intValue());
+                location = new MapPicture.Location(cur.getLong("x").intValue(), cur.getLong("y").intValue());
             }
 
             dataSets.add(new DataSet(picture, description, location));
         }
 
         return new MapToml(name, mapType, metaData, dataSets);
+    }
+
+    public static class TomlRep {
+        String name;
+        String type;
+        Map<String, Object> meta_data;
+        ArrayList<Map<String, Object>> data_set;
+    }
+
+    public void write(OutputStream outputStream) {
+        TomlWriter writer = new TomlWriter();
+        TomlRep tomlRep = new TomlRep();
+
+        //toplevel data
+        tomlRep.name = name;
+        tomlRep.type = type == IMap.MapType.GOOGLE ? "google-maps" : "picture";
+
+        //meta_data
+        tomlRep.meta_data = new HashMap<>();
+        tomlRep.meta_data.put("map", metaData.get("map"));
+        if(type == IMap.MapType.PICTURE) {
+            tomlRep.meta_data.put("dist_x", metaData.get("dist_x"));
+            tomlRep.meta_data.put("dist_y", metaData.get("dist_y"));
+        }
+
+        //data_set
+        tomlRep.data_set = new ArrayList<>();
+        for(DataSet dataSet : dataSets) {
+            Map<String, Object> data = new HashMap<>();
+            data.put("picture", dataSet.picture);
+            data.put("description", dataSet.description);
+            if(type == IMap.MapType.GOOGLE) {
+                MapGoogle.Location locationGoogle = (MapGoogle.Location)dataSet.location;
+                data.put("latitude", locationGoogle.latitude);
+                data.put("longitude", locationGoogle.longitude);
+            } else {
+                MapPicture.Location locationPicture = (MapPicture.Location)dataSet.location;
+                data.put("x", locationPicture.x);
+                data.put("y", locationPicture.y);
+            }
+            tomlRep.data_set.add(data);
+        }
+
+        try {
+            writer.write(tomlRep, outputStream);
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void add(String picturePath, IMap.Location location) {
+        add(picturePath, location, null);
+    }
+
+    public void add(String picturePath, IMap.Location location, String description) {
+        if(description == null) {
+            description = "";
+        }
+        if(location instanceof MapGoogle.Location && type != IMap.MapType.GOOGLE
+                || location instanceof MapPicture.Location && type != IMap.MapType.PICTURE) {
+            Log.e("MapToml", "Tried to add new Question with wrong type of location");
+            return;
+        }
+        dataSets.add(new DataSet(picturePath, description, location));
     }
 
     public String getName() {

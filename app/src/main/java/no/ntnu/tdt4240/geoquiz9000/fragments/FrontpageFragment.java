@@ -21,6 +21,8 @@ public class FrontpageFragment extends Fragment
 
         void onMultiplayerPressed();
 
+        void onMapPacksPressed();
+
         void onSettingsPressed();
 
         void onHighScorePressed();
@@ -73,6 +75,20 @@ public class FrontpageFragment extends Fragment
                 }
             }
         });
+
+        final Button mappacksBtn = (Button)root.findViewById(R.id.mappacks_btn);
+        mappacksBtn.setTypeface(textFont);
+        mappacksBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (m_callbacks != null) {
+                    m_callbacks.onMapPacksPressed();
+                }
+            }
+        });
+
         final Button settingsBtn = (Button)root.findViewById(R.id.settings_btn);
         settingsBtn.setTypeface(textFont);
         settingsBtn.setOnClickListener(new View.OnClickListener()
