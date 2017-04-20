@@ -16,7 +16,7 @@ public class MapChooserFragment extends AbstractListFragment<MapStore>
 {
     public interface Callbacks
     {
-        void onMapPressed(String mapName);
+        void onMapPressed(MapStore map);
 
         void onBackBtnPressed();
     }
@@ -39,7 +39,7 @@ public class MapChooserFragment extends AbstractListFragment<MapStore>
             protected void onMapPressed(View v, MapStore store)
             {
                 if (m_callbacks != null)
-                    m_callbacks.onMapPressed(store.getName());
+                    m_callbacks.onMapPressed(store);
             }
         };
     }
