@@ -1,4 +1,4 @@
-package no.ntnu.tdt4240.geoquiz9000.ui;
+package no.ntnu.tdt4240.geoquiz9000.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -15,6 +15,7 @@ import java.util.Collections;
 
 import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.models.Score;
+import no.ntnu.tdt4240.geoquiz9000.ui.UiUtils;
 
 public class ResultsArrayAdapter extends ArrayAdapter<Score> {
     private ArrayList<Score> scores;

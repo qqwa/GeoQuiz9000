@@ -15,7 +15,7 @@ import java.util.List;
 
 import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.models.Score;
-import no.ntnu.tdt4240.geoquiz9000.ui.ResultsArrayAdapter;
+import no.ntnu.tdt4240.geoquiz9000.adapters.ResultsArrayAdapter;
 import no.ntnu.tdt4240.geoquiz9000.ui.UiUtils;
 
 public class ResultActivity extends AppCompatActivity {

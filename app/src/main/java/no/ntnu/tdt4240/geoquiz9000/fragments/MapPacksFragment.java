@@ -11,14 +11,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import io.objectbox.Box;
 import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.activities.GeoActivity;
 import no.ntnu.tdt4240.geoquiz9000.database.DatabaseLayer;
 import no.ntnu.tdt4240.geoquiz9000.models.MapStore;
-import no.ntnu.tdt4240.geoquiz9000.ui.MapStoreArrayAdapter;
+import no.ntnu.tdt4240.geoquiz9000.adapters.MapStoreArrayAdapter;
 
 public class MapPacksFragment extends Fragment {
     public interface Callbacks {
@@ -37,6 +37,7 @@ public class MapPacksFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        m_callbacks = null;
     }
 
     @Nullable
@@ -47,9 +48,8 @@ public class MapPacksFragment extends Fragment {
 
         //TODO: Fill list
         Box mapBox = DatabaseLayer.getInstance(getActivity()).getBoxFor(MapStore.class);
-        ArrayList<MapStore> stores = (ArrayList<MapStore>) mapBox.getAll();
-        MapStoreArrayAdapter adapter = new MapStoreArrayAdapter(getContext(),
-                R.layout.map_packs_list_row, stores);
+        List<MapStore> stores = (List<MapStore>) mapBox.getAll();
+        MapStoreArrayAdapter adapter = new MapStoreArrayAdapter(getContext(), stores);
 
         final ListView mapList = (ListView) root.findViewById(R.id.map_pack_list_view);
         mapList.setAdapter(adapter);

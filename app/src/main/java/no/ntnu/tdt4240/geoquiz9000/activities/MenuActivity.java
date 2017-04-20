@@ -58,28 +58,26 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     private int m_numberPlayers;
 
     // ---TaskDialog-CALLBACKS----------------------------------------------------------------
-
     @Override
-    public void onCancelPressed() {
-        if(m_task != null) {
+    public void onCancelPressed()
+    {
+        if (m_task != null) {
             m_task.cancel(false);
         }
     }
-
-
-
     // ---MapPacksFragment-CALLBACKS----------------------------------------------------------------
-
-
     @Override
-    public void onImportMapPressed() {
+    public void onImportMapPressed()
+    {
         Button button = (Button)findViewById(R.id.import_map_btn);
         PopupMenu popup = new PopupMenu(MenuActivity.this, button);
         popup.getMenuInflater().inflate(R.menu.menu_import_option, popup.getMenu());
 
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener()
+        {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
+            public boolean onMenuItemClick(MenuItem item)
+            {
                 Intent intent;
                 switch (item.getItemId()) {
                     case R.id.menu_import_storage:
@@ -109,13 +107,12 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
 
         popup.show();
     }
-
     @Override
-    public void onMapPacksBackPressed() {
+    public void onMapPacksBackPressed()
+    {
         m_title = getResources().getString(R.string.app_name);
         gotoPreviousState();
     }
-
     // ---SettingsFragment-CALLBACKS----------------------------------------------------------------
     @Override
     public void onSettingsBackPressed()
@@ -143,12 +140,8 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
         replaceState(new AddPlayersFragment());
     }
     @Override
-    public void selectMapBtn(int nrOfPlayers) {
-        m_numberPlayers = nrOfPlayers;
-        replaceState(new MapChooserFragment());
-    }
-    @Override
-    public void onMapPacksPressed() {
+    public void onMapPacksPressed()
+    {
         m_title = getResources().getString(R.string.mappacks_btn_label);
         replaceState(new MapPacksFragment());
     }
@@ -171,30 +164,22 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     }
     // ---MapChooserFragment-CALLBACKS--------------------------------------------------------------
     @Override
-    public void onDefaultMapPressed()
+    public void onMapPressed(String mapName)
     {
         if (m_numberPlayers < 1) m_numberPlayers = 1;
-        startActivity(MapsActivity.newIntent(this, "Test Map Pack", m_numberPlayers));
+        startActivity(MapsActivity.newIntent(this, mapName, m_numberPlayers));
     }
     @Override
-    public void onDefaultImagePressed() {
-        if (m_numberPlayers < 1) m_numberPlayers = 1;
-        startActivity(ImageActivity.newIntent(this, "Wraeclast123", m_numberPlayers));
-    }
-    @Override
-    public void onBrowseMapPressed()
-    {
-        // launching file explorer
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-        intent.setType("*/*");
-        startActivityForResult(intent, REQUEST_FILE);
-    }
-    @Override
-    public void onBackBtnPressed()
+    public void onBackBtnPressed() // also for AddPlayersFragment
     {
         gotoPreviousState();
+    }
+    // ---AddPlayersFragment-CALLBACKS--------------------------------------------------------------
+    @Override
+    public void selectMapBtn(int nrOfPlayers)
+    {
+        m_numberPlayers = nrOfPlayers;
+        replaceState(new MapChooserFragment());
     }
     // ---LIFECYCLE-METHODS-------------------------------------------------------------------------
     @Override
@@ -243,59 +228,70 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
             taskDialog.show(getSupportFragmentManager(), TAG_TASK_DIALOG);
 
 
-            if(m_file != null) {
+            if (m_file != null) {
                 Log.i("MENU", "CREATING TASK FOR FILE");
                 final AsyncTask task;
-                task = new AsyncImportMap(m_file, this) {
+                task = new AsyncImportMap(m_file, this)
+                {
                     @Override
-                    protected void onPostExecute(MapStore mapStore) {
-                        if(mapStore != null) {
+                    protected void onPostExecute(MapStore mapStore)
+                    {
+                        if (mapStore != null) {
                             taskDialog.setTaskLog("Successfully importer Map!");
-                        } else {
+                        }
+                        else {
                             taskDialog.setTaskLog(getErrorMessage());
                         }
                         taskDialog.setCanDismiss(true);
                     }
                     @Override
-                    protected void onCancelled() {
+                    protected void onCancelled()
+                    {
                         taskDialog.setTaskLog("Canceled.");
                         taskDialog.setCanDismiss(true);
                     }
                     @Override
-                    protected void onProgressUpdate(String... values) {
+                    protected void onProgressUpdate(String... values)
+                    {
                         taskDialog.setTaskLog(values[0]);
                     }
                 }.execute();
 
                 m_file = null;
             }
-            if(m_url != null) {
+            if (m_url != null) {
                 Log.i("MENU", "CREATING TASK FOR URL " + m_url);
                 final AsyncTask task;
-                task = new AsyncImportMap(m_url, this) {
+                task = new AsyncImportMap(m_url, this)
+                {
                     @Override
-                    protected void onPreExecute() {
+                    protected void onPreExecute()
+                    {
                         super.onPreExecute();
                     }
 
                     @Override
-                    protected void onPostExecute(MapStore mapStore) {
-                        if(mapStore != null) {
+                    protected void onPostExecute(MapStore mapStore)
+                    {
+                        if (mapStore != null) {
                             taskDialog.setTaskLog("Successfully importer Map!");
-                        } else {
+                        }
+                        else {
                             taskDialog.setTaskLog(getErrorMessage());
                         }
                         taskDialog.setCanDismiss(true);
                     }
 
                     @Override
-                    protected void onCancelled() {
+                    protected void onCancelled()
+                    {
                         taskDialog.setTaskLog("Canceled.");
                         taskDialog.setCanDismiss(true);
                     }
 
                     @Override
-                    protected void onProgressUpdate(String... values) {
+                    protected void onProgressUpdate(String... values)
+                    {
                         taskDialog.setTaskLog(values[0]);
                     }
                 }.execute();
@@ -365,7 +361,8 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
         }
     }
 
-    public static Intent startMapChooserIntent(Context c, int nrOfPlayers) {
+    public static Intent startMapChooserIntent(Context c, int nrOfPlayers)
+    {
         Intent intent = new Intent(c, MenuActivity.class);
         intent.putExtra(INTENT_NR_OF_PLAYERS, nrOfPlayers);
         return intent;

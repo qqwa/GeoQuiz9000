@@ -4,21 +4,6 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:5884734594454778380",
-      "lastPropertyId": "2:3131299236686445997",
-      "name": "Test",
-      "properties": [
-        {
-          "id": "1:4363801903079198445",
-          "name": "id"
-        },
-        {
-          "id": "2:3131299236686445997",
-          "name": "text"
-        }
-      ]
-    },
-    {
       "id": "2:6275143695012075244",
       "lastPropertyId": "8:4017309052912875092",
       "name": "MapStore",
@@ -78,7 +63,8 @@
   "lastSequenceId": "0:0",
   "modelVersion": 2,
   "retiredEntityUids": [
-    9148204076691080701
+    9148204076691080701,
+    5884734594454778380
   ],
   "retiredIndexUids": [],
   "retiredPropertyUids": [
@@ -87,7 +73,9 @@
     4359992485191841813,
     675342111604811492,
     5902204682706905063,
-    112452697769995020
+    112452697769995020,
+    4363801903079198445,
+    3131299236686445997
   ],
   "version": 1
 }

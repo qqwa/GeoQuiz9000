@@ -18,6 +18,7 @@
     <string name="highscore_btn_label">Highscores</string>
     <string name="quit_btn_label">Quit game</string>
     <!--Fragment MapChooser-->
+    <string name="map_packs_info_label">Available map packs:</string>
     <string name="default_map_btn_label">Go with default map!</string>
     <string name="default_image_map">Default image map!</string>
     <string name="browse_map_btn_label">Choose your own map!</string>
@@ -36,6 +37,7 @@
     <string name="settings_title_label">Settings</string>
     <!--Fragment Score-->
     <string name="score_title_label">High score</string>
+    <string name="score_info_label">Your scores:</string>
 
 
     <!--!!!QuestionActivity!!!-->
