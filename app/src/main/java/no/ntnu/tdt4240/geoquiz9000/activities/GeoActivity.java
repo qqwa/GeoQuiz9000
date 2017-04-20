@@ -75,6 +75,10 @@ public abstract class GeoActivity extends AppCompatActivity
         if (fm.getBackStackEntryCount() > 1)
             fm.popBackStack();
     }
+    protected Fragment getCurrentState()
+    {
+        return getSupportFragmentManager().findFragmentById(R.id.container);
+    }
     @Override
     public void onBackPressed()
     {

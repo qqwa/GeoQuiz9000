@@ -1,6 +1,7 @@
 package no.ntnu.tdt4240.geoquiz9000.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.os.Environment;
 import android.provider.OpenableColumns;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.MenuItem;
@@ -57,13 +59,19 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     private String m_title;
     private int m_numberPlayers;
 
-    // ---TaskDialog-CALLBACKS----------------------------------------------------------------
+    // ---TaskDialog-CALLBACKS----------------------------------------------------------------------
     @Override
     public void onCancelPressed()
     {
         if (m_task != null) {
             m_task.cancel(false);
         }
+        updateMapPacksList();
+    }
+    @Override
+    public void onOkPressed()
+    {
+        updateMapPacksList();
     }
     // ---MapPacksFragment-CALLBACKS----------------------------------------------------------------
     @Override
@@ -160,7 +168,21 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     @Override
     public void onQuitApplication()
     {
-        finish();
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.quit_game))
+                .setMessage(getString(R.string.sure_to_quit_game))
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) { dialogInterface.dismiss(); }
+                })
+                .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) { finish(); }
+                })
+                .create();
+        dialog.show();
     }
     // ---MapChooserFragment-CALLBACKS--------------------------------------------------------------
     @Override
@@ -227,7 +249,6 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
             taskDialog.setCancelable(false);
             taskDialog.show(getSupportFragmentManager(), TAG_TASK_DIALOG);
 
-
             if (m_file != null) {
                 Log.i("MENU", "CREATING TASK FOR FILE");
                 final AsyncTask task;
@@ -237,7 +258,7 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
                     protected void onPostExecute(MapStore mapStore)
                     {
                         if (mapStore != null) {
-                            taskDialog.setTaskLog("Successfully importer Map!");
+                            taskDialog.setTaskLog("Successfully imported Map!");
                         }
                         else {
                             taskDialog.setTaskLog(getErrorMessage());
@@ -358,6 +379,13 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+    private void updateMapPacksList(){
+        Fragment state = getCurrentState();
+        if (state instanceof MapPacksFragment) {
+            ((MapPacksFragment)state).updateListView();
+            Log.d("Maps", "List view updated from callback");
         }
     }
 
