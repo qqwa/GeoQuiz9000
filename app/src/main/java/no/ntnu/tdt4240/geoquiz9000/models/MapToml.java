@@ -89,7 +89,7 @@ public class MapToml {
             metaData.put("map", toml.getString("meta_data.map"));
         } else if(mapType == IMap.MapType.PICTURE) {
             metaData.put("map", toml.getString("meta_data.map"));
-            metaData.put("dist_x", Double.toString(toml.getDouble("meta_data.dist_x"))); // TODO: 20.04.2017 NullPointerException here
+            metaData.put("dist_x", Double.toString(toml.getDouble("meta_data.dist_x")));
             metaData.put("dist_y", Double.toString(toml.getDouble("meta_data.dist_y")));
         }
 

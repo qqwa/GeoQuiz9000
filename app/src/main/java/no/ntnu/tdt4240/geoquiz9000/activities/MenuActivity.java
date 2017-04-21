@@ -29,6 +29,8 @@ import no.ntnu.tdt4240.geoquiz9000.fragments.MapChooserFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.MapPacksFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.ScoreFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.SettingsFragment;
+import no.ntnu.tdt4240.geoquiz9000.models.IMap;
+import no.ntnu.tdt4240.geoquiz9000.models.MapGoogle;
 import no.ntnu.tdt4240.geoquiz9000.models.MapStore;
 
 public class MenuActivity extends GeoActivity implements FrontpageFragment.Callbacks,
@@ -186,10 +188,17 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     }
     // ---MapChooserFragment-CALLBACKS--------------------------------------------------------------
     @Override
-    public void onMapPressed(String mapName)
+    public void onMapPressed(MapStore map)
     {
         if (m_numberPlayers < 1) m_numberPlayers = 1;
-        startActivity(MapsActivity.newIntent(this, mapName, m_numberPlayers));
+
+        if(map.getType() == IMap.MapType.GOOGLE) {
+            startActivity(MapsActivity.newIntent(this, map.getName(), m_numberPlayers));
+        } else if (map.getType() == IMap.MapType.PICTURE) {
+            startActivity(ImageActivity.newIntent(this, map.getName(), m_numberPlayers));
+        }
+
+
     }
     @Override
     public void onBackBtnPressed() // also for AddPlayersFragment
