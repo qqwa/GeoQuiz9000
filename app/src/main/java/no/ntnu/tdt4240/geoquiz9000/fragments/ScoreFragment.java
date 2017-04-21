@@ -3,16 +3,16 @@ package no.ntnu.tdt4240.geoquiz9000.fragments;
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
-import java.util.ArrayList;
+import java.util.List;
 
+import io.objectbox.Box;
 import no.ntnu.tdt4240.geoquiz9000.R;
-import no.ntnu.tdt4240.geoquiz9000.activities.GeoActivity;
+import no.ntnu.tdt4240.geoquiz9000.adapters.ScoreAdapter;
+import no.ntnu.tdt4240.geoquiz9000.database.DatabaseLayer;
+import no.ntnu.tdt4240.geoquiz9000.models.Score;
 
-/**
- * Created by MikhailV on 04.04.2017.
- */
 
-public class ScoreFragment extends AbstractListFragment<String>
+public class ScoreFragment extends AbstractListFragment<Score>
 {
     public interface Callbacks
     {
@@ -27,9 +27,11 @@ public class ScoreFragment extends AbstractListFragment<String>
         return getResources().getString(R.string.score_info_label);
     }
     @Override
-    protected ArrayAdapter<String> getAdapter()
+    protected ArrayAdapter<Score> getAdapter()
     {
-        return new ArrayAdapter<String>(getContext(), 0, new ArrayList<String>()); // TODO: retrieve scores
+        Box scores = DatabaseLayer.getInstance(getActivity()).getBoxFor(Score.class);
+        List<Score> allScores = scores.getAll();
+        return new ScoreAdapter(getContext(), allScores);
     }
     @Override
     protected void onBackPressed()
@@ -49,5 +51,4 @@ public class ScoreFragment extends AbstractListFragment<String>
         super.onDetach();
         m_callbacks = null;
     }
-
 }

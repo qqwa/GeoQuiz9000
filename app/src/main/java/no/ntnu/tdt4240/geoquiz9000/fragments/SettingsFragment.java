@@ -73,6 +73,7 @@ public class SettingsFragment extends Fragment
 
         final Button unitsBtn = (Button)root.findViewById(R.id.units_btn);
         unitsBtn.setTypeface(font);
+        unitsBtn.setText(getString(R.string.settings_units_label, GeoUtils.getCurrentUnits().toString()));
         unitsBtn.setOnClickListener(new View.OnClickListener()
         {
             @Override

@@ -60,7 +60,6 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     private boolean m_showTaskDialog = false;
     private AsyncTask m_task = null;
     private InputStream m_file = null;
-    private String m_url = null;
     private String m_title;
     private int m_numberPlayers;
 
@@ -68,8 +67,38 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     @Override
     public void onUrlSubmitted(String url)
     {
-        m_url = url;
-        m_showTaskDialog = true;
+        final TaskDialog taskDialog = TaskDialog.newInstance();
+        //Prevent user from closing dialog until task is finished.
+        taskDialog.setCancelable(false);
+        taskDialog.show(getSupportFragmentManager(), TAG_TASK_DIALOG);
+
+        Log.i("MENU", "CREATING TASK FOR URL " + url);
+        new AsyncImportMap(url, this)
+        {
+            @Override
+            protected void onPostExecute(MapStore mapStore)
+            {
+                if (mapStore != null) {
+                    taskDialog.setTaskLog("Successfully imported Map!");
+                }
+                else {
+                    taskDialog.setTaskLog(getErrorMessage());
+                }
+                taskDialog.setCanDismiss(true);
+            }
+            @Override
+            protected void onCancelled()
+            {
+                taskDialog.setTaskLog("Canceled.");
+                taskDialog.setCanDismiss(true);
+            }
+            @Override
+            protected void onProgressUpdate(String... values)
+            {
+                taskDialog.setTaskLog(values[0]);
+            }
+        }.execute();
+        Log.i("MENU", "EXECUTING TASK");
     }
     // ---TaskDialog-CALLBACKS----------------------------------------------------------------------
     @Override
@@ -243,6 +272,7 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     @Override
     protected void onResumeFragments()
     {
+        Log.d("MENU", "onResumeFragments() called");
         // http://stackoverflow.com/a/15802094/4432988
         super.onResumeFragments();
         if (m_showErrorDialog) {
@@ -262,8 +292,7 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
 
             if (m_file != null) {
                 Log.i("MENU", "CREATING TASK FOR FILE");
-                final AsyncTask task;
-                task = new AsyncImportMap(m_file, this)
+                new AsyncImportMap(m_file, this)
                 {
                     @Override
                     protected void onPostExecute(MapStore mapStore)
@@ -288,52 +317,8 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
                         taskDialog.setTaskLog(values[0]);
                     }
                 }.execute();
-
                 m_file = null;
             }
-            if (m_url != null) {
-                Log.i("MENU", "CREATING TASK FOR URL " + m_url);
-                final AsyncTask task;
-                task = new AsyncImportMap(m_url, this)
-                {
-                    @Override
-                    protected void onPreExecute()
-                    {
-                        super.onPreExecute();
-                    }
-
-                    @Override
-                    protected void onPostExecute(MapStore mapStore)
-                    {
-                        if (mapStore != null) {
-                            taskDialog.setTaskLog("Successfully importer Map!");
-                        }
-                        else {
-                            taskDialog.setTaskLog(getErrorMessage());
-                        }
-                        taskDialog.setCanDismiss(true);
-                    }
-
-                    @Override
-                    protected void onCancelled()
-                    {
-                        taskDialog.setTaskLog("Canceled.");
-                        taskDialog.setCanDismiss(true);
-                    }
-
-                    @Override
-                    protected void onProgressUpdate(String... values)
-                    {
-                        taskDialog.setTaskLog(values[0]);
-                    }
-                }.execute();
-
-                Log.i("MENU", "EXECUTING TASK");
-
-                m_url = null;
-            }
-
-
         }
     }
     @Override

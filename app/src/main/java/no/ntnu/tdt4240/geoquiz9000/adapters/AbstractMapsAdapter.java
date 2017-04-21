@@ -21,12 +21,11 @@ public abstract class AbstractMapsAdapter extends ArrayAdapter<MapStore>
 {
     protected abstract void onMapPressed(View v, MapStore store);
 
-    private final int m_itemLayoutId;
+    private static final int LAYOUT_ID = R.layout.map_packs_list_row;
 
     public AbstractMapsAdapter(Context context, List<MapStore> stores)
     {
-        super(context, R.layout.map_packs_list_row, stores);
-        m_itemLayoutId = R.layout.map_packs_list_row;
+        super(context, LAYOUT_ID, stores);
     }
     @NonNull
     @Override
@@ -37,7 +36,7 @@ public abstract class AbstractMapsAdapter extends ArrayAdapter<MapStore>
 
         Button buttonTag;
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(m_itemLayoutId, null);
+            convertView = LayoutInflater.from(getContext()).inflate(LAYOUT_ID, null);
 
             buttonTag = (Button)convertView.findViewById(R.id.map_pack_name);
             buttonTag.setTypeface(tf);

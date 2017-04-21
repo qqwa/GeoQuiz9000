@@ -38,7 +38,7 @@
     <string name="settings_units_label">Units of distance: %1$s</string>
     <!--Fragment Score-->
     <string name="score_title_label">High score</string>
-    <string name="score_info_label">Your scores:</string>
+    <string name="score_info_label">Recorded scores:</string>
 
 
     <!--!!!QuestionActivity!!!-->
