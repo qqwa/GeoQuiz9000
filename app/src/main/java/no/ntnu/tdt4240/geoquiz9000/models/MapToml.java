@@ -89,8 +89,9 @@ public class MapToml {
             metaData.put("map", toml.getString("meta_data.map"));
         } else if(mapType == IMap.MapType.PICTURE) {
             metaData.put("map", toml.getString("meta_data.map"));
-            metaData.put("dist_x", Double.toString(toml.getDouble("meta_data.dist_x")));    // TODO: crashes here after added picture to the wrea... map
-            metaData.put("dist_y", Double.toString(toml.getDouble("meta_data.dist_y")));
+            metaData.put("dist_x", toml.getString("meta_data.dist_x"));
+            metaData.put("dist_y", toml.getString("meta_data.dist_y"));
+
         }
 
         //dataSets
