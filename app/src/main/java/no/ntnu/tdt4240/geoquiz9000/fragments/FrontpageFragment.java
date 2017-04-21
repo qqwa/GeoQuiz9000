@@ -21,8 +21,6 @@ public class FrontpageFragment extends Fragment
 
         void onMultiplayerPressed();
 
-        void onMapPacksPressed();
-
         void onSettingsPressed();
 
         void onHighScorePressed();
@@ -72,19 +70,6 @@ public class FrontpageFragment extends Fragment
             {
                 if (m_callbacks != null) {
                     m_callbacks.onMultiplayerPressed();
-                }
-            }
-        });
-
-        final Button mappacksBtn = (Button)root.findViewById(R.id.mappacks_btn);
-        mappacksBtn.setTypeface(textFont);
-        mappacksBtn.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (m_callbacks != null) {
-                    m_callbacks.onMapPacksPressed();
                 }
             }
         });

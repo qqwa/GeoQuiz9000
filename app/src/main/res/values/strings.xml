@@ -35,6 +35,7 @@
     <string name="export_map">Export Map Pack</string>
     <!--Fragment Settings-->
     <string name="settings_title_label">Settings</string>
+    <string name="settings_units_label">Units of distance: %1$s</string>
     <!--Fragment Score-->
     <string name="score_title_label">High score</string>
     <string name="score_info_label">Your scores:</string>

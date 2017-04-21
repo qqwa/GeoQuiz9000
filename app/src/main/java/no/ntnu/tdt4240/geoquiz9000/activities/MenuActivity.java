@@ -30,7 +30,6 @@ import no.ntnu.tdt4240.geoquiz9000.fragments.MapPacksFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.ScoreFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.SettingsFragment;
 import no.ntnu.tdt4240.geoquiz9000.models.IMap;
-import no.ntnu.tdt4240.geoquiz9000.models.MapGoogle;
 import no.ntnu.tdt4240.geoquiz9000.models.MapStore;
 
 public class MenuActivity extends GeoActivity implements FrontpageFragment.Callbacks,
@@ -42,6 +41,12 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
                                                          TaskDialog.Callbacks,
                                                          EnterUrlDialog.Callbacks
 {
+    public static Intent startMapChooserIntent(Context c, int nrOfPlayers)
+    {
+        Intent intent = new Intent(c, MenuActivity.class);
+        intent.putExtra(INTENT_NR_OF_PLAYERS, nrOfPlayers);
+        return intent;
+    }
     private static final int REQUEST_FILE = 10;
     private static final int REQUEST_GAME = 11;
     private static final String SAVED_TITLE = "MenuActivity.SAVED_TITLE";
@@ -93,12 +98,11 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
             @Override
             public boolean onMenuItemClick(MenuItem item)
             {
-                Intent intent;
                 switch (item.getItemId()) {
                     case R.id.menu_import_storage:
                         Log.i("MENU", "IMPORT FROM DEVICE");
                         // launching file explorer
-                        intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                         intent.addCategory(Intent.CATEGORY_OPENABLE);
                         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
                         intent.setType("*/*");
@@ -130,6 +134,12 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
         m_title = getResources().getString(R.string.app_name);
         gotoPreviousState();
     }
+    @Override
+    public void onMapPacksPressed()
+    {
+        m_title = getResources().getString(R.string.mappacks_btn_label);
+        replaceState(new MapPacksFragment());
+    }
     // ---ScoreFragment-CALLBACKS-------------------------------------------------------------------
     @Override
     public void onScoreBackPressed()
@@ -148,12 +158,6 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     public void onMultiplayerPressed()
     {
         replaceState(new AddPlayersFragment());
-    }
-    @Override
-    public void onMapPacksPressed()
-    {
-        m_title = getResources().getString(R.string.mappacks_btn_label);
-        replaceState(new MapPacksFragment());
     }
     @Override
     public void onSettingsPressed()
@@ -197,8 +201,6 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
         } else if (map.getType() == IMap.MapType.PICTURE) {
             startActivity(ImageActivity.newIntent(this, map.getName(), m_numberPlayers));
         }
-
-
     }
     @Override
     public void onBackBtnPressed() // also for AddPlayersFragment
@@ -391,12 +393,5 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
             ((MapPacksFragment)state).updateListView();
             Log.d("Maps", "List view updated from callback");
         }
-    }
-
-    public static Intent startMapChooserIntent(Context c, int nrOfPlayers)
-    {
-        Intent intent = new Intent(c, MenuActivity.class);
-        intent.putExtra(INTENT_NR_OF_PLAYERS, nrOfPlayers);
-        return intent;
     }
 }

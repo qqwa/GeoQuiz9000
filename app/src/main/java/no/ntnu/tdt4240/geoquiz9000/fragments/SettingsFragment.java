@@ -13,15 +13,15 @@ import android.widget.Button;
 
 import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.activities.GeoActivity;
+import no.ntnu.tdt4240.geoquiz9000.utils.GeoUtils;
 
-/**
- * Created by MikhailV on 04.04.2017.
- */
 
 public class SettingsFragment extends Fragment
 {
     public interface Callbacks
     {
+        void onMapPacksPressed();
+
         void onSettingsBackPressed();
     }
 
@@ -58,8 +58,40 @@ public class SettingsFragment extends Fragment
             }
         });
 
-        // TODO: 04.04.2017 initialize other views here
+        final Button mappacksBtn = (Button)root.findViewById(R.id.mappacks_btn);
+        mappacksBtn.setTypeface(font);
+        mappacksBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (m_callbacks != null) {
+                    m_callbacks.onMapPacksPressed();
+                }
+            }
+        });
 
+        final Button unitsBtn = (Button)root.findViewById(R.id.units_btn);
+        unitsBtn.setTypeface(font);
+        unitsBtn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                switch (GeoUtils.getCurrentUnits()) {
+                    case KM:
+                        GeoUtils.setCurrentUnits(GeoUtils.Units.MILES);
+                        unitsBtn.setText(getString(R.string.settings_units_label,
+                                GeoUtils.Units.MILES.toString()));
+                        return;
+                    case MILES:
+                        GeoUtils.setCurrentUnits(GeoUtils.Units.KM);
+                        unitsBtn.setText(getString(R.string.settings_units_label,
+                                GeoUtils.Units.KM.toString()));
+                        return;
+                }
+            }
+        });
         return root;
     }
 }

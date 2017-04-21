@@ -3,7 +3,6 @@ package no.ntnu.tdt4240.geoquiz9000.dialogs;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,9 +16,6 @@ import android.widget.TextView;
 import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.ui.UiUtils;
 
-/**
- * Created by MikhailV on 21.04.2017.
- */
 
 public class EnterUrlDialog extends DialogFragment
 {

@@ -38,8 +38,30 @@ public class GeoUtils {
     public static float kmToMiles(float km) {
         return km * 0.621371192f;
     }
-
     public static float milesToKm(float miles) {
         return miles * 1.609344f;
+    }
+
+    public enum Units {
+        KM("km"), MILES("miles");
+
+        private String m_string;
+
+        Units(String string) {
+            m_string = string;
+        }
+        @Override
+        public String toString() {
+            return m_string;
+        }
+    }
+
+    private static Units s_currentUnits = Units.KM;
+
+    public static Units getCurrentUnits() {
+        return s_currentUnits;
+    }
+    public static  void setCurrentUnits(Units units) {
+        s_currentUnits = units;
     }
 }
