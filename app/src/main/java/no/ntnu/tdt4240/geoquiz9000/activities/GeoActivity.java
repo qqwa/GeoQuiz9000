@@ -82,7 +82,7 @@ public abstract class GeoActivity extends AppCompatActivity
                         protected void onPostExecute(MapStore mapStore)
                         {
                             try {
-                                new AsyncImportMap(getAssets().open("wraeclast3.zip"), GeoActivity.this)
+                                new AsyncImportMap(getAssets().open("wraeclast.zip"), GeoActivity.this)
                                 {
                                     @Override
                                     protected void onCancelled() { m_defaultMapsImported = false; }

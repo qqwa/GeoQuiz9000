@@ -9,10 +9,12 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.OpenableColumns;
 import android.renderscript.RSInvalidStateException;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.os.EnvironmentCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
@@ -20,10 +22,14 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 
 import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.controllers.AsyncAddQuestion;
+import no.ntnu.tdt4240.geoquiz9000.controllers.AsyncExportMap;
 import no.ntnu.tdt4240.geoquiz9000.controllers.AsyncImportMap;
 import no.ntnu.tdt4240.geoquiz9000.dialogs.EnterUrlDialog;
 import no.ntnu.tdt4240.geoquiz9000.dialogs.ImportErrorDialog;
@@ -36,8 +42,6 @@ import no.ntnu.tdt4240.geoquiz9000.fragments.MapPacksFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.ScoreFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.SettingsFragment;
 import no.ntnu.tdt4240.geoquiz9000.models.IMap;
-import no.ntnu.tdt4240.geoquiz9000.models.MapGoogle;
-import no.ntnu.tdt4240.geoquiz9000.models.MapPicture;
 import no.ntnu.tdt4240.geoquiz9000.models.MapStore;
 
 public class MenuActivity extends GeoActivity implements FrontpageFragment.Callbacks,
@@ -95,8 +99,8 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
                 @Override
                 protected void onPostExecute(MapStore mapStore)
                 {
-                    Toast.makeText(MenuActivity.this, "Picture added successfully", Toast.LENGTH_SHORT)
-                            .show();
+                    Toast.makeText(getApplicationContext(), "Picture added successfully", Toast.LENGTH_SHORT)
+                    .show();
                 }
             }.execute();
         }
@@ -168,7 +172,30 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     @Override
     public void onExportMapPressed(MapStore store)
     {
-        // TODO: 21.04.2017
+        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+
+        // temp test:
+        File file = new File(dir, "example.txt");
+        try (FileWriter fileWriter = new FileWriter(file)) {
+            file.createNewFile();
+            fileWriter.append("Writing to file!");
+        } catch (IOException e) {
+            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+        // TODO: 22.04.2017 https://developer.android.com/training/permissions/requesting.html
+
+//        dir.mkdirs();
+//        String fname = store.getName() + ".zip";
+//        File file = new File(dir, fname);
+//        new AsyncExportMap(store, file){
+//            @Override
+//            protected void onPostExecute(Void aVoid)
+//            {
+//                Toast.makeText(getApplicationContext(), "Map exported successfully!", Toast.LENGTH_SHORT)
+//                .show();
+//            }
+//        }.execute();
     }
     @Override
     public void onImportMapPressed()
