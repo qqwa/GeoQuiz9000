@@ -53,10 +53,11 @@ public class ScoreAdapter extends ArrayAdapter<Score>
         private final TextView m_playerName;
         private final TextView m_distance;
         private final TextView m_mapName;
+        private Context m_context;
 
         public ViewHolder(View rootView, Context context)
         {
-            Typeface font = UiUtils.getTextFont(context);
+            Typeface font = UiUtils.getTextFont(m_context = context);
             m_playerName = (TextView)rootView.findViewById(R.id.player_label);
             m_playerName.setTypeface(font);
             m_distance = (TextView)rootView.findViewById(R.id.total_distance_label);
@@ -67,7 +68,9 @@ public class ScoreAdapter extends ArrayAdapter<Score>
         public void bind(Score data)
         {
             m_playerName.setText(data.getPlayerName());
-            m_distance.setText(data.getTotalDistance() + GeoUtils.getCurrentUnits().toString());
+            String text = m_context.getString(R.string.score_distance_line,
+                    data.getTotalDistance(), GeoUtils.getCurrentUnits().toString());
+            m_distance.setText(text);
             m_mapName.setText(data.getMapPackName());
         }
     }

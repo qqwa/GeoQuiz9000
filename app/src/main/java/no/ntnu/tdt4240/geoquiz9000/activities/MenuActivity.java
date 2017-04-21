@@ -4,10 +4,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.OpenableColumns;
+import android.renderscript.RSInvalidStateException;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -15,13 +18,16 @@ import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.io.InputStream;
 
 import no.ntnu.tdt4240.geoquiz9000.R;
+import no.ntnu.tdt4240.geoquiz9000.controllers.AsyncAddQuestion;
 import no.ntnu.tdt4240.geoquiz9000.controllers.AsyncImportMap;
 import no.ntnu.tdt4240.geoquiz9000.dialogs.EnterUrlDialog;
 import no.ntnu.tdt4240.geoquiz9000.dialogs.ImportErrorDialog;
+import no.ntnu.tdt4240.geoquiz9000.dialogs.LocationDialog;
 import no.ntnu.tdt4240.geoquiz9000.fragments.AddPlayersFragment;
 import no.ntnu.tdt4240.geoquiz9000.dialogs.TaskDialog;
 import no.ntnu.tdt4240.geoquiz9000.fragments.FrontpageFragment;
@@ -30,6 +36,8 @@ import no.ntnu.tdt4240.geoquiz9000.fragments.MapPacksFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.ScoreFragment;
 import no.ntnu.tdt4240.geoquiz9000.fragments.SettingsFragment;
 import no.ntnu.tdt4240.geoquiz9000.models.IMap;
+import no.ntnu.tdt4240.geoquiz9000.models.MapGoogle;
+import no.ntnu.tdt4240.geoquiz9000.models.MapPicture;
 import no.ntnu.tdt4240.geoquiz9000.models.MapStore;
 
 public class MenuActivity extends GeoActivity implements FrontpageFragment.Callbacks,
@@ -39,7 +47,8 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
                                                          AddPlayersFragment.Callbacks,
                                                          MapPacksFragment.Callbacks,
                                                          TaskDialog.Callbacks,
-                                                         EnterUrlDialog.Callbacks
+                                                         EnterUrlDialog.Callbacks,
+                                                         LocationDialog.Callbacks
 {
     public static Intent startMapChooserIntent(Context c, int nrOfPlayers)
     {
@@ -49,9 +58,11 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     }
     private static final int REQUEST_FILE = 10;
     private static final int REQUEST_GAME = 11;
+    private static final int REQUEST_PICTURE = 12;
     private static final String SAVED_TITLE = "MenuActivity.SAVED_TITLE";
     private static final String TAG_ERROR_DIALOG = "MapChooserFragment.TAG_ERROR_DIALOG";
     private static final String TAG_URL_DIALOG = "MenuActivity.TAG_URL_DIALOG";
+    private static final String TAG_LOCATION_DIALOG = "MenuActivity.TAG_LOCATION_DIALOG";
     private static final String INTENT_NR_OF_PLAYERS = "intent nr of players";
     private static final String TAG_TASK_DIALOG = "MapPacksFragment.TAG_TASK_DIALOG";
 
@@ -63,6 +74,35 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     private String m_title;
     private int m_numberPlayers;
 
+    private MapStore m_selectedMapStore = null;
+    private Bitmap m_selectedPicture = null;
+    private boolean m_showLocationGoogleDialog = false;
+    private boolean m_showLocationPictureDialog = false;
+
+    // ---LocationDialog-CALLBACKS------------------------------------------------------------------
+    @Override
+    public void onDialogDismissed()
+    {
+        m_selectedPicture = null;
+        m_selectedMapStore = null;
+    }
+    @Override
+    public void onLocationSubmitted(IMap.Location location)
+    {
+        if (m_selectedPicture != null && m_selectedMapStore != null && location != null) {
+            new AsyncAddQuestion(m_selectedMapStore, m_selectedPicture, location)
+            {
+                @Override
+                protected void onPostExecute(MapStore mapStore)
+                {
+                    Toast.makeText(MenuActivity.this, "Picture added successfully", Toast.LENGTH_SHORT)
+                            .show();
+                }
+            }.execute();
+        }
+        m_selectedPicture = null;
+        m_selectedMapStore = null;
+    }
     // ---EnterUrlDialog-CALLBACKS------------------------------------------------------------------
     @Override
     public void onUrlSubmitted(String url)
@@ -115,6 +155,21 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
         updateMapPacksList();
     }
     // ---MapPacksFragment-CALLBACKS----------------------------------------------------------------
+    @Override
+    public void onAddPicturePressed(MapStore store)
+    {
+        m_selectedMapStore = store;
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.select_pic_prompt)),
+                REQUEST_PICTURE);
+    }
+    @Override
+    public void onExportMapPressed(MapStore store)
+    {
+        // TODO: 21.04.2017
+    }
     @Override
     public void onImportMapPressed()
     {
@@ -225,9 +280,10 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     {
         if (m_numberPlayers < 1) m_numberPlayers = 1;
 
-        if(map.getType() == IMap.MapType.GOOGLE) {
+        if (map.getType() == IMap.MapType.GOOGLE) {
             startActivity(MapsActivity.newIntent(this, map.getName(), m_numberPlayers));
-        } else if (map.getType() == IMap.MapType.PICTURE) {
+        }
+        else if (map.getType() == IMap.MapType.PICTURE) {
             startActivity(ImageActivity.newIntent(this, map.getName(), m_numberPlayers));
         }
     }
@@ -272,7 +328,6 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     @Override
     protected void onResumeFragments()
     {
-        Log.d("MENU", "onResumeFragments() called");
         // http://stackoverflow.com/a/15802094/4432988
         super.onResumeFragments();
         if (m_showErrorDialog) {
@@ -283,8 +338,16 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
             m_gotoFrontpage = false;
             replaceState(new FrontpageFragment());
         }
+        if (m_showLocationGoogleDialog) {
+            m_showLocationGoogleDialog = false;
+            LocationDialog.newLocationGoogleDialog().show(getSupportFragmentManager(), TAG_LOCATION_DIALOG);
+        }
+        if (m_showLocationPictureDialog) {
+            m_showLocationPictureDialog = false;
+            LocationDialog.newLocationPictureDialog().show(getSupportFragmentManager(), TAG_LOCATION_DIALOG);
+        }
         if (m_showTaskDialog) {
-            m_showErrorDialog = false;
+            m_showTaskDialog = false;
             final TaskDialog taskDialog = TaskDialog.newInstance();
             //Prevent user from closing dialog until task is finished.
             taskDialog.setCancelable(false);
@@ -334,6 +397,25 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
             return;
 
         switch (requestCode) {
+            case REQUEST_PICTURE:
+                try {
+                    if (m_selectedMapStore == null)
+                        throw new IllegalStateException();
+                    InputStream inputStream = getContentResolver().openInputStream(data.getData());
+                    m_selectedPicture = BitmapFactory.decodeStream(inputStream);
+
+                    if (m_selectedMapStore.getType() == IMap.MapType.GOOGLE)
+                        m_showLocationGoogleDialog = true;
+                    else if (m_selectedMapStore.getType() == IMap.MapType.PICTURE)
+                        m_showLocationPictureDialog = true;
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                    m_showErrorDialog = true;
+                    m_selectedMapStore = null;
+                    m_selectedPicture = null;
+                }
+                break;
             case REQUEST_GAME:
                 m_gotoFrontpage = true;
                 break;
@@ -354,10 +436,8 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
                     else {
                         throw new Exception();
                     }
-                    //start new AsyncTask
                     m_file = getContentResolver().openInputStream(path);
                     m_showTaskDialog = true;
-
                 }
                 catch (Exception e) {
                     e.printStackTrace();
@@ -372,7 +452,8 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
                 super.onActivityResult(requestCode, resultCode, data);
         }
     }
-    private void updateMapPacksList(){
+    private void updateMapPacksList()
+    {
         Fragment state = getCurrentState();
         if (state instanceof MapPacksFragment) {
             ((MapPacksFragment)state).updateListView();

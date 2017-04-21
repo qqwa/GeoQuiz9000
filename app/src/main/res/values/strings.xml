@@ -33,12 +33,14 @@
     <string name="import_from_network">Download from Internet</string>
     <string name="add_question">Add new Question</string>
     <string name="export_map">Export Map Pack</string>
+    <string name="select_pic_prompt">Select picture</string>
     <!--Fragment Settings-->
     <string name="settings_title_label">Settings</string>
     <string name="settings_units_label">Units of distance: %1$s</string>
     <!--Fragment Score-->
     <string name="score_title_label">High score</string>
     <string name="score_info_label">Recorded scores:</string>
+    <string name="score_distance_line">%1$.2f %2$s</string>
 
 
     <!--!!!QuestionActivity!!!-->
@@ -74,6 +76,13 @@
 
     <!--Dialog URL-->
     <string name="enter_url_prompt">Enter a url:</string>
+
+    <!--Dialog Location-->
+    <string name="coordinates_prompt">Enter coordinates:</string>
+    <string name="longitude">Longitude:</string>
+    <string name="latitude">Latitude:</string>
+    <string name="x">X:</string>
+    <string name="y">Y:</string>
 
     <!--Error Messages-->
     <string name="error_load_map_package">"Could not load map package."</string>
