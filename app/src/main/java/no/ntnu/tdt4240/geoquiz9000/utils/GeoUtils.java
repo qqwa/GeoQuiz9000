@@ -34,4 +34,12 @@ public class GeoUtils {
         return (float) Math.sqrt(Math.pow((setX - answerX) * mapPicture.getDistX(), 2) +
                 Math.pow((setY - answerY) * mapPicture.getDistY(), 2));
     }
+
+    public static float kmToMiles(float km) {
+        return km * 0.621371192f;
+    }
+
+    public static float milesToKm(float miles) {
+        return miles * 1.609344f;
+    }
 }

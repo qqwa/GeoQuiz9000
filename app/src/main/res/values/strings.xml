@@ -71,6 +71,9 @@
     <string name="press_long_on_the_map_to_set_the_marker">Press long on the map to set the marker!</string>
     <string name="let_s_go">LET\'S GO</string>
 
+    <!--Dialog URL-->
+    <string name="enter_url_prompt">Enter a url:</string>
+
     <!--Error Messages-->
     <string name="error_load_map_package">"Could not load map package."</string>
     <string name="import_error_msg">Incompatible file type chosen</string>

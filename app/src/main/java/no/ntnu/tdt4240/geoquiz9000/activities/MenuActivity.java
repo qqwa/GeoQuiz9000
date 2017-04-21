@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.OpenableColumns;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,13 +16,11 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 
-import java.io.File;
 import java.io.InputStream;
 
 import no.ntnu.tdt4240.geoquiz9000.R;
-import no.ntnu.tdt4240.geoquiz9000.controllers.AsyncExportMap;
 import no.ntnu.tdt4240.geoquiz9000.controllers.AsyncImportMap;
-import no.ntnu.tdt4240.geoquiz9000.controllers.MapFactory;
+import no.ntnu.tdt4240.geoquiz9000.dialogs.EnterUrlDialog;
 import no.ntnu.tdt4240.geoquiz9000.dialogs.ImportErrorDialog;
 import no.ntnu.tdt4240.geoquiz9000.fragments.AddPlayersFragment;
 import no.ntnu.tdt4240.geoquiz9000.dialogs.TaskDialog;
@@ -40,13 +37,14 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
                                                          SettingsFragment.Callbacks,
                                                          AddPlayersFragment.Callbacks,
                                                          MapPacksFragment.Callbacks,
-                                                         TaskDialog.Callbacks
+                                                         TaskDialog.Callbacks,
+                                                         EnterUrlDialog.Callbacks
 {
     private static final int REQUEST_FILE = 10;
     private static final int REQUEST_GAME = 11;
-    private static final int REQUEST_URL = 12;
     private static final String SAVED_TITLE = "MenuActivity.SAVED_TITLE";
     private static final String TAG_ERROR_DIALOG = "MapChooserFragment.TAG_ERROR_DIALOG";
+    private static final String TAG_URL_DIALOG = "MenuActivity.TAG_URL_DIALOG";
     private static final String INTENT_NR_OF_PLAYERS = "intent nr of players";
     private static final String TAG_TASK_DIALOG = "MapPacksFragment.TAG_TASK_DIALOG";
 
@@ -59,6 +57,13 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     private String m_title;
     private int m_numberPlayers;
 
+    // ---EnterUrlDialog-CALLBACKS------------------------------------------------------------------
+    @Override
+    public void onUrlSubmitted(String url)
+    {
+        m_url = url;
+        m_showTaskDialog = true;
+    }
     // ---TaskDialog-CALLBACKS----------------------------------------------------------------------
     @Override
     public void onCancelPressed()
@@ -99,14 +104,9 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
                         return true;
                     case R.id.menu_import_network:
                         Log.i("MENU", "IMPORT FROM NETWORK");
-                        //TODO: change intent to something meaningful
-                        intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                        intent.addCategory(Intent.CATEGORY_OPENABLE);
-                        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-                        intent.setType("*/*");
-                        startActivityForResult(intent, REQUEST_URL);
+                        EnterUrlDialog dialog = new EnterUrlDialog();
+                        dialog.show(getSupportFragmentManager(), TAG_URL_DIALOG);
                         return true;
-
                     default:
                         return false;
                 }
@@ -371,11 +371,6 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
                     if (cursor != null)
                         cursor.close();
                 }
-                break;
-            case REQUEST_URL:
-                //TODO: put real url into m_url
-                m_url = "https://github.com/bebae/Maps-GeoQuiz9000/raw/master/wraeclast3.zip";
-                m_showTaskDialog = true;
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
