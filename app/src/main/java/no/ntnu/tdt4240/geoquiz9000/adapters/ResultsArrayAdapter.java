@@ -16,6 +16,7 @@ import java.util.Collections;
 import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.models.Score;
 import no.ntnu.tdt4240.geoquiz9000.ui.UiUtils;
+import no.ntnu.tdt4240.geoquiz9000.utils.GeoUtils;
 
 public class ResultsArrayAdapter extends ArrayAdapter<Score> {
     private ArrayList<Score> scores;
@@ -62,7 +63,18 @@ public class ResultsArrayAdapter extends ArrayAdapter<Score> {
         holder.playerName.setText(score.getPlayerName());
 
         // Meter representation of result to km
-        String result = String.format("%.02f", score.getTotalDistance() / 1000) + "km";
+        float distance =  score.getTotalDistance() / 1000;
+        switch (GeoUtils.getCurrentUnits(getContext()))
+        {
+            case MILES:
+                distance = GeoUtils.kmToMiles(distance);
+                break;
+            default:
+                break;
+        }
+
+
+        String result = String.format("%.02f", distance) + GeoUtils.getCurrentUnits(getContext()).toString();
         holder.result.setText(result);
 
         return view;

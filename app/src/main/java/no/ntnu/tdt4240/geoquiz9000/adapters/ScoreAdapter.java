@@ -16,6 +16,7 @@ import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.models.Score;
 import no.ntnu.tdt4240.geoquiz9000.ui.UiUtils;
 import no.ntnu.tdt4240.geoquiz9000.utils.GeoUtils;
+import no.ntnu.tdt4240.geoquiz9000.utils.GeoUtils.Units;
 
 
 public class ScoreAdapter extends ArrayAdapter<Score>
@@ -68,8 +69,18 @@ public class ScoreAdapter extends ArrayAdapter<Score>
         public void bind(Score data)
         {
             m_playerName.setText(data.getPlayerName());
+            float distance = data.getTotalDistance();
+            switch (GeoUtils.getCurrentUnits(m_context))
+            {
+                case MILES:
+                    distance = GeoUtils.kmToMiles(distance);
+                    break;
+                default:
+                    break;
+            }
+
             String text = m_context.getString(R.string.score_distance_line,
-                    data.getTotalDistance(), GeoUtils.getCurrentUnits(m_context).toString());
+                    distance, GeoUtils.getCurrentUnits(m_context).toString());
             m_distance.setText(text);
             m_mapName.setText(data.getMapPackName());
         }
