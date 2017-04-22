@@ -187,6 +187,7 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
         }
         else {
             writeMapToFile();
+            m_selectedMapStore = null;
         }
     }
     @Override
