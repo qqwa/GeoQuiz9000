@@ -1,0 +1,23 @@
+# Name of the Map Pack, that will be displayed in game
+name = "Map Pack 2"
+
+# type of the map pack, if you want another type, please us responding
+# template file it
+type = "picture"
+
+[meta_data] # map type specific data
+map = "map.jpg" # path to the map, relative to the toml file
+dist_x = "35.4" # distance, in meter, between two pixels on the x axis
+dist_y = "35.4" # distance, in meter, between two pixels on the y axis
+
+
+# Each question has it's own data_set
+[[data_set]] # first question
+picture = "pic1.jpg" #path to picture, relative to the toml file
+x = 378 #Zero being left.
+y = 154 #Zero being top.
+
+[[data_set]] # second question
+picture = "pic2.jpg"
+x = 378
+y = 154
