@@ -1,8 +1,10 @@
 package no.ntnu.tdt4240.geoquiz9000.activities;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,10 +13,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.OpenableColumns;
-import android.renderscript.RSInvalidStateException;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.os.EnvironmentCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
@@ -63,6 +65,7 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     private static final int REQUEST_FILE = 10;
     private static final int REQUEST_GAME = 11;
     private static final int REQUEST_PICTURE = 12;
+    private static final int PERMISSION_REQUEST_WRITE = 20;
     private static final String SAVED_TITLE = "MenuActivity.SAVED_TITLE";
     private static final String TAG_ERROR_DIALOG = "MapChooserFragment.TAG_ERROR_DIALOG";
     private static final String TAG_URL_DIALOG = "MenuActivity.TAG_URL_DIALOG";
@@ -100,7 +103,7 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
                 protected void onPostExecute(MapStore mapStore)
                 {
                     Toast.makeText(getApplicationContext(), "Picture added successfully", Toast.LENGTH_SHORT)
-                    .show();
+                            .show();
                 }
             }.execute();
         }
@@ -172,30 +175,21 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
     @Override
     public void onExportMapPressed(MapStore store)
     {
-        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-
-        // temp test:
-        File file = new File(dir, "example.txt");
-        try (FileWriter fileWriter = new FileWriter(file)) {
-            file.createNewFile();
-            fileWriter.append("Writing to file!");
-        } catch (IOException e) {
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        if (m_selectedMapStore != null) {
+            Toast.makeText(getApplicationContext(), "Cannot export map now!", Toast.LENGTH_SHORT)
+                    .show();
+            return;
         }
+        m_selectedMapStore = store;
 
-        // TODO: 22.04.2017 https://developer.android.com/training/permissions/requesting.html
-
-//        dir.mkdirs();
-//        String fname = store.getName() + ".zip";
-//        File file = new File(dir, fname);
-//        new AsyncExportMap(store, file){
-//            @Override
-//            protected void onPostExecute(Void aVoid)
-//            {
-//                Toast.makeText(getApplicationContext(), "Map exported successfully!", Toast.LENGTH_SHORT)
-//                .show();
-//            }
-//        }.execute();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                    PERMISSION_REQUEST_WRITE);
+        }
+        else {
+            writeMapToFile();
+        }
     }
     @Override
     public void onImportMapPressed()
@@ -478,6 +472,46 @@ public class MenuActivity extends GeoActivity implements FrontpageFragment.Callb
             default:
                 super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_WRITE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    writeMapToFile();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Error: permission denied", Toast.LENGTH_SHORT)
+                            .show();
+                }
+                m_selectedMapStore = null;
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+    private void writeMapToFile() // doesn't clear m_selectedMapStore
+    {
+        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        dir.mkdirs();
+        String fname = m_selectedMapStore.getName() + ".zip";
+        File file = new File(dir, fname);
+        new AsyncExportMap(m_selectedMapStore, file)
+        {
+            @Override
+            protected void onPostExecute(Void aVoid)
+            {
+                Toast.makeText(getApplicationContext(), "Map exported successfully to Downloads", Toast.LENGTH_SHORT)
+                        .show();
+            }
+            @Override
+            protected void onCancelled()
+            {
+                Toast.makeText(getApplicationContext(), "Error: export cancelled", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }.execute();
     }
     private void updateMapPacksList()
     {
