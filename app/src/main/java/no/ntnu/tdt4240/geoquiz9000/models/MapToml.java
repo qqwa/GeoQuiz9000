@@ -89,28 +89,31 @@ public class MapToml {
             metaData.put("map", toml.getString("meta_data.map"));
         } else if(mapType == IMap.MapType.PICTURE) {
             metaData.put("map", toml.getString("meta_data.map"));
-            metaData.put("dist_x", Double.toString(toml.getDouble("meta_data.dist_x")));
-            metaData.put("dist_y", Double.toString(toml.getDouble("meta_data.dist_y")));
+            metaData.put("dist_x", toml.getString("meta_data.dist_x"));
+            metaData.put("dist_y", toml.getString("meta_data.dist_y"));
+
         }
 
         //dataSets
         List<Toml> dataToml = toml.getTables("data_set");
         ArrayList<DataSet> dataSets = new ArrayList<>(dataToml.size());
 
-        for(int i=0; i<dataToml.size(); i++) {
+        for (int i = 0; i < dataToml.size(); i++) {
             Toml cur = dataToml.get(i);
             String picture = cur.getString("picture");
             String description;
-            if(cur.contains("description")) {
+            if (cur.contains("description")) {
                 description = cur.getString("description");
-            } else {
+            }
+            else {
                 description = "";
             }
-            
+
             IMap.Location location = null;
-            if(mapType == IMap.MapType.GOOGLE) {
+            if (mapType == IMap.MapType.GOOGLE) {
                 location = new MapGoogle.Location(cur.getDouble("longitude"), cur.getDouble("latitude"));
-            } else if(mapType == IMap.MapType.PICTURE) {
+            }
+            else if (mapType == IMap.MapType.PICTURE) {
                 location = new MapPicture.Location(cur.getLong("x").intValue(), cur.getLong("y").intValue());
             }
 

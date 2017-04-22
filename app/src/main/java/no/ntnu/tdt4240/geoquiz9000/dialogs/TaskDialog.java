@@ -4,12 +4,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +20,7 @@ import no.ntnu.tdt4240.geoquiz9000.activities.GeoActivity;
 public class TaskDialog extends DialogFragment {
     public interface Callbacks {
         void onCancelPressed();
+        void onOkPressed();
     }
 
     public static TaskDialog newInstance() {
@@ -70,6 +69,8 @@ public class TaskDialog extends DialogFragment {
                 ok.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        if (m_callbacks!=null)
+                            m_callbacks.onOkPressed();
                         if(m_canDismiss) {
                             dialog.dismiss();
                         }

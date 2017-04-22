@@ -1,33 +1,54 @@
 package no.ntnu.tdt4240.geoquiz9000.fragments;
 
 import android.content.Context;
-import android.graphics.Typeface;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 
+import java.util.List;
+
+import io.objectbox.Box;
 import no.ntnu.tdt4240.geoquiz9000.R;
-import no.ntnu.tdt4240.geoquiz9000.activities.GeoActivity;
+import no.ntnu.tdt4240.geoquiz9000.adapters.AbstractMapsAdapter;
+import no.ntnu.tdt4240.geoquiz9000.database.DatabaseLayer;
+import no.ntnu.tdt4240.geoquiz9000.models.MapStore;
 
-public class MapChooserFragment extends Fragment
+public class MapChooserFragment extends AbstractListFragment<MapStore>
 {
     public interface Callbacks
     {
-        void onDefaultMapPressed();
-
-        void onBrowseMapPressed();
+        void onMapPressed(MapStore map);
 
         void onBackBtnPressed();
-
-        void onDefaultImagePressed();
     }
 
     private Callbacks m_callbacks;
 
+    @Override
+    protected CharSequence getListLabel()
+    {
+        return getResources().getString(R.string.map_packs_info_label);
+    }
+    @Override
+    protected ArrayAdapter<MapStore> getAdapter()
+    {
+        Box mapBox = DatabaseLayer.getInstance(getActivity()).getBoxFor(MapStore.class);
+        List<MapStore> stores = (List<MapStore>)mapBox.getAll();
+        return new AbstractMapsAdapter(getContext(), stores)
+        {
+            @Override
+            protected void onMapPressed(View v, MapStore store)
+            {
+                if (m_callbacks != null)
+                    m_callbacks.onMapPressed(store);
+            }
+        };
+    }
+    @Override
+    protected void onBackPressed()
+    {
+        if (m_callbacks != null)
+            m_callbacks.onBackBtnPressed();
+    }
     @Override
     public void onAttach(Context context)
     {
@@ -39,64 +60,5 @@ public class MapChooserFragment extends Fragment
     {
         super.onDetach();
         m_callbacks = null;
-    }
-    @Nullable
-    @Override
-    public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-    {
-        final Typeface textFont = ((GeoActivity)getActivity()).getTextFont();
-        View root = inflater.inflate(R.layout.fragment_map_chooser, container, false);
-
-        final Button defaultBtn = (Button)root.findViewById(R.id.default_map_btn);
-        defaultBtn.setTypeface(textFont);
-        defaultBtn.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (m_callbacks != null) {
-                    m_callbacks.onDefaultMapPressed();
-                }
-
-            }
-        });
-        final Button defaultImageBtn = (Button)root.findViewById(R.id.default_image_btn);
-        defaultImageBtn.setTypeface(textFont);
-        defaultImageBtn.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (m_callbacks != null) {
-                    m_callbacks.onDefaultImagePressed();
-                }
-
-            }
-        });
-        final Button browseBtn = (Button)root.findViewById(R.id.browse_map_btn);
-        browseBtn.setTypeface(textFont);
-        browseBtn.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (m_callbacks != null) {
-                    m_callbacks.onBrowseMapPressed();
-                }
-            }
-        });
-        final Button backBtn = (Button)root.findViewById(R.id.back_btn);
-        backBtn.setTypeface(textFont);
-        backBtn.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (m_callbacks != null) {
-                    m_callbacks.onBackBtnPressed();
-                }
-            }
-        });
-        return root;
     }
 }

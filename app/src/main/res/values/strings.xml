@@ -18,6 +18,7 @@
     <string name="highscore_btn_label">Highscores</string>
     <string name="quit_btn_label">Quit game</string>
     <!--Fragment MapChooser-->
+    <string name="map_packs_info_label">Available map packs:</string>
     <string name="default_map_btn_label">Go with default map!</string>
     <string name="default_image_map">Default image map!</string>
     <string name="browse_map_btn_label">Choose your own map!</string>
@@ -32,10 +33,14 @@
     <string name="import_from_network">Download from Internet</string>
     <string name="add_question">Add new Question</string>
     <string name="export_map">Export Map Pack</string>
+    <string name="select_pic_prompt">Select picture</string>
     <!--Fragment Settings-->
     <string name="settings_title_label">Settings</string>
+    <string name="settings_units_label">Units of distance: %1$s</string>
     <!--Fragment Score-->
     <string name="score_title_label">High score</string>
+    <string name="score_info_label">Recorded scores:</string>
+    <string name="score_distance_line">%1$.2f %2$s</string>
 
 
     <!--!!!QuestionActivity!!!-->
@@ -69,6 +74,16 @@
     <string name="press_long_on_the_map_to_set_the_marker">Press long on the map to set the marker!</string>
     <string name="let_s_go">LET\'S GO</string>
 
+    <!--Dialog URL-->
+    <string name="enter_url_prompt">Enter a url:</string>
+
+    <!--Dialog Location-->
+    <string name="coordinates_prompt">Enter coordinates:</string>
+    <string name="longitude">Longitude:</string>
+    <string name="latitude">Latitude:</string>
+    <string name="x">X:</string>
+    <string name="y">Y:</string>
+
     <!--Error Messages-->
     <string name="error_load_map_package">"Could not load map package."</string>
     <string name="import_error_msg">Incompatible file type chosen</string>
@@ -76,5 +91,6 @@
     <!--universal-->
     <string name="back_btn_label">Back!</string>
     <string name="image_for_question">Image for Question</string>
+    <string name="preferences_file_name">config</string>
 
 </resources>

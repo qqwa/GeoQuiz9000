@@ -1,24 +1,18 @@
 package no.ntnu.tdt4240.geoquiz9000.fragments;
 
 import android.content.Context;
-import android.graphics.Typeface;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ListFragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 
+import java.util.List;
+
+import io.objectbox.Box;
 import no.ntnu.tdt4240.geoquiz9000.R;
-import no.ntnu.tdt4240.geoquiz9000.activities.GeoActivity;
+import no.ntnu.tdt4240.geoquiz9000.adapters.ScoreAdapter;
+import no.ntnu.tdt4240.geoquiz9000.database.DatabaseLayer;
+import no.ntnu.tdt4240.geoquiz9000.models.Score;
 
-/**
- * Created by MikhailV on 04.04.2017.
- */
 
-public class ScoreFragment extends ListFragment
+public class ScoreFragment extends AbstractListFragment<Score>
 {
     public interface Callbacks
     {
@@ -27,6 +21,24 @@ public class ScoreFragment extends ListFragment
 
     private Callbacks m_callbacks;
 
+    @Override
+    protected CharSequence getListLabel()
+    {
+        return getResources().getString(R.string.score_info_label);
+    }
+    @Override
+    protected ArrayAdapter<Score> getAdapter()
+    {
+        Box scores = DatabaseLayer.getInstance(getActivity()).getBoxFor(Score.class);
+        List<Score> allScores = scores.getAll();
+        return new ScoreAdapter(getContext(), allScores);
+    }
+    @Override
+    protected void onBackPressed()
+    {
+        if (m_callbacks != null)
+            m_callbacks.onScoreBackPressed();
+    }
     @Override
     public void onAttach(Context context)
     {
@@ -38,30 +50,5 @@ public class ScoreFragment extends ListFragment
     {
         super.onDetach();
         m_callbacks = null;
-    }
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setListAdapter(null); // TODO: 05.04.2017 define ScoreAdapter in the 'controllers' package
-    }
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        final Typeface font = ((GeoActivity)getActivity()).getTextFont();
-        View root = inflater.inflate(R.layout.fragment_score, container, false);
-
-        Button backBtn = (Button)root.findViewById(R.id.back_btn);
-        backBtn.setTypeface(font);
-        backBtn.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if (m_callbacks != null)
-                    m_callbacks.onScoreBackPressed();
-            }
-        });
-        return root;
     }
 }
