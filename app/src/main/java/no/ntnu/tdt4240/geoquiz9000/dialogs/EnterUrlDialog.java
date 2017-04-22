@@ -17,31 +17,26 @@ import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.ui.UiUtils;
 
 
-public class EnterUrlDialog extends DialogFragment
-{
-    public interface Callbacks
-    {
+public class EnterUrlDialog extends DialogFragment {
+    public interface Callbacks {
         void onUrlSubmitted(String url);
     }
 
     private Callbacks m_callbacks;
 
     @Override
-    public void onAttach(Context context)
-    {
+    public void onAttach(Context context) {
         super.onAttach(context);
         m_callbacks = (Callbacks)context;
     }
     @Override
-    public void onDetach()
-    {
+    public void onDetach() {
         super.onDetach();
         m_callbacks = null;
     }
     @NonNull
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState)
-    {
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         Typeface font = UiUtils.getTextFont(getContext());
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_enter_url, null);
 
@@ -53,16 +48,13 @@ public class EnterUrlDialog extends DialogFragment
 
         return new AlertDialog.Builder(getContext())
                 .setView(root)
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
-                {
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) { dialog.dismiss(); }
                 })
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
-                {
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
+                    public void onClick(DialogInterface dialog, int which) {
                         if (m_callbacks != null) {
                             String url = editUrl.getText().toString();
                             m_callbacks.onUrlSubmitted(url);

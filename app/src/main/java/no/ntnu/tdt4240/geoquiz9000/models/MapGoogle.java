@@ -14,6 +14,7 @@ public class MapGoogle implements IMap {
             this.latitude = latitude;
         }
     }
+
     protected String name;
     protected static IMap.MapType mapType;
     protected String rootPath;

@@ -17,20 +17,17 @@ import no.ntnu.tdt4240.geoquiz9000.models.MapStore;
 import no.ntnu.tdt4240.geoquiz9000.ui.UiUtils;
 
 
-public abstract class AbstractMapsAdapter extends ArrayAdapter<MapStore>
-{
+public abstract class AbstractMapsAdapter extends ArrayAdapter<MapStore> {
     protected abstract void onMapPressed(View v, MapStore store);
 
     private static final int LAYOUT_ID = R.layout.map_packs_list_row;
 
-    public AbstractMapsAdapter(Context context, List<MapStore> stores)
-    {
+    public AbstractMapsAdapter(Context context, List<MapStore> stores) {
         super(context, LAYOUT_ID, stores);
     }
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent)
-    {
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         Typeface tf = UiUtils.getTextFont(getContext());
         final MapStore store = getItem(position);
 
@@ -47,8 +44,7 @@ public abstract class AbstractMapsAdapter extends ArrayAdapter<MapStore>
         }
         if (store != null) {
             buttonTag.setText(store.getName());
-            buttonTag.setOnClickListener(new View.OnClickListener()
-            {
+            buttonTag.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) { onMapPressed(v, store); }
             });

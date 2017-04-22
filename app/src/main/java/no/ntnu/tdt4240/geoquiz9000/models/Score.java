@@ -80,7 +80,8 @@ public class Score extends AbstractModel implements Parcelable, Comparable<Score
         if (in.readByte() == 0x01) {
             distances = new ArrayList<Float>();
             in.readList(distances, Float.class.getClassLoader());
-        } else {
+        }
+        else {
             distances = null;
         }
         mapPackName = in.readString();
@@ -110,9 +111,10 @@ public class Score extends AbstractModel implements Parcelable, Comparable<Score
         dest.writeString(playerName);
         dest.writeFloat(totalDistance);
         if (distances == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
+            dest.writeByte((byte)(0x00));
+        }
+        else {
+            dest.writeByte((byte)(0x01));
             dest.writeList(distances);
         }
         dest.writeString(mapPackName);
@@ -137,7 +139,8 @@ public class Score extends AbstractModel implements Parcelable, Comparable<Score
         if (this.totalDistance == score.totalDistance) {
             return 0;
 
-        } else {
+        }
+        else {
             return this.totalDistance > score.totalDistance ? 1 : -1;
         }
 

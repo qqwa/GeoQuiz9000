@@ -17,16 +17,19 @@ public class MapStore extends AbstractModel implements IMap {
     protected String rootPath;
     protected int locationCount;
 
-    public String getName() { return name; };
+    public String getName() { return name; }
     public IMap.MapType getType() {
         return MapType.convert(mapType);
-    };
-    public String getRootPath() { return rootPath; };
-    public int getLocationCount() { return locationCount; };
+    }
+
+    public String getRootPath() { return rootPath; }
+
+    public int getLocationCount() { return locationCount; }
+
 
     @Generated(hash = 608205584)
     public MapStore(long id, String name, int mapType, String rootPath,
-            int locationCount) {
+                    int locationCount) {
         this.id = id;
         this.name = name;
         this.mapType = mapType;
@@ -59,7 +62,7 @@ public class MapStore extends AbstractModel implements IMap {
     public void setRootPath(String rootPath) {
         this.rootPath = rootPath;
     }
-    
+
     public void setLocationCount(int locationCount) {
         this.locationCount = locationCount;
     }

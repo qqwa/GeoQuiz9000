@@ -25,7 +25,8 @@ public class ScoreConverter implements PropertyConverter<List<Float>, String> {
                 String jsonValue = jsonArray.opt(i).toString();
                 dists.add(Float.valueOf(jsonValue));
             }
-        } catch (JSONException e) {
+        }
+        catch (JSONException e) {
             Log.e(TAG, "Not possible to convert String to List<Float> again");
         }
 

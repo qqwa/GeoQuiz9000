@@ -39,8 +39,8 @@ import no.ntnu.tdt4240.geoquiz9000.models.Score;
 import no.ntnu.tdt4240.geoquiz9000.utils.GeoUtils;
 
 public class MapsActivity extends AbstractQuestionsActivity implements OnMapReadyCallback,
-        GoogleMap.OnMapClickListener,
-        GoogleMap.OnMapLongClickListener {
+                                                                       GoogleMap.OnMapClickListener,
+                                                                       GoogleMap.OnMapLongClickListener {
 
     private static final String TAG = MapsActivity.class.getSimpleName();
 
@@ -58,14 +58,14 @@ public class MapsActivity extends AbstractQuestionsActivity implements OnMapRead
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        mActionButton = (FloatingActionButton) findViewById(R.id.action_button);
+        mActionButton = (FloatingActionButton)findViewById(R.id.action_button);
         mActionButton.setOnClickListener(onActionButtonClick);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        mPlayerTv = (TextView) findViewById(R.id.player_id);
+        mPlayerTv = (TextView)findViewById(R.id.player_id);
         mCurrentPlayerNr = 1;
         setPlayerName(mCurrentPlayerNr);
 
@@ -163,16 +163,18 @@ public class MapsActivity extends AbstractQuestionsActivity implements OnMapRead
                 //TODO: update me to new map management system
 //                MapFactory.importMap(getAssets().open("testMap.zip"), this).save(this);
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Log.e(TAG, "Could not import map package.");
         }
 
         try {
             if (maps.find("name", mMapName).size() != 0) {
-                mMapStore = (MapStore) maps.find("name", mMapName).get(0);
-                mapGoogle = (MapGoogle) MapFactory.getMap(mMapStore);
+                mMapStore = (MapStore)maps.find("name", mMapName).get(0);
+                mapGoogle = (MapGoogle)MapFactory.getMap(mMapStore);
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             Log.e(TAG, "Could not load map package.");
             Toast.makeText(this, getString(R.string.error_load_map_package), Toast.LENGTH_LONG)
                     .show();
@@ -189,7 +191,7 @@ public class MapsActivity extends AbstractQuestionsActivity implements OnMapRead
 
         showDialog(questionNr, picPath);
 
-        ImageView questionPic = (ImageView) findViewById(R.id.image_preview);
+        ImageView questionPic = (ImageView)findViewById(R.id.image_preview);
         Bitmap pic = BitmapFactory.decodeFile(picPath);
         questionPic.setImageBitmap(pic);
         questionPic.setOnClickListener(new View.OnClickListener() {
@@ -225,7 +227,8 @@ public class MapsActivity extends AbstractQuestionsActivity implements OnMapRead
 
                 mActionButton.setVisibility(View.GONE);
                 mActionButton.setOnClickListener(onActionButtonClick);
-            } else {
+            }
+            else {
                 ArrayList<Score> finalScores = new ArrayList<>();
 
                 for (int i = 1; i <= mNrOfPlayers; i++) {
@@ -281,19 +284,22 @@ public class MapsActivity extends AbstractQuestionsActivity implements OnMapRead
 
                     mActionButton.setVisibility(View.VISIBLE);
                     mActionButton.setOnClickListener(onNextQuestionClick);
-                } else {
+                }
+                else {
                     removeLastMarker();
 
                     mActionButton.setVisibility(View.GONE);
                     initializeQuestion(mCurrentQuestionNr);
                 }
-            } else {
+            }
+            else {
                 nextPlayer(mCurrentPlayerNr);
 
                 if (mCurrentPlayerNr != 1) {
                     removeLastMarker();
                     initializeQuestion(mCurrentQuestionNr);
-                } else {
+                }
+                else {
                     removeLastMarker();
 
                     LatLng answerPoint = new LatLng(mapGoogle.getLocationLatitude(mCurrentQuestionNr),
@@ -326,7 +332,8 @@ public class MapsActivity extends AbstractQuestionsActivity implements OnMapRead
     private void nextPlayer(int currentNr) {
         if (currentNr < mNrOfPlayers) {
             mCurrentPlayerNr = currentNr + 1;
-        } else {
+        }
+        else {
             mCurrentPlayerNr = 1;
         }
         setPlayerName(mCurrentPlayerNr);
@@ -349,7 +356,7 @@ public class MapsActivity extends AbstractQuestionsActivity implements OnMapRead
         dialog.setArguments(bundle);
         dialog.show(getSupportFragmentManager(), RESULT_DIALOG);
 
-        ImageView questionPic = (ImageView) findViewById(R.id.image_preview);
+        ImageView questionPic = (ImageView)findViewById(R.id.image_preview);
         mPlayerTv.setText(getString(R.string.answer));
         questionPic.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -38,23 +38,24 @@ public class ResultsArrayAdapter extends ArrayAdapter<Score> {
         View view = convertView;
 
         if (view == null) {
-            LayoutInflater vi = (LayoutInflater) getContext()
+            LayoutInflater vi = (LayoutInflater)getContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = vi.inflate(layout, null);
 
-            holder.ranking = (TextView) view.findViewById(R.id.text_ranking);
+            holder.ranking = (TextView)view.findViewById(R.id.text_ranking);
             holder.ranking.setTypeface(tf);
 
-            holder.playerName = (TextView) view.findViewById(R.id.text_player_name);
+            holder.playerName = (TextView)view.findViewById(R.id.text_player_name);
             holder.playerName.setTypeface(tf);
 
-            holder.result = (TextView) view.findViewById(R.id.text_result);
+            holder.result = (TextView)view.findViewById(R.id.text_result);
             holder.result.setTypeface(tf);
 
             view.setTag(holder);
 
-        } else {
-            holder = (ViewHolder) view.getTag();
+        }
+        else {
+            holder = (ViewHolder)view.getTag();
         }
 
         String ranking = String.valueOf(position + 1) + ".";
@@ -63,9 +64,8 @@ public class ResultsArrayAdapter extends ArrayAdapter<Score> {
         holder.playerName.setText(score.getPlayerName());
 
         // Meter representation of result to km
-        float distance =  score.getTotalDistance() / 1000;
-        switch (GeoUtils.getCurrentUnits(getContext()))
-        {
+        float distance = score.getTotalDistance() / 1000;
+        switch (GeoUtils.getCurrentUnits(getContext())) {
             case MILES:
                 distance = GeoUtils.kmToMiles(distance);
                 break;

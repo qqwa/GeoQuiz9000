@@ -27,7 +27,7 @@ public class AsyncExportMap extends AsyncTask<Void, String, Void> {
     @Override
     protected Void doInBackground(Void... params) {
         try {
-            if(!mFile.createNewFile()) {
+            if (!mFile.createNewFile()) {
                 publishProgress("Error: Couldn't create File!");
                 return null;
             }
@@ -39,10 +39,12 @@ public class AsyncExportMap extends AsyncTask<Void, String, Void> {
             zipOutputStream.close();
 
             publishProgress("Finished...");
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e) {
             e.printStackTrace();
             publishProgress("Error: File not found!");
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
             publishProgress("Error: IO Exception!");
         }
@@ -51,14 +53,15 @@ public class AsyncExportMap extends AsyncTask<Void, String, Void> {
     }
 
     private void zipFolder(File folder, ZipOutputStream zipOutputStream, String rootFolderName) throws IOException {
-        for(File file : folder.listFiles()) {
-            if(file.isFile()) {
+        for (File file : folder.listFiles()) {
+            if (file.isFile()) {
                 ZipEntry entry = new ZipEntry(rootFolderName + "/" + file.getPath().replace(mMap.getRootPath() + "/", ""));
                 zipOutputStream.putNextEntry(entry);
                 InputStream inputStream = new FileInputStream(file);
                 IoUtils.copyAllBytes(inputStream, zipOutputStream);
                 zipOutputStream.closeEntry();
-            } else if(file.isDirectory()) {
+            }
+            else if (file.isDirectory()) {
                 zipFolder(file, zipOutputStream, rootFolderName);
             }
         }

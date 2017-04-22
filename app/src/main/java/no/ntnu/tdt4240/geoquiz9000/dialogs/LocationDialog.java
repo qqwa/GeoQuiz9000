@@ -21,41 +21,34 @@ import no.ntnu.tdt4240.geoquiz9000.models.MapGoogle;
 import no.ntnu.tdt4240.geoquiz9000.models.MapPicture;
 
 
-public abstract class LocationDialog extends DialogFragment
-{
-    public interface Callbacks
-    {
+public abstract class LocationDialog extends DialogFragment {
+    public interface Callbacks {
         void onLocationSubmitted(IMap.Location location);
 
         void onDialogDismissed();
     }
 
-    public static LocationDialog newLocationGoogleDialog()
-    {
+    public static LocationDialog newLocationGoogleDialog() {
         return new Google();
     }
-    public static LocationDialog newLocationPictureDialog()
-    {
+    public static LocationDialog newLocationPictureDialog() {
         return new Picture();
     }
 
     private Callbacks m_callbacks;
     @Override
-    public void onAttach(Context context)
-    {
+    public void onAttach(Context context) {
         super.onAttach(context);
         m_callbacks = (Callbacks)context;
     }
     @Override
-    public void onDetach()
-    {
+    public void onDetach() {
         super.onDetach();
         m_callbacks = null;
     }
     @NonNull
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState)
-    {
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         Typeface font = ((GeoActivity)getActivity()).getTextFont();
         View root = LayoutInflater.from(getContext()).inflate(R.layout.dialog_location, null);
 
@@ -81,21 +74,17 @@ public abstract class LocationDialog extends DialogFragment
 
         return new AlertDialog.Builder(getContext())
                 .setView(root)
-                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
-                {
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
+                    public void onClick(DialogInterface dialog, int which) {
                         if (m_callbacks != null)
                             m_callbacks.onDialogDismissed();
                         dialog.dismiss();
                     }
                 })
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
-                {
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
+                    public void onClick(DialogInterface dialog, int which) {
                         if (m_callbacks != null) {
                             String dim1 = dim1edit.getText().toString();
                             String dim2 = dim2edit.getText().toString();
@@ -113,8 +102,7 @@ public abstract class LocationDialog extends DialogFragment
 
     protected abstract int getInputType();
 
-    public static class Google extends LocationDialog
-    {
+    public static class Google extends LocationDialog {
         @Override
         protected int getDim1String() { return R.string.longitude; }
         @Override
@@ -122,14 +110,12 @@ public abstract class LocationDialog extends DialogFragment
         @Override
         protected int getInputType() { return InputType.TYPE_NUMBER_FLAG_DECIMAL; }
         @Override
-        protected IMap.Location getLocation(String dim1, String dim2)
-        {
+        protected IMap.Location getLocation(String dim1, String dim2) {
             return new MapGoogle.Location(Double.parseDouble(dim1), Double.parseDouble(dim2));
         }
     }
 
-    public static class Picture extends LocationDialog
-    {
+    public static class Picture extends LocationDialog {
         @Override
         protected int getDim1String() { return R.string.x; }
         @Override
@@ -137,8 +123,7 @@ public abstract class LocationDialog extends DialogFragment
         @Override
         protected int getInputType() { return InputType.TYPE_CLASS_NUMBER; }
         @Override
-        protected IMap.Location getLocation(String dim1, String dim2)
-        {
+        protected IMap.Location getLocation(String dim1, String dim2) {
             return new MapPicture.Location(Integer.parseInt(dim1), Integer.parseInt(dim2));
         }
     }

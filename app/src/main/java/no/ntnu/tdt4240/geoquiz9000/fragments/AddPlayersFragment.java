@@ -29,7 +29,7 @@ public class AddPlayersFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        m_callbacks = (Callbacks) getActivity();
+        m_callbacks = (Callbacks)getActivity();
     }
 
     @Override
@@ -45,14 +45,14 @@ public class AddPlayersFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_add_players, container, false);
 
-        TextView amountText = (TextView) v.findViewById(R.id.amount_text);
+        TextView amountText = (TextView)v.findViewById(R.id.amount_text);
         amountText.setTypeface(tf);
 
-        mAmountNr = (TextView) v.findViewById(R.id.amount_players);
+        mAmountNr = (TextView)v.findViewById(R.id.amount_players);
         mAmountNr.setTypeface(tf);
         setAmountNumber(nrOfPlayers);
 
-        Button addPlayerBtn = (Button) v.findViewById(R.id.add_player);
+        Button addPlayerBtn = (Button)v.findViewById(R.id.add_player);
         addPlayerBtn.setTypeface(tf);
         addPlayerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +62,7 @@ public class AddPlayersFragment extends Fragment {
             }
         });
 
-        Button removePlayerBtn = (Button) v.findViewById(R.id.remove_player);
+        Button removePlayerBtn = (Button)v.findViewById(R.id.remove_player);
         removePlayerBtn.setTypeface(tf);
         removePlayerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,7 +74,7 @@ public class AddPlayersFragment extends Fragment {
             }
         });
 
-        Button selectMapBtn = (Button) v.findViewById(R.id.choose_map);
+        Button selectMapBtn = (Button)v.findViewById(R.id.choose_map);
         selectMapBtn.setTypeface(tf);
         selectMapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +85,7 @@ public class AddPlayersFragment extends Fragment {
             }
         });
 
-        Button backBtn = (Button) v.findViewById(R.id.back);
+        Button backBtn = (Button)v.findViewById(R.id.back);
         backBtn.setTypeface(tf);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override

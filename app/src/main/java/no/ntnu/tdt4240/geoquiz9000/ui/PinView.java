@@ -122,16 +122,17 @@ public class PinView extends SubsamplingScaleImageView {
 
                 float w = (density / 420f) * pin.getWidth();
                 float h = (density / 420f) * pin.getHeight();
-                pin = Bitmap.createScaledBitmap(pin, (int) w, (int) h, true);
+                pin = Bitmap.createScaledBitmap(pin, (int)w, (int)h, true);
 
                 pins.put(p, pin);
             }
-        } else if (sPin == null) {
+        }
+        else if (sPin == null) {
             float density = getResources().getDisplayMetrics().densityDpi;
             clearPin = BitmapFactory.decodeResource(this.getResources(), R.drawable.ic_place_red);
             float w = (density / 420f) * clearPin.getWidth();
             float h = (density / 420f) * clearPin.getHeight();
-            clearPin = Bitmap.createScaledBitmap(clearPin, (int) w, (int) h, true);
+            clearPin = Bitmap.createScaledBitmap(clearPin, (int)w, (int)h, true);
 
         }
     }
