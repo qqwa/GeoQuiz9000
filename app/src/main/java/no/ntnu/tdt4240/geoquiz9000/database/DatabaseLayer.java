@@ -15,7 +15,7 @@ public class DatabaseLayer {
     private BoxStore mBoxStore;
 
     protected DatabaseLayer(Activity activity) {
-        App app = (App) activity.getApplication();
+        App app = (App)activity.getApplication();
         mBoxStore = app.getBoxStore();
     }
 

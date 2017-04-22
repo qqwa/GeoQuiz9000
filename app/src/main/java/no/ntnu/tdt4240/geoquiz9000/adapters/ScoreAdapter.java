@@ -19,18 +19,15 @@ import no.ntnu.tdt4240.geoquiz9000.utils.GeoUtils;
 import no.ntnu.tdt4240.geoquiz9000.utils.GeoUtils.Units;
 
 
-public class ScoreAdapter extends ArrayAdapter<Score>
-{
+public class ScoreAdapter extends ArrayAdapter<Score> {
     private static final int LAYOUT_ID = R.layout.item_score;
 
-    public ScoreAdapter(Context context, List<Score> scores)
-    {
+    public ScoreAdapter(Context context, List<Score> scores) {
         super(context, LAYOUT_ID, scores);
     }
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent)
-    {
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         final Score record = getItem(position);
 
         ViewHolder holder;
@@ -49,15 +46,13 @@ public class ScoreAdapter extends ArrayAdapter<Score>
         return convertView;
     }
 
-    private static class ViewHolder
-    {
+    private static class ViewHolder {
         private final TextView m_playerName;
         private final TextView m_distance;
         private final TextView m_mapName;
         private Context m_context;
 
-        public ViewHolder(View rootView, Context context)
-        {
+        public ViewHolder(View rootView, Context context) {
             Typeface font = UiUtils.getTextFont(m_context = context);
             m_playerName = (TextView)rootView.findViewById(R.id.player_label);
             m_playerName.setTypeface(font);
@@ -66,12 +61,10 @@ public class ScoreAdapter extends ArrayAdapter<Score>
             m_mapName = (TextView)rootView.findViewById(R.id.map_pack_label);
             m_mapName.setTypeface(font);
         }
-        public void bind(Score data)
-        {
+        public void bind(Score data) {
             m_playerName.setText(data.getPlayerName());
             float distance = data.getTotalDistance();
-            switch (GeoUtils.getCurrentUnits(m_context))
-            {
+            switch (GeoUtils.getCurrentUnits(m_context)) {
                 case MILES:
                     distance = GeoUtils.kmToMiles(distance);
                     break;

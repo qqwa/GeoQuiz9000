@@ -22,10 +22,8 @@ import no.ntnu.tdt4240.geoquiz9000.database.DatabaseLayer;
 import no.ntnu.tdt4240.geoquiz9000.models.MapStore;
 import no.ntnu.tdt4240.geoquiz9000.adapters.MapStoreArrayAdapter;
 
-public class MapPacksFragment extends Fragment implements MapStoreArrayAdapter.OnPopupListener
-{
-    public interface Callbacks
-    {
+public class MapPacksFragment extends Fragment implements MapStoreArrayAdapter.OnPopupListener {
+    public interface Callbacks {
         void onImportMapPressed();
 
         void onMapPacksBackPressed();
@@ -39,8 +37,7 @@ public class MapPacksFragment extends Fragment implements MapStoreArrayAdapter.O
     private ListView m_mapList;
 
     @Override
-    public boolean onPopupItemClick(MapStore store, MenuItem item)
-    {
+    public boolean onPopupItemClick(MapStore store, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_add_question:
                 if (m_callbacks != null)
@@ -57,21 +54,18 @@ public class MapPacksFragment extends Fragment implements MapStoreArrayAdapter.O
         }
     }
     @Override
-    public void onAttach(Context context)
-    {
+    public void onAttach(Context context) {
         super.onAttach(context);
         m_callbacks = (Callbacks)context;
     }
     @Override
-    public void onDetach()
-    {
+    public void onDetach() {
         super.onDetach();
         m_callbacks = null;
     }
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final Typeface font = ((GeoActivity)getActivity()).getTextFont();
         View root = inflater.inflate(R.layout.fragment_map_packs, container, false);
 
@@ -84,11 +78,9 @@ public class MapPacksFragment extends Fragment implements MapStoreArrayAdapter.O
 
         final Button importMapBtn = (Button)root.findViewById(R.id.import_map_btn);
         importMapBtn.setTypeface(font);
-        importMapBtn.setOnClickListener(new View.OnClickListener()
-        {
+        importMapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 if (m_callbacks != null)
                     m_callbacks.onImportMapPressed();
             }
@@ -96,11 +88,9 @@ public class MapPacksFragment extends Fragment implements MapStoreArrayAdapter.O
 
         final Button backBtn = (Button)root.findViewById(R.id.back_btn);
         backBtn.setTypeface(font);
-        backBtn.setOnClickListener(new View.OnClickListener()
-        {
+        backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 if (m_callbacks != null)
                     m_callbacks.onMapPacksBackPressed();
             }
@@ -108,8 +98,7 @@ public class MapPacksFragment extends Fragment implements MapStoreArrayAdapter.O
 
         return root;
     }
-    public void updateListView()
-    {
+    public void updateListView() {
         Box mapBox = DatabaseLayer.getInstance(getActivity()).getBoxFor(MapStore.class);
         List<MapStore> stores = (List<MapStore>)mapBox.getAll();
         MapStoreArrayAdapter adapter = new MapStoreArrayAdapter(getContext(), stores, this);

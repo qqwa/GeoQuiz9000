@@ -9,16 +9,13 @@ import android.support.v7.app.AlertDialog;
 
 import no.ntnu.tdt4240.geoquiz9000.R;
 
-public class ImportErrorDialog extends DialogFragment
-{
+public class ImportErrorDialog extends DialogFragment {
     @NonNull
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState)
-    {
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         return new AlertDialog.Builder(getContext())
                 .setTitle(R.string.import_error_msg)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
-                {
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) { dialog.dismiss(); }
                 })

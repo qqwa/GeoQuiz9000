@@ -35,17 +35,17 @@ public class ResultDialog extends DialogFragment {
 
         View v = inflater.inflate(R.layout.dialog_result, container, false);
 
-        TextView title = (TextView) v.findViewById(R.id.result_dialog_title);
+        TextView title = (TextView)v.findViewById(R.id.result_dialog_title);
         title.setTypeface(textFont);
 
-        TextView content = (TextView) v.findViewById(R.id.result_dialog_content);
+        TextView content = (TextView)v.findViewById(R.id.result_dialog_content);
         content.setTypeface(textFont);
 
-        ImageView iv = (ImageView) v.findViewById(R.id.result_picture);
+        ImageView iv = (ImageView)v.findViewById(R.id.result_picture);
         Bitmap pic = BitmapFactory.decodeFile(mImagePath);
         iv.setImageBitmap(pic);
 
-        Button answerButton = (Button) v.findViewById(R.id.result_dialog_btn);
+        Button answerButton = (Button)v.findViewById(R.id.result_dialog_btn);
         answerButton.setTypeface(textFont);
         answerButton.setOnClickListener(new View.OnClickListener() {
             @Override

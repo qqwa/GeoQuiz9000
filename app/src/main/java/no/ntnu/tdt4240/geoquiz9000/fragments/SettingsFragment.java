@@ -15,10 +15,8 @@ import no.ntnu.tdt4240.geoquiz9000.activities.GeoActivity;
 import no.ntnu.tdt4240.geoquiz9000.utils.GeoUtils;
 
 
-public class SettingsFragment extends Fragment
-{
-    public interface Callbacks
-    {
+public class SettingsFragment extends Fragment {
+    public interface Callbacks {
         void onMapPacksPressed();
 
         void onSettingsBackPressed();
@@ -27,31 +25,26 @@ public class SettingsFragment extends Fragment
     private Callbacks m_callbacks;
 
     @Override
-    public void onAttach(Context context)
-    {
+    public void onAttach(Context context) {
         super.onAttach(context);
         m_callbacks = (Callbacks)context;
     }
     @Override
-    public void onDetach()
-    {
+    public void onDetach() {
         super.onDetach();
         m_callbacks = null;
     }
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final Typeface font = ((GeoActivity)getActivity()).getTextFont();
         View root = inflater.inflate(R.layout.fragment_settings, container, false);
 
         final Button backBtn = (Button)root.findViewById(R.id.back_btn);
         backBtn.setTypeface(font);
-        backBtn.setOnClickListener(new View.OnClickListener()
-        {
+        backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 if (m_callbacks != null)
                     m_callbacks.onSettingsBackPressed();
             }
@@ -59,11 +52,9 @@ public class SettingsFragment extends Fragment
 
         final Button mappacksBtn = (Button)root.findViewById(R.id.mappacks_btn);
         mappacksBtn.setTypeface(font);
-        mappacksBtn.setOnClickListener(new View.OnClickListener()
-        {
+        mappacksBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 if (m_callbacks != null) {
                     m_callbacks.onMapPacksPressed();
                 }
@@ -74,11 +65,9 @@ public class SettingsFragment extends Fragment
         unitsBtn.setTypeface(font);
         unitsBtn.setText(
                 getString(R.string.settings_units_label, GeoUtils.getCurrentUnits(getContext()).toString()));
-        unitsBtn.setOnClickListener(new View.OnClickListener()
-        {
+        unitsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 switch (GeoUtils.getCurrentUnits(getContext())) {
                     case KM:
                         GeoUtils.setCurrentUnits(getContext(), GeoUtils.Units.MILES);

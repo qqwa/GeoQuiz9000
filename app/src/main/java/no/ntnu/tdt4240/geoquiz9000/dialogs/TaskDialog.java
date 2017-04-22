@@ -20,6 +20,7 @@ import no.ntnu.tdt4240.geoquiz9000.activities.GeoActivity;
 public class TaskDialog extends DialogFragment {
     public interface Callbacks {
         void onCancelPressed();
+
         void onOkPressed();
     }
 
@@ -69,9 +70,9 @@ public class TaskDialog extends DialogFragment {
                 ok.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (m_callbacks!=null)
+                        if (m_callbacks != null)
                             m_callbacks.onOkPressed();
-                        if(m_canDismiss) {
+                        if (m_canDismiss) {
                             dialog.dismiss();
                         }
                     }
@@ -83,7 +84,7 @@ public class TaskDialog extends DialogFragment {
                     public void onClick(View v) {
                         if (m_callbacks != null) {
                             m_callbacks.onCancelPressed();
-                            if(m_canDismiss) {
+                            if (m_canDismiss) {
                                 dialog.dismiss();
                             }
                         }

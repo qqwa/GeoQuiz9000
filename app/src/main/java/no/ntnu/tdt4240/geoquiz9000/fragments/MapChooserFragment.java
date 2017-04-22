@@ -12,10 +12,8 @@ import no.ntnu.tdt4240.geoquiz9000.adapters.AbstractMapsAdapter;
 import no.ntnu.tdt4240.geoquiz9000.database.DatabaseLayer;
 import no.ntnu.tdt4240.geoquiz9000.models.MapStore;
 
-public class MapChooserFragment extends AbstractListFragment<MapStore>
-{
-    public interface Callbacks
-    {
+public class MapChooserFragment extends AbstractListFragment<MapStore> {
+    public interface Callbacks {
         void onMapPressed(MapStore map);
 
         void onBackBtnPressed();
@@ -24,40 +22,33 @@ public class MapChooserFragment extends AbstractListFragment<MapStore>
     private Callbacks m_callbacks;
 
     @Override
-    protected CharSequence getListLabel()
-    {
+    protected CharSequence getListLabel() {
         return getResources().getString(R.string.map_packs_info_label);
     }
     @Override
-    protected ArrayAdapter<MapStore> getAdapter()
-    {
+    protected ArrayAdapter<MapStore> getAdapter() {
         Box mapBox = DatabaseLayer.getInstance(getActivity()).getBoxFor(MapStore.class);
         List<MapStore> stores = (List<MapStore>)mapBox.getAll();
-        return new AbstractMapsAdapter(getContext(), stores)
-        {
+        return new AbstractMapsAdapter(getContext(), stores) {
             @Override
-            protected void onMapPressed(View v, MapStore store)
-            {
+            protected void onMapPressed(View v, MapStore store) {
                 if (m_callbacks != null)
                     m_callbacks.onMapPressed(store);
             }
         };
     }
     @Override
-    protected void onBackPressed()
-    {
+    protected void onBackPressed() {
         if (m_callbacks != null)
             m_callbacks.onBackBtnPressed();
     }
     @Override
-    public void onAttach(Context context)
-    {
+    public void onAttach(Context context) {
         super.onAttach(context);
         m_callbacks = (Callbacks)getActivity();
     }
     @Override
-    public void onDetach()
-    {
+    public void onDetach() {
         super.onDetach();
         m_callbacks = null;
     }

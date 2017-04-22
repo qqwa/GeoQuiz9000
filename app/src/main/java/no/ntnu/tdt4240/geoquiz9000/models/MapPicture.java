@@ -11,6 +11,7 @@ public class MapPicture implements IMap {
             this.y = y;
         }
     }
+
     protected String name;
     protected static IMap.MapType mapType;
     protected String rootPath;

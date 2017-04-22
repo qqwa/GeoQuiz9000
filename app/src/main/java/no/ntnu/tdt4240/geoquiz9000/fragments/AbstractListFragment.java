@@ -15,8 +15,7 @@ import no.ntnu.tdt4240.geoquiz9000.R;
 import no.ntnu.tdt4240.geoquiz9000.activities.GeoActivity;
 
 
-public abstract class AbstractListFragment<TItem> extends ListFragment
-{
+public abstract class AbstractListFragment<TItem> extends ListFragment {
 
     protected abstract ArrayAdapter<TItem> getAdapter();
 
@@ -25,21 +24,18 @@ public abstract class AbstractListFragment<TItem> extends ListFragment
     protected abstract CharSequence getListLabel();
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState)
-    {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setListAdapter(getAdapter());
     }
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final Typeface font = ((GeoActivity)getActivity()).getTextFont();
         View root = inflater.inflate(R.layout.fragment_list, container, false);
 
         Button backBtn = (Button)root.findViewById(R.id.back_btn);
         backBtn.setTypeface(font);
-        backBtn.setOnClickListener(new View.OnClickListener()
-        {
+        backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { onBackPressed(); }
         });

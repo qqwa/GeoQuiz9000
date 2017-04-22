@@ -2,7 +2,9 @@ package no.ntnu.tdt4240.geoquiz9000.models;
 
 
 public interface IMap {
-    public static abstract class Location {};
+    public static abstract class Location {
+    }
+
     public enum MapType {
         GOOGLE,
         PICTURE;
@@ -30,7 +32,10 @@ public interface IMap {
     }
 
     public String getName();
+
     public MapType getType();
+
     public String getRootPath();
+
     public int getLocationCount();
 }

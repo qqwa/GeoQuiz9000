@@ -28,6 +28,7 @@ public class MapToml {
             this.location = location;
         }
     }
+
     private String name;
     private IMap.MapType type;
     public String rootPath;
@@ -41,7 +42,7 @@ public class MapToml {
         this.dataSets = dataSets;
 
         String hashData = name;
-        for(DataSet dataSet : dataSets) {
+        for (DataSet dataSet : dataSets) {
             name += dataSet.picture + dataSet.description;
         }
 
@@ -50,11 +51,12 @@ public class MapToml {
             md = MessageDigest.getInstance("MD5");
             byte[] hash = md.digest(hashData.getBytes());
             StringBuilder sb = new StringBuilder(hash.length * 2);
-            for(byte b: hash) {
+            for (byte b : hash) {
                 sb.append(String.format("%02x", b));
             }
             rootPath = sb.toString();
-        } catch (NoSuchAlgorithmException e) {
+        }
+        catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
 
@@ -65,7 +67,7 @@ public class MapToml {
     static public MapToml readToml(InputStream inputStream) {
         Toml toml = new Toml().read(inputStream);
 
-        if(toml == null) {
+        if (toml == null) {
             return null;
         }
 
@@ -73,21 +75,22 @@ public class MapToml {
         String name = toml.getString("name");
         String type = toml.getString("type");
 
-        if(name == null || type == null) {
+        if (name == null || type == null) {
             throw new RuntimeException("Couldn't parse toml file");
         }
 
         IMap.MapType mapType;
 
-        if(type.equals("google-maps")) mapType = IMap.MapType.GOOGLE;
+        if (type.equals("google-maps")) mapType = IMap.MapType.GOOGLE;
         else if (type.equals("picture")) mapType = IMap.MapType.PICTURE;
         else throw new RuntimeException("Unsupported map type.");
 
         //metaData
         Map<String, String> metaData = new HashMap<>();
-        if(mapType == IMap.MapType.GOOGLE) {
+        if (mapType == IMap.MapType.GOOGLE) {
             metaData.put("map", toml.getString("meta_data.map"));
-        } else if(mapType == IMap.MapType.PICTURE) {
+        }
+        else if (mapType == IMap.MapType.PICTURE) {
             metaData.put("map", toml.getString("meta_data.map"));
             metaData.put("dist_x", toml.getString("meta_data.dist_x"));
             metaData.put("dist_y", toml.getString("meta_data.dist_y"));
@@ -141,22 +144,23 @@ public class MapToml {
         //meta_data
         tomlRep.meta_data = new HashMap<>();
         tomlRep.meta_data.put("map", metaData.get("map"));
-        if(type == IMap.MapType.PICTURE) {
+        if (type == IMap.MapType.PICTURE) {
             tomlRep.meta_data.put("dist_x", metaData.get("dist_x"));
             tomlRep.meta_data.put("dist_y", metaData.get("dist_y"));
         }
 
         //data_set
         tomlRep.data_set = new ArrayList<>();
-        for(DataSet dataSet : dataSets) {
+        for (DataSet dataSet : dataSets) {
             Map<String, Object> data = new HashMap<>();
             data.put("picture", dataSet.picture);
             data.put("description", dataSet.description);
-            if(type == IMap.MapType.GOOGLE) {
+            if (type == IMap.MapType.GOOGLE) {
                 MapGoogle.Location locationGoogle = (MapGoogle.Location)dataSet.location;
                 data.put("latitude", locationGoogle.latitude);
                 data.put("longitude", locationGoogle.longitude);
-            } else {
+            }
+            else {
                 MapPicture.Location locationPicture = (MapPicture.Location)dataSet.location;
                 data.put("x", locationPicture.x);
                 data.put("y", locationPicture.y);
@@ -167,7 +171,8 @@ public class MapToml {
         try {
             writer.write(tomlRep, outputStream);
             outputStream.close();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -177,10 +182,10 @@ public class MapToml {
     }
 
     public void add(String picturePath, IMap.Location location, String description) {
-        if(description == null) {
+        if (description == null) {
             description = "";
         }
-        if(location instanceof MapGoogle.Location && type != IMap.MapType.GOOGLE
+        if (location instanceof MapGoogle.Location && type != IMap.MapType.GOOGLE
                 || location instanceof MapPicture.Location && type != IMap.MapType.PICTURE) {
             Log.e("MapToml", "Tried to add new Question with wrong type of location");
             return;

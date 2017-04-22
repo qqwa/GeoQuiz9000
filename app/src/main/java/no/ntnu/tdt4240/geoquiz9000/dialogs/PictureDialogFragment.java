@@ -42,27 +42,27 @@ public class PictureDialogFragment extends DialogFragment {
 
         View v = inflater.inflate(R.layout.dialog_picture, container, false);
 
-        TextView playerNameText = (TextView) v.findViewById(R.id.player_name);
+        TextView playerNameText = (TextView)v.findViewById(R.id.player_name);
         playerNameText.setTypeface(textFont);
         playerNameText.setText(mPlayername);
 
         String titleText = getString(R.string.question_title1) + " " + String.valueOf(mQuestionNr + 1);
 
-        TextView title = (TextView) v.findViewById(R.id.title);
+        TextView title = (TextView)v.findViewById(R.id.title);
         title.setTypeface(textFont);
         title.setText(titleText);
 
-        TextView question = (TextView) v.findViewById(R.id.question);
+        TextView question = (TextView)v.findViewById(R.id.question);
         question.setTypeface(textFont);
 
-        TextView callToAction = (TextView) v.findViewById(R.id.call_to_action);
+        TextView callToAction = (TextView)v.findViewById(R.id.call_to_action);
         callToAction.setTypeface(textFont);
 
-        ImageView iv = (ImageView) v.findViewById(R.id.question_picture);
+        ImageView iv = (ImageView)v.findViewById(R.id.question_picture);
         Bitmap pic = BitmapFactory.decodeFile(mImagePath);
         iv.setImageBitmap(pic);
 
-        Button answerButton = (Button) v.findViewById(R.id.answer_button);
+        Button answerButton = (Button)v.findViewById(R.id.answer_button);
         answerButton.setTypeface(textFont);
         answerButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -52,10 +52,10 @@ public class ImageActivity extends AbstractQuestionsActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image);
 
-        mActionButton = (FloatingActionButton) findViewById(R.id.action_button);
+        mActionButton = (FloatingActionButton)findViewById(R.id.action_button);
         mActionButton.setOnClickListener(onActionButtonClick);
 
-        mPlayerTv = (TextView) findViewById(R.id.player_id);
+        mPlayerTv = (TextView)findViewById(R.id.player_id);
         mCurrentPlayerNr = 1;
         setPlayerName(mCurrentPlayerNr);
 
@@ -65,7 +65,7 @@ public class ImageActivity extends AbstractQuestionsActivity {
             initializeQuestion(0);
         }
 
-        mMapView = (PinView) findViewById(R.id.map_image);
+        mMapView = (PinView)findViewById(R.id.map_image);
         String rootPath = mMapPicture.getRootPath();
         Bitmap map = BitmapFactory.decodeFile(rootPath + "/" + mMapPicture.getMap());
         setupMap(map);
@@ -88,8 +88,8 @@ public class ImageActivity extends AbstractQuestionsActivity {
                             mMapView.setPin(sCoord);
                             mCurrentPoint = sCoord;
 
-                            float answerX = (float) mMapPicture.getLocationX(mCurrentQuestionNr);
-                            float answerY = (float) mMapPicture.getLocationY(mCurrentQuestionNr);
+                            float answerX = (float)mMapPicture.getLocationX(mCurrentQuestionNr);
+                            float answerY = (float)mMapPicture.getLocationY(mCurrentQuestionNr);
                             PointF answerPoint = new PointF(answerX, answerY);
                             float distance = GeoUtils.distanceBetweenTwoPoints(mMapPicture,
                                     answerPoint, sCoord);
@@ -98,7 +98,8 @@ public class ImageActivity extends AbstractQuestionsActivity {
                             mCurrentCalculatedDistance = distance;
 
                             mActionButton.setVisibility(View.VISIBLE);
-                        } else {
+                        }
+                        else {
                             Toast.makeText(getApplicationContext(), "Long press: Image not ready",
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -136,16 +137,18 @@ public class ImageActivity extends AbstractQuestionsActivity {
                 //TODO: update me to new map management system
 //                MapFactory.importMap(getAssets().open("wraeclast123.zip"), this).save(this);
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             Log.e(TAG, "Could not import map package.");
         }
 
         try {
             if (maps.find("name", mMapName).size() != 0) {
-                mMapStore = (MapStore) maps.find("name", mMapName).get(0);
-                mMapPicture = (MapPicture) MapFactory.getMap(mMapStore);
+                mMapStore = (MapStore)maps.find("name", mMapName).get(0);
+                mMapPicture = (MapPicture)MapFactory.getMap(mMapStore);
             }
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             Log.e(TAG, "Could not load map package.");
             Toast.makeText(this, getString(R.string.error_load_map_package), Toast.LENGTH_LONG)
                     .show();
@@ -166,7 +169,8 @@ public class ImageActivity extends AbstractQuestionsActivity {
 
                 mActionButton.setVisibility(View.GONE);
                 mActionButton.setOnClickListener(onActionButtonClick);
-            } else {
+            }
+            else {
                 ArrayList<Score> finalScores = new ArrayList<>();
 
                 for (int i = 1; i <= mNrOfPlayers; i++) {
@@ -216,30 +220,33 @@ public class ImageActivity extends AbstractQuestionsActivity {
                 if (mCurrentPlayerNr == 1) {
                     mMapView.clear();
 
-                    float answerX = (float) mMapPicture.getLocationX(mCurrentQuestionNr);
-                    float answerY = (float) mMapPicture.getLocationY(mCurrentQuestionNr);
+                    float answerX = (float)mMapPicture.getLocationX(mCurrentQuestionNr);
+                    float answerY = (float)mMapPicture.getLocationY(mCurrentQuestionNr);
                     PointF answerPoint = new PointF(answerX, answerY);
                     showResult(answerPoint);
 
                     mActionButton.setVisibility(View.VISIBLE);
                     mActionButton.setOnClickListener(onNextQuestionClick);
-                } else {
+                }
+                else {
                     mMapView.clear();
 
                     mActionButton.setVisibility(View.GONE);
                     initializeQuestion(mCurrentQuestionNr);
                 }
-            } else {
+            }
+            else {
                 nextPlayer(mCurrentPlayerNr);
 
                 if (mCurrentPlayerNr != 1) {
                     mMapView.clear();
                     initializeQuestion(mCurrentQuestionNr);
-                } else {
+                }
+                else {
                     mMapView.clear();
 
-                    float answerX = (float) mMapPicture.getLocationX(mCurrentQuestionNr);
-                    float answerY = (float) mMapPicture.getLocationY(mCurrentQuestionNr);
+                    float answerX = (float)mMapPicture.getLocationX(mCurrentQuestionNr);
+                    float answerY = (float)mMapPicture.getLocationY(mCurrentQuestionNr);
                     PointF answerPoint = new PointF(answerX, answerY);
                     showResult(answerPoint);
 
@@ -260,7 +267,7 @@ public class ImageActivity extends AbstractQuestionsActivity {
 
         showDialog(questionNr, picPath);
 
-        ImageView questionPic = (ImageView) findViewById(R.id.image_preview);
+        ImageView questionPic = (ImageView)findViewById(R.id.image_preview);
         Bitmap pic = BitmapFactory.decodeFile(picPath);
         questionPic.setImageBitmap(pic);
         questionPic.setOnClickListener(new View.OnClickListener() {
@@ -279,7 +286,8 @@ public class ImageActivity extends AbstractQuestionsActivity {
     private void nextPlayer(int currentNr) {
         if (currentNr < mNrOfPlayers) {
             mCurrentPlayerNr = currentNr + 1;
-        } else {
+        }
+        else {
             mCurrentPlayerNr = 1;
         }
         setPlayerName(mCurrentPlayerNr);
@@ -323,7 +331,7 @@ public class ImageActivity extends AbstractQuestionsActivity {
         dialog.setArguments(bundle);
         dialog.show(getSupportFragmentManager(), RESULT_DIALOG);
 
-        ImageView questionPic = (ImageView) findViewById(R.id.image_preview);
+        ImageView questionPic = (ImageView)findViewById(R.id.image_preview);
         mPlayerTv.setText(getString(R.string.answer));
         questionPic.setOnClickListener(new View.OnClickListener() {
             @Override

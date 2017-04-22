@@ -30,23 +30,23 @@ public class ResultActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         mScores = getIntent().getParcelableArrayListExtra(INTENT_SCORE);
         Collections.sort(mScores);
         saveScores(mScores);
 
-        TextView titleTv = (TextView) findViewById(R.id.result_title);
+        TextView titleTv = (TextView)findViewById(R.id.result_title);
         titleTv.setTypeface(UiUtils.getTitleFont(this));
 
         ResultsArrayAdapter adapter = new ResultsArrayAdapter(this, R.layout.result_list_row,
                 mScores);
 
-        ListView resultsList = (ListView) findViewById(R.id.results_list_view);
+        ListView resultsList = (ListView)findViewById(R.id.results_list_view);
         resultsList.setAdapter(adapter);
 
-        Button tryAgainBtn = (Button) findViewById(R.id.try_again_btn);
+        Button tryAgainBtn = (Button)findViewById(R.id.try_again_btn);
         tryAgainBtn.setTypeface(UiUtils.getTextFont(this));
         tryAgainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +57,7 @@ public class ResultActivity extends AppCompatActivity {
             }
         });
 
-        Button quitBtn = (Button) findViewById(R.id.quit_btn);
+        Button quitBtn = (Button)findViewById(R.id.quit_btn);
         quitBtn.setTypeface(UiUtils.getTextFont(this));
         quitBtn.setOnClickListener(new View.OnClickListener() {
             @Override

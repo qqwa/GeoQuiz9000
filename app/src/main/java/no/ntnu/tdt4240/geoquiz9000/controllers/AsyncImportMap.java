@@ -50,12 +50,12 @@ public class AsyncImportMap extends AsyncTask<Void, String, MapStore> {
     @Override
     protected MapStore doInBackground(Void... params) {
         try {
-            if(mInputStream == null) { //download map
+            if (mInputStream == null) { //download map
                 publishProgress("Downloading map...");
                 URL mapPack = new URL(mUrl);
                 mInputStream = mapPack.openStream();
             }
-            if(isCancelled()) {
+            if (isCancelled()) {
                 return null;
             }
             publishProgress("Unzipping archive...");
@@ -66,23 +66,24 @@ public class AsyncImportMap extends AsyncTask<Void, String, MapStore> {
             ZipInputStream input = new ZipInputStream(mInputStream);
             ZipEntry curEntry = null;
             boolean firstRun = true;
-            while((curEntry = input.getNextEntry()) != null) {
-                if(firstRun && curEntry.isDirectory()) {
+            while ((curEntry = input.getNextEntry()) != null) {
+                if (firstRun && curEntry.isDirectory()) {
                     root = curEntry.getName();
                 }
                 firstRun = false;
 
-                if(!curEntry.isDirectory()) {
+                if (!curEntry.isDirectory()) {
                     writeFile(mActivity, mTmpPath + curEntry.getName(), input);
-                } else {
+                }
+                else {
                     File file = new File(mTmpPath + curEntry.getName());
-                    if(!file.exists()) {
+                    if (!file.exists()) {
                         file.mkdirs();
                     }
                 }
 
                 input.closeEntry();
-                if(isCancelled()) {
+                if (isCancelled()) {
                     input.close();
                     cleanUp();
                     return null;
@@ -91,28 +92,28 @@ public class AsyncImportMap extends AsyncTask<Void, String, MapStore> {
 
             input.close();
 
-            if(isCancelled()) {
+            if (isCancelled()) {
                 cleanUp();
                 return null;
             }
             publishProgress("Validating Map Pack...");
 
             MapToml mapToml = mapToml = MapToml.readToml(new FileInputStream(new File(mTmpPath + root + "map.toml")));
-            if(mapToml == null) {
+            if (mapToml == null) {
                 mError = "Error: Map Pack doesn't contain a map.toml file!";
                 cleanUp();
                 return null;
             }
             //check if mapPack exists already
             Box mapStores = DatabaseLayer.getInstance(mActivity).getBoxFor(MapStore.class);
-            if(mapStores.find("rootPath", mActivity.getFilesDir().getPath() + "/" + mapToml.getRootPath()).size() != 0) {
+            if (mapStores.find("rootPath", mActivity.getFilesDir().getPath() + "/" + mapToml.getRootPath()).size() != 0) {
                 //error map already imported
                 mError = "Error: Map Pack already imported!";
                 cleanUp();
                 return null;
             }
 
-            if(isCancelled()) {
+            if (isCancelled()) {
                 cleanUp();
                 return null;
             }
@@ -130,7 +131,8 @@ public class AsyncImportMap extends AsyncTask<Void, String, MapStore> {
             publishProgress("Finishing...");
             Log.i("IMPORT", "Imported " + result.getName());
             return result;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
             mError = "Error: Unexpected error occurred.";
             cleanUp();
@@ -139,11 +141,11 @@ public class AsyncImportMap extends AsyncTask<Void, String, MapStore> {
     }
 
     private void cleanUp() {
-        if(mError.equals("")) {
+        if (mError.equals("")) {
             mError = "Canceling...";
         }
         File tmpFolder = new File(mTmpPath);
-        if(tmpFolder.exists()) {
+        if (tmpFolder.exists()) {
             deleteFolder(tmpFolder);
         }
     }
@@ -157,9 +159,9 @@ public class AsyncImportMap extends AsyncTask<Void, String, MapStore> {
     }
 
     private static void deleteFolder(File file) {
-        if(file != null) {
-            if(file.isDirectory() && file.listFiles() != null) {
-                for(File f : file.listFiles()) {
+        if (file != null) {
+            if (file.isDirectory() && file.listFiles() != null) {
+                for (File f : file.listFiles()) {
                     deleteFolder(f);
                 }
             }
