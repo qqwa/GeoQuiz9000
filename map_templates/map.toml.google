@@ -1,0 +1,25 @@
+# Name of the Map Pack, that will be displayed in game
+name = "Map Pack 1"
+
+# type of the map pack, if you want another type, please us responding
+# template file it
+type = "google-maps"
+
+[meta_data] # map type specific data
+map = "earth" # currently only earth is support for google maps
+
+# tip to get the latitude and longitude for a location:
+# open google maps in your favorite browser and go to the location
+# you want to add, right click and select "What's here". This will
+# show a small popup on the bottom with two numbers, the first one
+# is latitude and the second one, longitude
+
+[[data_set]] # first question
+picture = "pic1.png" #path to picture
+latitude = 63.43 #north positive, south negative
+longitude = 10.39 #east positive, west negative
+
+[[data_set]] # second question
+picture = "pic2.png"
+latitude = 52.52
+longitude = 13.4
