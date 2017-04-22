@@ -3,6 +3,7 @@ package no.ntnu.tdt4240.geoquiz9000.fragments;
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
+import java.util.Collections;
 import java.util.List;
 
 import io.objectbox.Box;
@@ -31,6 +32,7 @@ public class ScoreFragment extends AbstractListFragment<Score>
     {
         Box scores = DatabaseLayer.getInstance(getActivity()).getBoxFor(Score.class);
         List<Score> allScores = scores.getAll();
+        Collections.sort(allScores);
         return new ScoreAdapter(getContext(), allScores);
     }
     @Override

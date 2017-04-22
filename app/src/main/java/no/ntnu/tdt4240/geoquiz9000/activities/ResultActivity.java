@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import no.ntnu.tdt4240.geoquiz9000.R;
@@ -33,6 +34,7 @@ public class ResultActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         mScores = getIntent().getParcelableArrayListExtra(INTENT_SCORE);
+        Collections.sort(mScores);
         saveScores(mScores);
 
         TextView titleTv = (TextView) findViewById(R.id.result_title);
