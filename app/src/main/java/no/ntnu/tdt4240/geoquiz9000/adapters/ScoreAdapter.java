@@ -69,7 +69,7 @@ public class ScoreAdapter extends ArrayAdapter<Score>
         {
             m_playerName.setText(data.getPlayerName());
             String text = m_context.getString(R.string.score_distance_line,
-                    data.getTotalDistance(), GeoUtils.getCurrentUnits().toString());
+                    data.getTotalDistance(), GeoUtils.getCurrentUnits(m_context).toString());
             m_distance.setText(text);
             m_mapName.setText(data.getMapPackName());
         }

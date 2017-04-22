@@ -2,7 +2,6 @@ package no.ntnu.tdt4240.geoquiz9000.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.PopupMenu;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 

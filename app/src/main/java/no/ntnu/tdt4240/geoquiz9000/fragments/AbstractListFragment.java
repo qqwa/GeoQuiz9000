@@ -1,6 +1,5 @@
 package no.ntnu.tdt4240.geoquiz9000.fragments;
 
-import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;

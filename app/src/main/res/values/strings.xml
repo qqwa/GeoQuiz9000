@@ -91,5 +91,6 @@
     <!--universal-->
     <string name="back_btn_label">Back!</string>
     <string name="image_for_question">Image for Question</string>
+    <string name="preferences_file_name">config</string>
 
 </resources>

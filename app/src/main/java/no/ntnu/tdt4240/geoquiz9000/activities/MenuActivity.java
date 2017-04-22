@@ -25,8 +25,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.InputStream;
 
 import no.ntnu.tdt4240.geoquiz9000.R;

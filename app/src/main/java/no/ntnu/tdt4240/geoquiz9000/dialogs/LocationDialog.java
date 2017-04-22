@@ -20,9 +20,6 @@ import no.ntnu.tdt4240.geoquiz9000.models.IMap;
 import no.ntnu.tdt4240.geoquiz9000.models.MapGoogle;
 import no.ntnu.tdt4240.geoquiz9000.models.MapPicture;
 
-/**
- * Created by MikhailV on 21.04.2017.
- */
 
 public abstract class LocationDialog extends DialogFragment
 {

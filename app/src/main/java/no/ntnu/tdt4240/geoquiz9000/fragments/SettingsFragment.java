@@ -5,7 +5,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.telecom.Call;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,20 +72,21 @@ public class SettingsFragment extends Fragment
 
         final Button unitsBtn = (Button)root.findViewById(R.id.units_btn);
         unitsBtn.setTypeface(font);
-        unitsBtn.setText(getString(R.string.settings_units_label, GeoUtils.getCurrentUnits().toString()));
+        unitsBtn.setText(
+                getString(R.string.settings_units_label, GeoUtils.getCurrentUnits(getContext()).toString()));
         unitsBtn.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                switch (GeoUtils.getCurrentUnits()) {
+                switch (GeoUtils.getCurrentUnits(getContext())) {
                     case KM:
-                        GeoUtils.setCurrentUnits(GeoUtils.Units.MILES);
+                        GeoUtils.setCurrentUnits(getContext(), GeoUtils.Units.MILES);
                         unitsBtn.setText(getString(R.string.settings_units_label,
                                 GeoUtils.Units.MILES.toString()));
                         return;
                     case MILES:
-                        GeoUtils.setCurrentUnits(GeoUtils.Units.KM);
+                        GeoUtils.setCurrentUnits(getContext(), GeoUtils.Units.KM);
                         unitsBtn.setText(getString(R.string.settings_units_label,
                                 GeoUtils.Units.KM.toString()));
                         return;
